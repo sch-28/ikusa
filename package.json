@@ -32,5 +32,9 @@
 		"vite": "^4.0.0",
 		"vitest": "^0.25.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"apexcharts": "^3.37.1",
+		"svelte-apexcharts": "^1.0.2"
+	}
 }
