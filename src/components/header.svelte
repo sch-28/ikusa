@@ -7,20 +7,30 @@
 	};
 </script>
 
-<header class="flex items-center justify-between px-4 py-4 max-w-7xl mx-auto">
-	<h1 class="text-3xl font-bold">Ikusa</h1>
-	<div class="flex gap-4">
-		<button
-			on:click={() => goto('/dashboard')}
-			class={is_selected('dashboard') ? 'text-gold' : 'text-gold-muted'}>Dashboard</button
+<header class="flex items-center justify-between py-4 ">
+	<div class="flex gap-2 items-end">
+		<a class="text-3xl font-bold mr-2" href="/">Ikusa</a>
+		<a
+			href="/wars"
+			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}>Wars</a
 		>
-		<button
-			on:click={() => goto('/docs')}
-			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted'}>Documentation</button
+		<a
+			href="/players"
+			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
+			>Players</a
 		>
-		<button
-			on:click={() => goto('/login')}
-			class="bg-gold text-black rounded-lg px-2 py-1 font-bold">Log in</button
+		<a
+			href="/guilds"
+			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
+			>Guilds</a
 		>
+	</div>
+	<div class="flex gap-4 items-end h-[2.25rem]">
+		<a
+			href="/documentation"
+			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
+			>Documentation</a
+		>
+		<a href="/login" class="bg-gold text-black rounded-lg px-2 py-1 font-bold">Log in</a>
 	</div>
 </header>
