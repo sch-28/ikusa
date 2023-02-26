@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { chart } from 'svelte-apexcharts';
+	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
+	import Button from '../../components/elements/button.svelte';
+	import Icon from '../../components/elements/icon.svelte';
 
 	let options = {
 		chart: {
@@ -56,7 +59,7 @@
 				fontWeight: 'normal'
 			}
 		},
-		title: {
+		subtitle: {
 			text: 'War Performance',
 			align: 'center',
 			style: {
@@ -120,3 +123,8 @@
 		</div>
 	</div>
 </div>
+
+<Button class="mx-auto">
+	<Icon icon={MdAdd} />
+	Add War
+</Button>
