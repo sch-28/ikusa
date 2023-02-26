@@ -4,6 +4,8 @@
 	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
 	import Button from '../../components/elements/button.svelte';
 	import Icon from '../../components/elements/icon.svelte';
+	import { ModalManager } from '../../components/modal/modal-store';
+	import Upload from '../../components/modal/modals/upload.svelte';
 
 	let options = {
 		chart: {
@@ -124,7 +126,7 @@
 	</div>
 </div>
 
-<Button class="mx-auto">
+<Button class="mx-auto" on:click={() => ModalManager.open(Upload)}>
 	<Icon icon={MdAdd} />
 	Add War
 </Button>
