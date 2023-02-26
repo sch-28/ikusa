@@ -12,4 +12,5 @@
 html {
 	font-family: 'Oswald';
 	@apply text-gold bg-black;
+	color-scheme: dark;
 }
