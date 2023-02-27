@@ -119,14 +119,14 @@ export class War {
 			guild_name: this.guild_name,
 			name: this.name,
 			date: this.date,
-			is_nodewar: this.won,
+			won: this.won,
 			logs: this.logs.map(
 				(e) =>
 					new Log(
 						e.player_one.name,
 						e.player_two.name,
 						e.kill,
-						e.player_two.guild.name,
+						e.local_player_two.local_guild.guild.name,
 						e.time_string
 					)
 			)
@@ -137,7 +137,7 @@ export class War {
 export class Player {
 	locals: Local_Guild_Player[] = [];
 	name: string;
-	guild: Guild;
+	guilds: Guild[] = [];
 	events: Event[] = [];
 
 	kills = 0;
@@ -155,7 +155,7 @@ export class Player {
 	death_events: Event[] = [];
 
 	constructor(name: string, guild: Guild) {
-		this.guild = guild;
+		this.guilds = [guild];
 		this.name = name;
 	}
 
@@ -207,9 +207,10 @@ export class Player {
 	}
 
 	get_participation_percentage() {
-		if (this.guild.locals.length == 0) return 0;
+		const guild_total = this.guilds.reduce((sum, g) => sum + g.locals.length, 0);
+		if (guild_total === 0) return 0;
 
-		return this.get_participation() / this.guild.locals.length;
+		return this.get_participation() / guild_total;
 	}
 }
 
@@ -339,11 +340,11 @@ export class Local_Guild_Player {
 	}
 
 	get_kill_events() {
-		return this.local_events.filter((l) => l.normalized_kill(this.player.guild));
+		return this.local_events.filter((l) => l.normalized_kill(this.local_guild.guild));
 	}
 
 	get_death_events() {
-		return this.local_events.filter((l) => !l.normalized_kill(this.player.guild));
+		return this.local_events.filter((l) => !l.normalized_kill(this.local_guild.guild));
 	}
 
 	get_kd() {
@@ -378,7 +379,9 @@ export class Local_Guild_Player {
 }
 export class Event {
 	player_one: Player;
+	local_player_one!: Local_Guild_Player;
 	player_two: Player;
+	local_player_two!: Local_Guild_Player;
 	kill: boolean;
 	time: Dayjs;
 
@@ -390,7 +393,7 @@ export class Event {
 	}
 
 	normalized_kill(guild: Guild) {
-		if (guild == this.player_one.guild) {
+		if (guild == this.local_player_one.local_guild.guild) {
 			return this.kill;
 		}
 		return !this.kill;
