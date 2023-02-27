@@ -38,7 +38,7 @@
 			if (results) {
 				state = 'edit';
 				war_logs = results;
-				war_name = files[0].name;
+				war_name = files[0].name.split('.')[0];
 				war_date = new Date().toISOString().split('T')[0];
 			}
 		}
