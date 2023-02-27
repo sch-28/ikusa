@@ -220,9 +220,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="flex gap-2 mt-4">
+			<div class="flex gap-2 mt-4 items-center">
 				<Button on:click={save_war} disabled={!form_validity}>Add</Button>
 				<Button color="secondary" on:click={close}>Cancel</Button>
+				<p class="text-red-500">{form_error}</p>
 			</div>
 		</form>
 	{:else if state === 'logs'}
