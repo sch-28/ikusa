@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Dropzone, Input, Label, Select, Toggle } from 'flowbite-svelte';
+	import { Dropzone, Label, Toggle } from 'flowbite-svelte';
 	import { Log } from '../../../logic/data';
 	import { show_toast } from '../../../logic/util';
 	import Button from '../../elements/button.svelte';
+	import Input from '../../elements/input.svelte';
 	import Icon from '../../elements/icon.svelte';
 	import MdDelete from 'svelte-icons/md/MdDelete.svelte';
 	import MdArrowBack from 'svelte-icons/md/MdArrowBack.svelte';
@@ -12,6 +13,7 @@
 	import Autocomplete from '../../elements/auto-complete.svelte';
 	import { Manager } from '../../../logic/manager';
 	import { ModalManager } from '../modal-store';
+	import { afterUpdate } from 'svelte';
 
 	let states = ['upload', 'edit', 'logs'] as const;
 	let state: (typeof states)[number] = 'upload';
@@ -20,10 +22,22 @@
 	$: files && check_files();
 
 	let war_guild_name: string = '';
+	let war_guild_name_suggestions: string[] = [];
+	$: war_guild_name_suggestions = $Manager.guilds
+		.map((guild) => {
+			console.log(guild, guild.name);
+			return guild.name;
+		})
+		.filter((name) => name.toLowerCase().includes(war_guild_name?.toLowerCase()));
+
 	let war_name: string = '';
 	let war_date: string = '';
 	let war_logs: Log[] = [];
 	let war_won: boolean = false;
+
+	let form_validity: boolean = false;
+	let form: HTMLFormElement;
+	let form_error: string = '';
 
 	async function check_files() {
 		console.log(files);
@@ -108,13 +122,27 @@
 			war_won = false;
 			close();
 		} else {
-			show_toast('War already exists', 'error');
+			show_toast(form_error, 'error');
 		}
 	}
 
 	function close() {
 		ModalManager.close();
 	}
+
+	afterUpdate(() => {
+		const valid_war = $Manager.is_valid_war(war_date, war_name);
+		form_validity = valid_war && form && form.checkValidity();
+		console.log(valid_war, form_validity);
+
+		if (!valid_war) {
+			form_error = 'War already exists';
+		} else if (valid_war && !form_validity) {
+			form_error = 'Fill out all inputs';
+		} else {
+			form_error = '';
+		}
+	});
 </script>
 
 <div class="flex flex-col sm:w-[475px] w-80">
@@ -159,7 +187,7 @@
 			<p class="text-xs text-gray-500 400">LOG files</p>
 		</Dropzone>
 	{:else if state === 'edit'}
-		<div class="h-[264px] w-full">
+		<form class="h-[264px] w-full" action="" bind:this={form}>
 			<div class="grid grid-cols-2 gap-2">
 				<div>
 					<Label class="mb-2" for="name">Name</Label>
@@ -179,7 +207,7 @@
 				<div>
 					<Label class="mb-2" for="guild">Guild</Label>
 					<!-- <Select value={undefined} id="guild" items={[]} /> -->
-					<Autocomplete bind:value={war_guild_name} />
+					<Autocomplete bind:value={war_guild_name} items={$Manager.guilds.map(g => g.name)} required />
 				</div>
 				<div>
 					<Label class="mb-2" for="logs">Logs</Label>
@@ -193,10 +221,10 @@
 				</div>
 			</div>
 			<div class="flex gap-2 mt-4">
-				<Button on:click={save_war}>Add</Button>
+				<Button on:click={save_war} disabled={!form_validity}>Add</Button>
 				<Button color="secondary" on:click={close}>Cancel</Button>
 			</div>
-		</div>
+		</form>
 	{:else if state === 'logs'}
 		<div class="h-[264px] w-full overflow-auto">
 			<VirtualList items={war_logs} let:item={log}>
