@@ -15,6 +15,10 @@ const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> =
 
 	if (storedValueStr != null) store.set(ManagerClass.from_json(JSON.parse(storedValueStr)));
 
+	get(store).save_callback = () => {
+		store && store.set(get(store));
+	};
+
 	store.subscribe((val) => {
 		if (val == null || val == undefined) {
 			localStorage.removeItem(key);
@@ -52,6 +56,7 @@ export class ManagerClass {
 	players: Player[];
 	guilds: Guild[];
 	user: User | null;
+	save_callback: (() => void) | undefined;
 
 	constructor() {
 		this.wars = [];
@@ -107,12 +112,17 @@ export class ManagerClass {
 	}
 
 	find_or_create_player(name: string, guild: Guild) {
-		let player = this.players.find((p) => p.name == name && p.guild == guild);
+		let player = this.players.find((p) => p.name == name);
 
 		if (!player) {
 			player = new Player(name, guild);
 			this.players.push(player);
 			guild.players.push(player);
+		} else {
+			if (!player.guilds.includes(guild)) {
+				player.guilds.push(guild);
+				guild.players.push(player);
+			}
 		}
 
 		return player;
@@ -194,7 +204,7 @@ export class ManagerClass {
 
 			// get all joined players and add them to the local guild
 			for (const player of players) {
-				if (player.guild == guild) {
+				if (player.guilds.includes(guild)) {
 					// create new local player
 					const local_player = new Local_Guild_Player(local_guild, player);
 
@@ -208,6 +218,11 @@ export class ManagerClass {
 						if (event.player_one == player || event.player_two == player) {
 							local_player.local_events.push(event);
 							local_guild.local_events.push(event);
+							if (event.player_one == player) {
+								event.local_player_one = local_player;
+							} else {
+								event.local_player_two = local_player;
+							}
 						}
 					}
 				}
@@ -217,6 +232,7 @@ export class ManagerClass {
 		// Prevents empty guilds (happens if guild name changes mid fight)
 		war.local_guilds = war.local_guilds.filter((g) => g.local_players.length > 0);
 		war.update();
+		this.save_callback?.();
 		return war;
 	}
 
