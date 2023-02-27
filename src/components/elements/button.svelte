@@ -4,11 +4,13 @@
 		class?: string;
 		id?: string;
 		color?: 'primary' | 'secondary';
+		disabled?: boolean;
 	}
 </script>
 
 <Button
 	on:click
+	disabled={$$props.disabled || false}
 	id={$$props.id}
 	btnClass="
 	{$$props.color === 'primary' || (!$$props.color && 'bg-gold-300 focus:ring-gold-400 text-black')}
