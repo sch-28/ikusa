@@ -69,5 +69,5 @@
 </script>
 
 <div class="h-80">
-	<Table {header} {rows} />
+	<Table {header} {rows} searchable />
 </div>
