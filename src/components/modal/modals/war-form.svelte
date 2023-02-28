@@ -241,7 +241,7 @@
 				<div>
 					<Label class="mb-2" for="name">Name</Label>
 					<Input
-						class="input is-dark"
+						class="w-full"
 						type="text"
 						placeholder="Enter war name"
 						id="name"
@@ -251,11 +251,12 @@
 				</div>
 				<div>
 					<Label class="mb-2" for="date">Date</Label>
-					<Input class="input is-dark " type="date" id="date" required bind:value={war_date} />
+					<Input class="w-full" type="date" id="date" required bind:value={war_date} />
 				</div>
 				<div>
 					<Label class="mb-2" for="guild">Guild</Label>
 					<Autocomplete
+						input_class="w-full"
 						bind:value={war_guild_name}
 						items={$Manager.guilds.map((g) => g.name)}
 						required

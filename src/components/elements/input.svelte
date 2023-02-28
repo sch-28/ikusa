@@ -7,6 +7,7 @@
 		value?: string | number;
 		placeholder?: string;
 		input?: HTMLInputElement;
+		size?: 'sm' | 'md' | 'lg';
 	}
 	export let value: string | number = '';
 	export let type: string = 'text';
@@ -26,5 +27,6 @@
 	id={$$props.id}
 	on:input={handleInput}
 	on:focus
-	class="outline-none block w-full disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-blue-500 focus:!ring-blue-500 bg-gray-700 text-white placeholder-gray-400 border-gray-600 p-2.5 text-sm rounded-lg {$$props.class}"
+	class="{$$props.size === 'sm' ? 'py-1.5 px-2 text-xs' : $$props.size === 'lg' ? 'py-3 px-4' : 'p-2.5'}
+	outline-none block disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-blue-500 focus:!ring-blue-500 bg-gray-700 text-white placeholder-gray-400 border-gray-600 text-sm rounded-lg {$$props.class}"
 />

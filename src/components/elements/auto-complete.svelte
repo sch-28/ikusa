@@ -2,6 +2,15 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { click_outside } from '../../logic/util';
 	import Input from './input.svelte';
+
+	interface $$Props {
+		input_class?: string;
+		items?: string[];
+		value?: string;
+		placeholder?: string;
+		required?: boolean;
+	}
+
 	export let items: string[] = [];
 	export let value = '';
 	export let placeholder = '';
@@ -30,7 +39,6 @@
 			.splice(0, 3)
 			.map((item) => ({ name: item, button: undefined }));
 
-		console.log(suggestions, show_suggestions);
 		selected_suggestion = -1;
 	}
 
@@ -81,6 +89,7 @@
 
 <div use:click_outside on:click_outside={() => (show_suggestions = false)}>
 	<Input
+		class={$$props.input_class}
 		bind:value
 		on:change
 		{required}
