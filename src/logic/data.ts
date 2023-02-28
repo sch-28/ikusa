@@ -383,12 +383,14 @@ export class Event {
 	local_player_two!: Local_Guild_Player;
 	kill: boolean;
 	time: Dayjs;
+	time_string: string;
 
-	constructor(p1: Player, p2: Player, kill: boolean, time: Dayjs) {
+	constructor(p1: Player, p2: Player, kill: boolean, time_string: string) {
 		this.player_one = p1;
 		this.player_two = p2;
 		this.kill = kill;
-		this.time = time;
+		this.time_string = time_string;
+		this.time = dayjs(time_string, 'HH:mm:ss');
 	}
 
 	normalized_kill(guild: Guild) {
@@ -396,10 +398,6 @@ export class Event {
 			return this.kill;
 		}
 		return !this.kill;
-	}
-
-	get time_string() {
-		return this.time.format('HH:mm:ss');
 	}
 }
 

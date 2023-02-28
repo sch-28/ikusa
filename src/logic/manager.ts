@@ -150,7 +150,7 @@ export class ManagerClass {
 
 			// players.push(player_one, player_two);
 			players.add(player_one).add(player_two);
-			const event = new Event(player_one, player_two, log.kill, dayjs(log.time, 'HH:mm:ss'));
+			const event = new Event(player_one, player_two, log.kill, log.time);
 			player_one.events.push(event);
 			player_two.events.push(event);
 
