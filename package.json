@@ -36,10 +36,12 @@
 	"type": "module",
 	"dependencies": {
 		"@popperjs/core": "^2.11.6",
+		"@sveltejs/adapter-node": "^1.2.0",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"apexcharts": "^3.37.1",
 		"classnames": "^2.3.2",
 		"dayjs": "^1.11.7",
+		"flatted": "^3.2.7",
 		"flowbite": "^1.6.3",
 		"flowbite-svelte": "^0.30.4",
 		"svelte-apexcharts": "^1.0.2",
