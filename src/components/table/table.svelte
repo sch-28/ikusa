@@ -97,7 +97,6 @@
 
 		sorted_rows = sorted_rows.filter((row) => {
 			if (!search_string) return true;
-			console.log(row);
 
 			return row.columns.some((column) => {
 				if (typeof column === 'string') {

@@ -9,7 +9,6 @@ export function show_toast(message: string, type: 'success' | 'error') {
 	});
 }
 
-
 export async function sleep(ms?: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -31,7 +30,7 @@ export const click_outside: Action = (node) => {
 };
 
 function measure_scrollbar() {
-	if(!browser) return;
+	if (!browser) return;
 	const div = document.createElement('div');
 	div.style.width = '100px';
 	div.style.height = '100px';
@@ -45,3 +44,7 @@ function measure_scrollbar() {
 }
 
 export const scrollbar_width = measure_scrollbar();
+
+export function format(number: number, places = 2) {
+	return +number.toFixed(places);
+}

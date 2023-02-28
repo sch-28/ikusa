@@ -11,7 +11,6 @@
 	function open_edit(war: War) {
 		ModalManager.open(WarForm, { war: war });
 	}
-
 </script>
 
 <div class="flex justify-between mb-4">
@@ -21,7 +20,7 @@
 
 <div class="flex flex-col">
 	{#each $Manager.wars as war}
-		<div class="flex gap-2 hover:bg-gray-700 rounded-lg p-2 cursor-pointer">
+		<a class="flex gap-2 hover:bg-gray-700 rounded-lg p-2 cursor-pointer" href="/wars/{war.id}">
 			<!-- <div class="w-5 h-5">
 <Checkbox />
 </div> -->
@@ -37,6 +36,6 @@
 			<button on:click={() => open_edit(war)} class="ml-auto"
 				><Icon icon={MdSettings} class="self-center " /></button
 			>
-		</div>
+		</a>
 	{/each}
 </div>

@@ -108,7 +108,6 @@ export class War {
 		if (logs.length < 2) return 0;
 
 		logs.sort((a, b) => (b.time <= a.time ? 1 : -1));
-
 		const start = logs[0].time;
 		const end = logs[logs.length - 1].time;
 		return end.diff(start, 'minutes');
