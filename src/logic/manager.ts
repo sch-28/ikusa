@@ -1,47 +1,11 @@
-import { browser } from '$app/environment';
 import dayjs from 'dayjs';
-import type { Writable } from 'svelte/store';
-
-import { writable, get } from 'svelte/store';
+import { parse } from 'flatted';
+import { LoaderManager } from '../components/loader/loader-store';
 import { Log, War, Player, Guild, Local_Guild, Local_Guild_Player, Event } from './data';
+import type { ManagerUpdated, UpdateManager, UpdateProgress } from './manager-worker';
 import type { User } from './user';
 
-const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> => {
-	const store = writable(initValue);
 
-	if (!browser) return store;
-
-	const storedValueStr = localStorage.getItem(key);
-
-	if (storedValueStr != null) store.set(ManagerClass.from_json(JSON.parse(storedValueStr)));
-
-	get(store).save_callback = () => {
-		store && store.set(get(store));
-	};
-
-	store.subscribe((val) => {
-		if (val == null || val == undefined) {
-			localStorage.removeItem(key);
-		} else {
-			localStorage.setItem(key, val.get_json());
-		}
-	});
-
-	window.addEventListener('storage', () => {
-		const storedValueStr = localStorage.getItem(key);
-
-		if (storedValueStr == null) return;
-
-		const localValue = ManagerClass.from_json(JSON.parse(storedValueStr));
-
-		// might need to implemenet compare function
-		if (localValue !== get(store)) store.set(localValue);
-	});
-
-	return store;
-};
-
-export default storage;
 
 export interface War_JSON {
 	guild_name: string;
@@ -57,6 +21,7 @@ export class ManagerClass {
 	guilds: Guild[];
 	user: User | null;
 	save_callback: (() => void) | undefined;
+	worker: Worker | undefined;
 
 	constructor() {
 		this.wars = [];
@@ -93,13 +58,6 @@ export class ManagerClass {
 		}
 	}
 
-	/* delete_war(id: number) {
-		//TODO
-		console.log(this.wars.length);
-		this.wars = this.wars.filter((w) => w.id != id);
-		console.log(this.wars.length);
-	} */
-
 	find_or_create_guild(name: string) {
 		let guild = this.guilds.find((g) => g.name == name);
 
@@ -128,12 +86,11 @@ export class ManagerClass {
 		return player;
 	}
 
-	static from_json(json: { wars: War_JSON[] }) {
+	static from_json(wars: War_JSON[], browser = true) {
 		const manager = new ManagerClass();
-		for (const war of json.wars) {
-			war.logs = war.logs.map(
-				(l) => new Log(l.player_one, l.player_two, l.is_kill, l.guild, l.time)
-			);
+
+		for (const [index, war] of wars.entries()) {
+			war.logs = war.logs.map((l) => new Log(l.player_one, l.player_two, l.kill, l.guild, l.time));
 			manager.add_war({
 				guild_name: war.guild_name,
 				name: war.name,
@@ -141,6 +98,13 @@ export class ManagerClass {
 				won: war.won,
 				logs: war.logs
 			});
+			if (!browser) {
+				const message: UpdateProgress = {
+					msg: 'update_progress',
+					data: { progress: Math.floor(((index + 1) / wars.length) * 100) }
+				};
+				postMessage(message);
+			}
 		}
 		return manager;
 	}
@@ -151,7 +115,7 @@ export class ManagerClass {
 			json_wars.push(war.to_json());
 		}
 
-		return JSON.stringify({ wars: json_wars });
+		return JSON.stringify(json_wars);
 	}
 
 	add_war({
@@ -168,7 +132,7 @@ export class ManagerClass {
 		logs: Log[];
 	}) {
 		if (this.wars.find((war) => war.id == date + name)) {
-			return null;
+			return undefined;
 		}
 
 		const events: Event[] = [];
@@ -186,7 +150,7 @@ export class ManagerClass {
 
 			// players.push(player_one, player_two);
 			players.add(player_one).add(player_two);
-			const event = new Event(player_one, player_two, log.is_kill, dayjs(log.time, 'HH:mm:ss'));
+			const event = new Event(player_one, player_two, log.kill, dayjs(log.time, 'HH:mm:ss'));
 			player_one.events.push(event);
 			player_two.events.push(event);
 
@@ -236,6 +200,80 @@ export class ManagerClass {
 		return war;
 	}
 
+	reset() {
+		this.wars = [];
+		this.players = [];
+		this.guilds = [];
+	}
+
+	async update_war(
+		war: War,
+		{
+			name,
+			date,
+			logs,
+			won,
+			guild_name
+		}: { name: string; date: string; logs: Log[]; won: boolean; guild_name: string }
+	) {
+		if (war.id != date + name) {
+			if (!this.is_valid_war(date, name)) {
+				return undefined;
+			}
+		}
+
+		const wars = this.wars.filter((w) => w != war);
+		const wars_json = wars.map((w) => w.to_json());
+
+		await this.update_data([...wars_json, { guild_name, name, date, won, logs }]);
+
+		return this.wars.find((w) => w.id == date + name);
+	}
+
+	async delete_war(war: War) {
+		const wars = this.wars.filter((w) => w != war);
+		const wars_json = wars.map((w) => w.to_json());
+		await this.update_data(wars_json);
+	}
+
+	async update_data(wars: War_JSON[]) {
+		if (!this.worker) return;
+		this.reset();
+
+		LoaderManager.set_status('Updating data...', 0);
+		LoaderManager.open();
+
+		const message: UpdateManager = {
+			msg: 'update_manager',
+			data: {
+				wars: wars
+			}
+		};
+		let resolve!: (manager: ManagerClass | undefined) => void;
+		const promise = new Promise<ManagerClass | undefined>((res) => (resolve = res));
+
+		this.worker.onmessage = ({ data }: MessageEvent<ManagerUpdated | UpdateProgress>) => {
+			if (data.msg === 'manager_updated') {
+				resolve(parse(data.data?.manager));
+			} else if (data.msg === 'update_progress') {
+				LoaderManager.set_status('Updating wars...', data.data?.progress);
+			}
+		};
+
+		this.worker.postMessage(message);
+		const new_manager = await promise;
+
+		if (!new_manager) return;
+
+		this.wars = new_manager.wars.map((war) => Object.assign(new War('', '', '', false, []), war));
+		this.players = new_manager.players.map((player) =>
+			Object.assign(new Player('', new Guild('')), player)
+		);
+		this.guilds = new_manager.guilds.map((guild) => Object.assign(new Guild(''), guild));
+		this.save_callback?.();
+		LoaderManager.close();
+	}
+
 	is_valid_war(date: string, name: string) {
 		if (this.wars.find((war) => war.id == date + name)) {
 			return false;
@@ -243,5 +281,3 @@ export class ManagerClass {
 		return true;
 	}
 }
-
-export const Manager = storage('manager', new ManagerClass());

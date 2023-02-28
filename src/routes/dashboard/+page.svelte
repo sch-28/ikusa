@@ -5,7 +5,7 @@
 	import Button from '../../components/elements/button.svelte';
 	import Icon from '../../components/elements/icon.svelte';
 	import { ModalManager } from '../../components/modal/modal-store';
-	import Upload from '../../components/modal/modals/upload.svelte';
+	import Upload from '../../components/modal/modals/war-form.svelte';
 
 	let options = {
 		chart: {
@@ -126,7 +126,7 @@
 	</div>
 </div>
 
-<Button class="mx-auto" on:click={() => ModalManager.open(Upload)}>
+<Button class="mx-auto" on:click={() => ModalManager.open(Upload,{war: undefined})}>
 	<Icon icon={MdAdd} />
 	Add War
 </Button>

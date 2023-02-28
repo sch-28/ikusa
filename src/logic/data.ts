@@ -407,14 +407,14 @@ export class Event {
 export class Log {
 	player_one: string;
 	player_two: string;
-	is_kill: boolean;
+	kill: boolean;
 	guild: string;
 	time: string;
 
 	constructor(p1: string, p2: string, kill: boolean, guild: string, time: string) {
 		this.player_one = p1;
 		this.player_two = p2;
-		this.is_kill = kill;
+		this.kill = kill;
 		this.guild = guild;
 		if (this.guild == '-1') {
 			this.guild = 'No Guild';
@@ -431,5 +431,18 @@ export class Log {
 		}
 
 		throw new Error(`Invalid Log: ${log}`);
+	}
+
+	static parse_logs(events: Event[]) {
+		return events.map(
+			(l) =>
+				new Log(
+					l.player_one.name,
+					l.player_two.name,
+					l.kill,
+					l.local_player_two.local_guild.guild.name,
+					l.time_string
+				)
+		);
 	}
 }
