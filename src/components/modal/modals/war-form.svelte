@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Dropzone, Label, Toggle } from 'flowbite-svelte';
-	import { Log } from '../../../logic/data';
+	import { Log, War } from '../../../logic/data';
 	import { show_toast } from '../../../logic/util';
 	import Button from '../../elements/button.svelte';
 	import Input from '../../elements/input.svelte';
@@ -11,12 +11,37 @@
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import VirtualList from '@sveltejs/svelte-virtual-list';
 	import Autocomplete from '../../elements/auto-complete.svelte';
-	import { Manager } from '../../../logic/manager';
 	import { ModalManager } from '../modal-store';
 	import { afterUpdate } from 'svelte';
+	import { Manager } from '../../../logic/stores';
+
+	let war_name: string = '';
+	let war_date: string = '';
+	let war_logs: Log[] = [];
+	let war_won: boolean = false;
 
 	let states = ['upload', 'edit', 'logs'] as const;
-	let state: (typeof states)[number] = 'upload';
+	let state: (typeof states)[number] = 'edit';
+	export let war: War | undefined = undefined;
+
+	$: {
+		war;
+		set_state();
+	}
+
+	function set_state() {
+		if (war) {
+			state = 'edit';
+			war_date = war.date;
+			war_name = war.name;
+			war_won = war.won;
+			war_guild_name = war.guild_name;
+			war_logs = Log.parse_logs(war.logs);
+		} else {
+			state = 'upload';
+		}
+	}
+
 	let files: FileList | undefined = undefined;
 
 	$: files && check_files();
@@ -25,22 +50,15 @@
 	let war_guild_name_suggestions: string[] = [];
 	$: war_guild_name_suggestions = $Manager.guilds
 		.map((guild) => {
-			console.log(guild, guild.name);
 			return guild.name;
 		})
 		.filter((name) => name.toLowerCase().includes(war_guild_name?.toLowerCase()));
-
-	let war_name: string = '';
-	let war_date: string = '';
-	let war_logs: Log[] = [];
-	let war_won: boolean = false;
 
 	let form_validity: boolean = false;
 	let form: HTMLFormElement;
 	let form_error: string = '';
 
 	async function check_files() {
-		console.log(files);
 		if (files && files.length > 0) {
 			if (files.length > 1) {
 				console.log('Multiple files not supported yet');
@@ -85,7 +103,7 @@
 	}
 
 	function go_back() {
-		if (state === 'edit') {
+		if (state === 'edit' && war === undefined) {
 			state = 'upload';
 			files = undefined;
 			war_name = '';
@@ -103,37 +121,59 @@
 		war_logs = war_logs;
 	}
 
-	function save_war() {
-		const result = $Manager.add_war({
-			guild_name: war_guild_name,
-			name: war_name,
-			date: war_date,
-			won: war_won,
-			logs: war_logs
-		});
+	async function save_war() {
+		let result: War | undefined = undefined;
+		close();
+
+		if (war) {
+			result = await $Manager.update_war(war, {
+				guild_name: war_guild_name,
+				name: war_name,
+				date: war_date,
+				won: war_won,
+				logs: war_logs
+			});
+			if (result) show_toast('War updated successfully', 'success');
+		} else {
+			result = await $Manager.add_war({
+				guild_name: war_guild_name,
+				name: war_name,
+				date: war_date,
+				won: war_won,
+				logs: war_logs
+			});
+
+			if (result) show_toast('War added successfully', 'success');
+		}
 
 		if (result) {
-			show_toast('War added successfully', 'success');
 			state = 'upload';
 			files = undefined;
 			war_name = '';
 			war_date = '';
 			war_logs = [];
 			war_won = false;
-			close();
 		} else {
 			show_toast(form_error, 'error');
 		}
 	}
 
+	function delete_war() {
+		if (war) {
+			$Manager.delete_war(war);
+			close();
+		}
+	}
+
 	function close() {
+		war_guild_name_suggestions = [];
 		ModalManager.close();
 	}
 
 	afterUpdate(() => {
-		const valid_war = $Manager.is_valid_war(war_date, war_name);
+		const valid_war =
+			$Manager.is_valid_war(war_date, war_name) || (war !== undefined && war.name === war_name);
 		form_validity = valid_war && form && form.checkValidity();
-		console.log(valid_war, form_validity);
 
 		if (!valid_war) {
 			form_error = 'War already exists';
@@ -153,11 +193,20 @@
 				: 'cursor-default'}"
 			on:click={go_back}
 		>
-			{#if state !== 'upload'}
+			{#if state !== 'upload' && (state !== 'edit' || war === undefined)}
 				<Icon icon={MdArrowBack} class="self-center" />
 			{/if}
-			Add War /<span class="text-sm"> {state}</span>
+			<span class="shrink-0">Add War /</span><span class="text-sm"> {state}</span>
+
+			{#if war !== undefined}
+				<span class="text-sm truncate mr-2">{war.name}</span>
+			{/if}
 		</button>
+		{#if state === 'edit' && war !== undefined}
+			<button on:click={delete_war} class="ml-auto">
+				<Icon icon={MdDelete} class="self-center text-red-500" />
+			</button>
+		{/if}
 	</div>
 	{#if state === 'upload'}
 		<Dropzone
@@ -206,8 +255,11 @@
 				</div>
 				<div>
 					<Label class="mb-2" for="guild">Guild</Label>
-					<!-- <Select value={undefined} id="guild" items={[]} /> -->
-					<Autocomplete bind:value={war_guild_name} items={$Manager.guilds.map(g => g.name)} required />
+					<Autocomplete
+						bind:value={war_guild_name}
+						items={$Manager.guilds.map((g) => g.name)}
+						required
+					/>
 				</div>
 				<div>
 					<Label class="mb-2" for="logs">Logs</Label>
@@ -221,7 +273,7 @@
 				</div>
 			</div>
 			<div class="flex gap-2 mt-4 items-center">
-				<Button on:click={save_war} disabled={!form_validity}>Add</Button>
+				<Button on:click={save_war} disabled={!form_validity}>{war ? 'Update' : 'Add'}</Button>
 				<Button color="secondary" on:click={close}>Cancel</Button>
 				<p class="text-red-500">{form_error}</p>
 			</div>
@@ -233,7 +285,7 @@
 					<p class="text-sm text-gray-400">{log.time}:</p>
 					<p>{log.player_one}</p>
 					<div class="flex justify-center items-center">
-						{#if log.is_kill}
+						{#if log.kill}
 							<Icon icon={GiBroadsword} class="self-center text-submarine-500" />
 						{:else}
 							<Icon icon={GiSkullCrack} class="self-center text-red-500" />
