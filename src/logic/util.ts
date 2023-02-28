@@ -1,5 +1,6 @@
 import type { Action } from 'svelte/types/runtime/action';
 import toast from 'svelte-french-toast';
+import { browser } from '$app/environment';
 
 export function show_toast(message: string, type: 'success' | 'error') {
 	toast[type](message, {
@@ -28,3 +29,19 @@ export const click_outside: Action = (node) => {
 		}
 	};
 };
+
+function measure_scrollbar() {
+	if(!browser) return;
+	const div = document.createElement('div');
+	div.style.width = '100px';
+	div.style.height = '100px';
+	div.style.overflow = 'scroll';
+	div.style.position = 'absolute';
+	div.style.top = '-9999px';
+	document.body.appendChild(div);
+	const scrollbarWidth = div.offsetWidth - div.clientWidth;
+	document.body.removeChild(div);
+	return scrollbarWidth;
+}
+
+export const scrollbar_width = measure_scrollbar();
