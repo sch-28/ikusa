@@ -22,7 +22,7 @@
 
 	$: grid_template =
 		`grid-template-columns:` +
-		header.map((column) => `minmax(100px, ${column.width ?? 1}fr)`).join(' ') +
+		header.map((column) => `minmax(75px, ${column.width ?? 1}fr)`).join(' ') +
 		';';
 
 	$: {
@@ -125,21 +125,21 @@
 		style={grid_template + `padding-right:${scrollbar_width}px`}
 		bind:this={header_element}
 	>
-		{#each header as head}
+		{#each header as head, index}
 			<button
-				class="max-w-full flex items-center font-bold {head.sortable
-					? 'cursor-pointer'
-					: 'cursor-default'}"
+				class="max-w-full flex items-center font-bold 
+				{index > 0 ? 'justify-self-center' : ''}
+				{head.sortable ? 'cursor-pointer' : 'cursor-default'}"
 				on:click={() => handle_sort_change(head)}
 			>
-				<span>{head.label}</span>
+				<span class="truncate" title={head.label}>{head.label}</span>
 				{#if head.sortable}
 					{#if head.sort_dir === 'asc'}
-						<Icon icon={FaSortUp} />
+						<Icon class="hidden sm:block" icon={FaSortUp} />
 					{:else if head.sort_dir === 'desc'}
-						<Icon icon={FaSortDown} />
+						<Icon class="hidden sm:block" icon={FaSortDown} />
 					{:else}
-						<Icon icon={FaSort} />
+						<Icon class="hidden sm:block" icon={FaSort} />
 					{/if}
 				{/if}
 			</button>
@@ -149,11 +149,13 @@
 	<VirtualList items={sorted_rows} let:item={row}>
 		<button
 			on:click={row.onclick}
-			class="justify-items-start grid w-full text-gold-muted hover:text-gold"
+			class="grid w-full text-gold-muted hover:text-gold"
 			style={grid_template}
 		>
-			{#each row.columns as column}
-				<div class="max-w-full">{column}</div>
+			{#each row.columns as column, index}
+				<div class="max-w-full {index > 0 ? 'justify-self-center' : 'justify-self-start'}">
+					{column}
+				</div>
 			{/each}
 		</button>
 	</VirtualList>

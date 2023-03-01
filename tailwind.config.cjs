@@ -6,6 +6,9 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			screens:{
+				xs: '500px',
+			},
 			colors: {
 				gold: {
 					DEFAULT: '#f5cd40',

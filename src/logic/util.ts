@@ -46,5 +46,5 @@ function measure_scrollbar() {
 export const scrollbar_width = measure_scrollbar();
 
 export function format(number: number, places = 2) {
-	return +number.toFixed(places);
+	return +number?.toFixed(places);
 }

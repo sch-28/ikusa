@@ -5,12 +5,7 @@
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import { ModalManager } from '../../components/modal/modal-store';
 	import WarForm from '../../components/modal/modals/war-form.svelte';
-	import type { War } from '../../logic/data';
 	import { Manager } from '../../logic/stores';
-
-	function open_edit(war: War) {
-		ModalManager.open(WarForm, { war: war });
-	}
 </script>
 
 <div class="flex justify-between mb-4">
@@ -33,7 +28,7 @@
 				<div class="text-xs text-gray-500">{war.date}</div>
 			</div>
 
-			<button on:click={() => open_edit(war)} class="ml-auto"
+			<button on:click={() => ModalManager.open(WarForm, { war: war })} class="ml-auto"
 				><Icon icon={MdSettings} class="self-center " /></button
 			>
 		</a>
