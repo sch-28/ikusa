@@ -5,12 +5,14 @@
 	import WarForm from '../../../components/modal/modals/war-form.svelte';
 	import type { HeaderColumn, Row } from '../../../components/table/table';
 	import Table from '../../../components/table/table.svelte';
-	import type { War } from '../../../logic/data';
+	import type { Local_Guild, War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
 	import { format } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
+
+	let selected_guild: Local_Guild | undefined;
 
 	const header: HeaderColumn<string>[] = [
 		{ label: 'Name', width: 3, sortable: true },
@@ -19,28 +21,37 @@
 		{ label: 'Performance', width: 1, sortable: true },
 		{ label: 'Joined', width: 1, sortable: true }
 	];
-	const rows: Row[] = [];
+	let rows: Row[] = [];
 
 	let war: War | undefined;
 	$: {
 		const id = $page.params.id;
 		if (id) {
 			war = $Manager.get_war(id);
+			update_rows();
+		}
+	}
 
-			if (war) {
-				rows.splice(0, rows.length);
-				for (const local_player of war.local_players) {
-					rows.push({
-						columns: [
-							local_player.player.name,
-							local_player.kills,
-							local_player.deaths,
-							format(local_player.performance),
-							format(local_player.duration_percentage * 100)
-						]
-					});
-				}
+	$: {
+		selected_guild;
+		update_rows();
+	}
+
+	function update_rows() {
+		if (war) {
+			rows.splice(0, rows.length);
+			for (const local_player of selected_guild?.local_players ?? war.local_players) {
+				rows.push({
+					columns: [
+						local_player.player.name,
+						local_player.kills,
+						local_player.deaths,
+						format(local_player.performance),
+						format(local_player.duration_percentage * 100)
+					]
+				});
 			}
+			rows = rows;
 		}
 	}
 </script>
@@ -70,7 +81,11 @@
 			class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-1 gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2"
 		>
 			{#each war.local_guilds as local_guild}
-				<div class="flex flex-col p-2 border border-gold rounded-lg min-w-0">
+				<button
+					class="flex flex-col p-2 border border-gold rounded-lg min-w-0"
+					on:click={() =>
+						(selected_guild = selected_guild === local_guild ? undefined : local_guild)}
+				>
 					<div class="flex flex-col">
 						<!-- <img src={local_guild.guild.icon} class="w-[5rem] h-[5rem]" /> -->
 						<div class="text-lg truncate font-bold">{local_guild.guild.name}</div>
@@ -87,11 +102,16 @@
 						<div class="">{format(local_guild.duration * 100)}</div>
 						<div class="">Joined</div>
 					</div>
-				</div>
+				</button>
 			{/each}
 		</div>
 		<div class="w-full h-[30rem]">
-			<Table {header} {rows} searchable />
+			<Table
+				{header}
+				{rows}
+				searchable
+				title={(selected_guild?.guild.name ?? 'All') + ' Players'}
+			/>
 		</div>
 	</div>
 {/if}

@@ -12,12 +12,19 @@
 	export let header: HeaderColumn<any>[] = [];
 	export let rows: Row[] = [];
 	export let searchable: boolean = false;
+	export let title: string = '';
 
 	let sorted_rows: Row[] = [];
 	let search_string: string = '';
 	let header_element: HTMLDivElement;
 	let current_sort: HeaderColumn<any> | undefined = undefined;
 	let v_list: HTMLDivElement;
+
+	$: {
+		header;
+		rows;
+		handle_sort();
+	}
 
 	$: grid_template =
 		`grid-template-columns:` +
@@ -108,11 +115,15 @@
 			});
 		});
 
+		scroll_top();
+	}
+
+	function scroll_top() {
 		if (v_list) v_list.scrollTop = 0;
 	}
 </script>
 
-<div class="overflow-x-auto h-full flex flex-col min-w-0 p-2 -m-2">
+<div class="overflow-x-auto h-full flex flex-col min-w-0 relative">
 	{#if searchable}
 		<Input
 			class="mb-2 max-w-[12rem] shrink"
@@ -121,6 +132,7 @@
 			size="sm"
 		/>
 	{/if}
+	<div class="absolute left-1/2 -translate-x-1/2 text-xl font-bold">{title}</div>
 	<div
 		class="items-start grid w-full min-w-0"
 		style={grid_template + `padding-right:${scrollbar_width}px`}
