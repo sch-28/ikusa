@@ -256,7 +256,7 @@ export class ManagerClass {
 			if (data.msg === 'manager_updated') {
 				resolve(parse(data.data?.manager));
 			} else if (data.msg === 'update_progress') {
-				LoaderManager.set_status('Updating wars...', data.data?.progress);
+				LoaderManager.set_status('Updating data...', data.data?.progress);
 			}
 		};
 
