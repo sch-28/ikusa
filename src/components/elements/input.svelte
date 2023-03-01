@@ -28,5 +28,5 @@
 	on:input={handleInput}
 	on:focus
 	class="{$$props.size === 'sm' ? 'py-1.5 px-2 text-xs' : $$props.size === 'lg' ? 'py-3 px-4' : 'p-2.5'}
-	outline-none block disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-blue-500 focus:!ring-blue-500 bg-gray-700 text-white placeholder-gray-400 border-gray-600 text-sm rounded-lg {$$props.class}"
+	outline-none block disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-gold focus:!ring-gold bg-black text-white placeholder-gray-400 border-gold text-sm rounded-lg {$$props.class}"
 />
