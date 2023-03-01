@@ -14,11 +14,10 @@
 	export let searchable: boolean = false;
 
 	let sorted_rows: Row[] = [];
-
 	let search_string: string = '';
-
 	let header_element: HTMLDivElement;
 	let current_sort: HeaderColumn<any> | undefined = undefined;
+	let v_list: HTMLDivElement;
 
 	$: grid_template =
 		`grid-template-columns:` +
@@ -31,6 +30,7 @@
 	}
 
 	onMount(() => {
+		v_list = document.querySelector('svelte-virtual-list-viewport') as HTMLDivElement;
 		handle_resize();
 		sorted_rows = rows;
 		window.addEventListener('resize', handle_resize);
@@ -41,7 +41,6 @@
 	});
 
 	function handle_resize() {
-		const v_list = document.querySelector('svelte-virtual-list-viewport') as HTMLDivElement;
 		v_list.style.width = header_element.scrollWidth + 'px';
 	}
 
@@ -108,6 +107,8 @@
 				}
 			});
 		});
+
+		if (v_list) v_list.scrollTop = 0;
 	}
 </script>
 
