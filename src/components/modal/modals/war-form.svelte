@@ -214,7 +214,7 @@
 			on:drop={handle_drop}
 			on:dragover={(event) => event.preventDefault()}
 			id="dropzone"
-			defaultClass="h-[264px] flex flex-col justify-center items-center w-full bg-black rounded-lg border-2 border-gold border-dashed cursor-pointer"
+			defaultClass="h-[264px] flex flex-col justify-center items-center w-full bg-black rounded-lg cursor-pointer"
 		>
 			<svg
 				aria-hidden="true"
