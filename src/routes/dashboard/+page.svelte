@@ -2,75 +2,20 @@
 	import { browser } from '$app/environment';
 	import { chart } from 'svelte-apexcharts';
 	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
+	import Chart from '../../components/chart/chart.svelte';
 	import Button from '../../components/elements/button.svelte';
 	import Icon from '../../components/elements/icon.svelte';
 	import { ModalManager } from '../../components/modal/modal-store';
 	import Upload from '../../components/modal/modals/war-form.svelte';
 
-	let options = {
-		chart: {
-			type: 'area',
-			animations: {
-				enabled: false,
-				easing: 'easeout',
-				speed: 500
-			},
-			toolbar: {
-				show: false
-			},
-			fontFamily: 'inherit',
-			foreColor: '#f5cd40'
-		},
-		series: [
-			{
-				name: 'sales',
-				data: [1.2, 2.1, 0.8, 1.5, 1.7, 1.6, 1.5, 2, 1.9]
-			}
-		],
-		xaxis: {
-			categories: ['19.02', '21.02', '25.02', '26.02', '28.02', '03.03', '04.03', '07.03', '10.03']
-		},
-		fill: {
-			colors: ['#bd8e28']
-		},
-		colors: ['#f5cd40'],
-		tooltip: {
-			enabled: true,
-			theme: 'dark',
-			x: {
-				show: true,
-				format: 'yyyy'
-			},
-			y: {
-				title: {
-					formatter: function () {
-						return 'Sales: ';
-					}
-				}
-			}
-		},
-		toolbar: {
-			show: false
-		},
-		dataLabels: {
-			enabled: true,
-			style: {
-				colors: ['#333'],
-				fontSize: '10px',
-				fontFamily: 'inherit',
-				fontWeight: 'normal'
-			}
-		},
-		subtitle: {
-			text: 'War Performance',
-			align: 'center',
-			style: {
-				fontSize: '16px',
-				fontFamily: 'inherit',
-				fontWeight: 'bold'
-			}
+	const data = [
+		{
+			name: 'sales',
+			data: [1.2, 2.1, 0.8, 1.5, 1.7, 1.6, 1.5, 2, 1.9]
 		}
-	};
+	];
+
+	const labels = ['19.02', '21.02', '25.02', '26.02', '28.02', '03.03', '04.03', '07.03', '10.03'];
 </script>
 
 <div class="flex justify-between mb-4">
@@ -78,7 +23,8 @@
 	<p>Last login: 2 days ago</p>
 </div>
 <div class="sm:flex gap-2 items-center">
-	<div use:chart={options} class="flex-grow" />
+	<!-- <div use:chart={options} class="flex-grow" /> -->
+	<Chart type="area" {data} {labels} title="Performance" />
 	<div class="grid grid-cols-2 gap-2 mx-auto h-fit w-fit">
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">General Stats</p>
@@ -126,7 +72,7 @@
 	</div>
 </div>
 
-<Button class="mx-auto" on:click={() => ModalManager.open(Upload,{war: undefined})}>
+<Button class="mx-auto" on:click={() => ModalManager.open(Upload, { war: undefined })}>
 	<Icon icon={MdAdd} />
 	Add War
 </Button>
