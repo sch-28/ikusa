@@ -13,6 +13,9 @@
 	export let rows: Row[] = [];
 	export let searchable: boolean = false;
 	export let title: string = '';
+	export let height: number = 300;
+
+	export let instance: HTMLDivElement | undefined = undefined;
 
 	let sorted_rows: Row[] = [];
 	let search_string: string = '';
@@ -21,8 +24,10 @@
 	let v_list: HTMLDivElement;
 
 	$: {
+		height;
 		header;
 		rows;
+		search_string;
 		handle_sort();
 	}
 
@@ -30,11 +35,6 @@
 		`grid-template-columns:` +
 		header.map((column) => `minmax(75px, ${column.width ?? 1}fr)`).join(' ') +
 		';';
-
-	$: {
-		search_string;
-		handle_sort();
-	}
 
 	onMount(() => {
 		v_list = document.querySelector('svelte-virtual-list-viewport') as HTMLDivElement;
@@ -123,7 +123,11 @@
 	}
 </script>
 
-<div class="overflow-x-auto h-full flex flex-col min-w-0 relative">
+<div
+	class="overflow-x-auto h-full flex flex-col min-w-0 relative"
+	style="height: {height}px;"
+	bind:this={instance}
+>
 	{#if searchable}
 		<Input
 			class="mb-2 max-w-[12rem] shrink"
@@ -158,18 +162,19 @@
 			</button>
 		{/each}
 	</div>
-
-	<VirtualList items={sorted_rows} let:item={row}>
-		<button
-			on:click={row.onclick}
-			class="grid w-full text-gold-muted hover:text-gold"
-			style={grid_template}
-		>
-			{#each row.columns as column, index}
-				<div class="max-w-full {index > 0 ? 'justify-self-center' : 'justify-self-start'}">
-					{column}
-				</div>
-			{/each}
-		</button>
-	</VirtualList>
+	{#key height}
+		<VirtualList items={sorted_rows} let:item={row}>
+			<button
+				on:click={row.onclick}
+				class="grid w-full text-gold-muted hover:text-gold"
+				style={grid_template}
+			>
+				{#each row.columns as column, index}
+					<div class="max-w-full {index > 0 ? 'justify-self-center' : 'justify-self-start'}">
+						{column}
+					</div>
+				{/each}
+			</button>
+		</VirtualList>
+	{/key}
 </div>
