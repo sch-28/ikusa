@@ -12,16 +12,16 @@
 		<a class="text-3xl font-bold mr-2" href="/">Ikusa</a>
 		<a
 			href="/wars"
-			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}>Wars</a
+			class={is_selected('wars') ? 'text-gold' : 'text-gold-muted hover:text-gold'}>Wars</a
 		>
 		<a
 			href="/players"
-			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
+			class={is_selected('players') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
 			>Players</a
 		>
 		<a
 			href="/guilds"
-			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
+			class={is_selected('guilds') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
 			>Guilds</a
 		>
 	</div>
