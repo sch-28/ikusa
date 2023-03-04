@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Dropzone, Label, Toggle } from 'flowbite-svelte';
-	import { Log, War } from '../../../logic/data';
+	import { Log, War, type RawWar } from '../../../logic/data';
 	import { show_toast } from '../../../logic/util';
 	import Button from '../../elements/button.svelte';
 	import Input from '../../elements/input.svelte';
@@ -14,19 +14,33 @@
 	import { ModalManager } from '../modal-store';
 	import { afterUpdate } from 'svelte';
 	import { Manager } from '../../../logic/stores';
+	import WarList from '../../war-list.svelte';
+	import AutoComplete from '../../elements/auto-complete.svelte';
 
 	let war_name: string = '';
 	let war_date: string = '';
 	let war_logs: Log[] = [];
 	let war_won: boolean = false;
 
-	let states = ['upload', 'edit', 'logs'] as const;
+	let wars: RawWar[] = [];
+	let wars_guild_name: string = '';
+	let setted_wars_guild_name: boolean = false;
+
+	let states = ['upload', 'edit', 'logs', 'multi'] as const;
 	let state: (typeof states)[number] = 'edit';
-	export let war: War | undefined = undefined;
+	export let war: War | RawWar | undefined = undefined;
 
 	$: {
 		war;
 		set_state();
+	}
+
+	$: setted_wars_guild_name && set_wars_guild_name();
+
+	function set_wars_guild_name() {
+		if (wars_guild_name) {
+			wars.map((w) => (w.guild_name = wars_guild_name));
+		}
 	}
 
 	function set_state() {
@@ -36,7 +50,13 @@
 			war_name = war.name;
 			war_won = war.won;
 			war_guild_name = war.guild_name;
-			war_logs = Log.parse_logs(war.logs);
+			if (war.id) {
+				war_logs = Log.parse_logs((war as War).logs);
+			} else {
+				war_logs = (war as RawWar).logs as Log[];
+			}
+		} else if (wars && wars.length > 0) {
+			state = 'multi';
 		} else {
 			state = 'upload';
 		}
@@ -60,16 +80,25 @@
 
 	async function check_files() {
 		if (files && files.length > 0) {
-			if (files.length > 1) {
-				console.log('Multiple files not supported yet');
-				return;
-			}
+			const results = await Promise.all(Array.from(files).map((f) => load_data(f))).catch((e) =>
+				show_toast(e.message, 'error')
+			);
 
-			const results = await load_data(files[0]).catch((e) => show_toast(e.message, 'error'));
+			if (results && results.length > 1) {
+				state = 'multi';
 
-			if (results) {
+				wars = results.map((logs, index) => {
+					return {
+						guild_name: wars_guild_name,
+						name: files?.[index].name.split('.')[0] ?? '',
+						date: new Date().toISOString().split('T')[0],
+						won: false,
+						logs: logs
+					};
+				});
+			} else if (results && results.length === 1) {
 				state = 'edit';
-				war_logs = results;
+				war_logs = results[0];
 				war_name = files[0].name.split('.')[0];
 				war_date = new Date().toISOString().split('T')[0];
 			}
@@ -104,15 +133,31 @@
 
 	function go_back() {
 		if (state === 'edit' && war === undefined) {
-			state = 'upload';
-			files = undefined;
-			war_name = '';
-			war_date = '';
-			war_logs = [];
-			war_won = false;
+			reset();
+		} else if (state === 'edit' && wars.length > 0) {
+			state = 'multi';
+			war = undefined;
+		} else if (state === 'multi') {
+			if (setted_wars_guild_name) {
+				setted_wars_guild_name = false;
+			} else {
+				reset();
+			}
 		} else if (state === 'logs') {
 			state = 'edit';
 		}
+	}
+
+	function reset() {
+		war_name = '';
+		war_date = '';
+		war_logs = [];
+		war_won = false;
+		war_guild_name = '';
+		setted_wars_guild_name = false;
+		wars = [];
+		files = undefined;
+		state = 'upload';
 	}
 
 	function remove_log(log: Log) {
@@ -121,18 +166,57 @@
 		war_logs = war_logs;
 	}
 
+	async function save_wars() {
+		if (wars.length > 0) {
+			const results = wars.map((w) =>
+				$Manager.add_war({
+					guild_name: w.guild_name,
+					name: w.name,
+					date: w.date,
+					won: w.won,
+					logs: w.logs as Log[],
+					save: false
+				})
+			);
+			if (results) {
+				$Manager.save_callback?.();
+				reset();
+				show_toast('Wars added', 'success');
+			}
+		}
+	}
+
 	async function save_war() {
 		let result: War | undefined = undefined;
-		close();
 
 		if (war) {
-			result = await $Manager.update_war(war, {
-				guild_name: war_guild_name,
-				name: war_name,
-				date: war_date,
-				won: war_won,
-				logs: war_logs
-			});
+			let result: RawWar | undefined = undefined;
+			if (war.id) {
+				result = await $Manager.update_war(war as War, {
+					guild_name: war_guild_name,
+					name: war_name,
+					date: war_date,
+					won: war_won,
+					logs: war_logs
+				});
+			} else {
+				wars = wars.map((w) => {
+					if (w === war) {
+						return {
+							...w,
+							guild_name: war_guild_name,
+							name: war_name,
+							date: war_date,
+							won: war_won,
+							logs: war_logs
+						};
+					}
+					return w;
+				});
+				war = undefined;
+				return;
+			}
+
 			if (result) show_toast('War updated successfully', 'success');
 		} else {
 			result = await $Manager.add_war({
@@ -156,12 +240,20 @@
 		} else {
 			show_toast(form_error, 'error');
 		}
+
+		close();
 	}
 
 	function delete_war() {
 		if (war) {
-			$Manager.delete_war(war);
-			close();
+			if (war.id) {
+				$Manager.delete_war(war as War);
+				close();
+			} else {
+				wars = wars.filter((w) => w !== war);
+				war = undefined;
+				state = 'multi';
+			}
 		}
 	}
 
@@ -193,7 +285,7 @@
 				: 'cursor-default'}"
 			on:click={go_back}
 		>
-			{#if state !== 'upload' && (state !== 'edit' || war === undefined)}
+			{#if state !== 'upload' && (state !== 'edit' || war === undefined || wars.length > 0)}
 				<Icon icon={MdArrowBack} class="self-center" />
 			{/if}
 			<span class="shrink-0">Add War /</span><span class="text-sm"> {state}</span>
@@ -213,6 +305,7 @@
 			bind:files
 			on:drop={handle_drop}
 			on:dragover={(event) => event.preventDefault()}
+			multiple
 			id="dropzone"
 			defaultClass="h-[264px] flex flex-col justify-center items-center w-full bg-black rounded-lg cursor-pointer"
 		>
@@ -279,6 +372,43 @@
 				<p class="text-red-500">{form_error}</p>
 			</div>
 		</form>
+	{:else if state === 'multi'}
+		{#if setted_wars_guild_name && wars_guild_name.length > 0}
+			<div class="h-[264px] w-full flex flex-col">
+				<div class="h-full overflow-auto">
+					<WarList
+						{wars}
+						on_click={(w) => {
+							state = 'edit';
+							war = w;
+						}}
+					/>
+				</div>
+				<div class="flex gap-2 mt-4 items-center">
+					<Button on:click={save_wars}>Add</Button>
+					<Button color="secondary" on:click={close}>Cancel</Button>
+					<p class="text-red-500">{form_error}</p>
+				</div>
+			</div>
+		{:else}
+			<div class="h-[264px] w-full flex flex-col justify-center items-center gap-2 pb-11">
+				<div>
+					<Label class="mb-2" for="guild">Guild Name</Label>
+					<Autocomplete
+						input_class="w-full"
+						placeholder="Enter guild name.."
+						bind:value={wars_guild_name}
+						items={$Manager.guilds.map((g) => g.name)}
+						required
+					/>
+				</div>
+				<Button
+					class="w-[146px]"
+					on:click={() => (setted_wars_guild_name = true)}
+					disabled={wars_guild_name.length === 0}>Continue</Button
+				>
+			</div>
+		{/if}
 	{:else if state === 'logs'}
 		<div class="h-[264px] w-full overflow-auto">
 			<VirtualList items={war_logs} let:item={log}>
