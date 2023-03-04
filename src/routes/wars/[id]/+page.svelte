@@ -11,6 +11,7 @@
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
+	import Chart from '../../../components/chart/chart.svelte';
 
 	let selected_guild: Local_Guild | undefined;
 
@@ -54,6 +55,9 @@
 			rows = rows;
 		}
 	}
+
+	$: chart_data = war?.local_guilds.map((local_guild) => local_guild.local_players.length) ?? [];
+	$: chart_labels = war?.local_guilds.map((local_guild) => local_guild.guild.name) ?? [];
 </script>
 
 {#if war}
@@ -91,6 +95,10 @@
 						<div class="text-lg truncate font-bold">{local_guild.guild.name}</div>
 					</div>
 					<div class="flex gap-1 text-sm font-light">
+						<div class="">{local_guild.local_players.length}</div>
+						<div class="">Members</div>
+					</div>
+					<div class="flex gap-1 text-sm font-light">
 						<div class="">{local_guild.kills}</div>
 						<div class="">Kills</div>
 					</div>
@@ -114,4 +122,7 @@
 			/>
 		</div>
 	</div>
+	<!-- <div class="w-[450px] mt-4">
+		<Chart data={chart_data} labels={chart_labels} type="donut" />
+	</div> -->
 {/if}
