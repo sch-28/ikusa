@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import { get, writable, type Writable } from 'svelte/store';
 import { ManagerClass } from './manager';
+import { show_toast } from './util';
 
 const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> => {
 	const store = writable(initValue);
@@ -23,7 +24,12 @@ const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> =
 	get(store).save_callback = () => {
 		if (store) {
 			store.set(get(store));
-			localStorage.setItem(key, get(store).get_json());
+			try {
+				localStorage.setItem(key, get(store).get_json());
+			} catch (e) {
+				console.error(e);
+				show_toast('Not enough storage', 'error');
+			}
 		}
 	};
 
