@@ -48,3 +48,10 @@ export const scrollbar_width = measure_scrollbar();
 export function format(number: number, places = 2) {
 	return +number?.toFixed(places);
 }
+
+export function get_remaining_height(el: HTMLElement, margin = 0) {
+	if (!el) return 0;
+	const { top } = el.getBoundingClientRect();
+	const { innerHeight } = window;
+	return innerHeight - top - margin;
+}
