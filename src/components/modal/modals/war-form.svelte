@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Dropzone, Label, Toggle } from 'flowbite-svelte';
-	import { Log, War, type RawWar } from '../../../logic/data';
 	import { show_toast } from '../../../logic/util';
 	import Button from '../../elements/button.svelte';
 	import Input from '../../elements/input.svelte';
@@ -15,20 +14,20 @@
 	import { afterUpdate } from 'svelte';
 	import { Manager } from '../../../logic/stores';
 	import WarList from '../../war-list.svelte';
-	import AutoComplete from '../../elements/auto-complete.svelte';
+	import { Log, type WarJSON, type WarType } from '../../../logic/data';
 
 	let war_name: string = '';
 	let war_date: string = '';
 	let war_logs: Log[] = [];
 	let war_won: boolean = false;
 
-	let wars: RawWar[] = [];
+	let wars: WarJSON[] = [];
 	let wars_guild_name: string = '';
 	let setted_wars_guild_name: boolean = false;
 
 	let states = ['upload', 'edit', 'logs', 'multi'] as const;
 	let state: (typeof states)[number] = 'edit';
-	export let war: War | RawWar | undefined = undefined;
+	export let war: WarType | undefined = undefined;
 
 	$: {
 		war;
@@ -51,9 +50,9 @@
 			war_won = war.won;
 			war_guild_name = war.guild_name;
 			if (war.id) {
-				war_logs = Log.parse_logs((war as War).logs);
+				war_logs = Log.parse_logs(war.logs);
 			} else {
-				war_logs = (war as RawWar).logs as Log[];
+				war_logs = war.logs as Log[];
 			}
 		} else if (wars && wars.length > 0) {
 			state = 'multi';
@@ -111,6 +110,10 @@
 		files = event.dataTransfer?.files;
 	}
 
+	$: multi_error = wars.some((war) => {
+		return $Manager.wars.find((w) => w.id === war.date + war.name);
+	});
+
 	async function load_data(file: File) {
 		return new Promise<Log[]>((resolve, reject) => {
 			let reader = new FileReader();
@@ -156,6 +159,7 @@
 		war_guild_name = '';
 		setted_wars_guild_name = false;
 		wars = [];
+		war = undefined;
 		files = undefined;
 		state = 'upload';
 	}
@@ -168,38 +172,24 @@
 
 	async function save_wars() {
 		if (wars.length > 0) {
-			const results = wars.map((w) =>
-				$Manager.add_war({
-					guild_name: w.guild_name,
-					name: w.name,
-					date: w.date,
-					won: w.won,
-					logs: w.logs as Log[],
-					save: false
-				})
-			);
-			if (results) {
-				$Manager.save_callback?.();
-				reset();
-				show_toast('Wars added', 'success');
-			}
+			close();
+			await $Manager.add_wars(wars);
 		}
 	}
 
 	async function save_war() {
-		let result: War | undefined = undefined;
+		let result: WarType | undefined = undefined;
 
 		if (war) {
-			let result: RawWar | undefined = undefined;
 			if (war.id) {
-				result = await $Manager.update_war(war as War, {
+				result = await $Manager.update_war(war, {
 					guild_name: war_guild_name,
 					name: war_name,
 					date: war_date,
 					won: war_won,
 					logs: war_logs
 				});
-			} else {
+			} else if (!war.id) {
 				wars = wars.map((w) => {
 					if (w === war) {
 						return {
@@ -247,10 +237,11 @@
 	function delete_war() {
 		if (war) {
 			if (war.id) {
-				$Manager.delete_war(war as War);
+				$Manager.delete_war(war);
 				close();
 			} else {
 				wars = wars.filter((w) => w !== war);
+				if (wars.length === 0) return reset();
 				war = undefined;
 				state = 'multi';
 			}
@@ -264,7 +255,7 @@
 
 	afterUpdate(() => {
 		const valid_war =
-			$Manager.is_valid_war(war_date, war_name) || (war !== undefined && war.name === war_name);
+			$Manager.is_valid_war(war_date, war_name) || (war !== undefined && war.name === war_name && wars.length === 0);
 		form_validity = valid_war && form && form.checkValidity();
 
 		if (!valid_war) {
@@ -385,9 +376,11 @@
 					/>
 				</div>
 				<div class="flex gap-2 mt-4 items-center">
-					<Button on:click={save_wars}>Add</Button>
+					<Button on:click={save_wars} disabled={multi_error}>Add</Button>
 					<Button color="secondary" on:click={close}>Cancel</Button>
-					<p class="text-red-500">{form_error}</p>
+					{#if multi_error}
+						<p class="text-red-500">Wars with those name/date combinations already exist!</p>
+					{/if}
 				</div>
 			</div>
 		{:else}

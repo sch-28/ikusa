@@ -1,14 +1,22 @@
 <script lang="ts">
-	import type { RawWar } from '../logic/data';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import Icon from './elements/icon.svelte';
 	import { ModalManager } from './modal/modal-store';
 	import WarForm from './modal/modals/war-form.svelte';
-	export let wars: RawWar[] = [];
+	import IoIosWarning from 'svelte-icons/io/IoIosWarning.svelte';
+	import type { WarType } from '../logic/data';
+	import { Manager } from '../logic/stores';
+	export let wars: WarType[] = [];
 	export let editable: boolean = false;
-	export let on_click: (war: RawWar) => void;
+	export let on_click: (war: WarType) => void;
+
+	$: check_error = (war: WarType) => {
+		if (war.id === undefined) {
+			return $Manager.wars.find((w) => w.id === war.date + war.name);
+		}
+	}
 </script>
 
 {#each wars as war}
@@ -38,6 +46,8 @@
 			>
 				<Icon icon={MdSettings} class="self-center" />
 			</button>
+		{:else if check_error(war)}
+			<Icon icon={IoIosWarning} class="self-center text-red-500 ml-auto" />
 		{/if}
 	</button>
 {/each}
