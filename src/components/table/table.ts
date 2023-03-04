@@ -4,7 +4,7 @@ export type Row = {
 };
 
 export type HeaderColumn<T> = {
-	label: T;
+	label: string;
 	width?: number;
 	sort?: (a: T, b: T) => number;
 	sortable?: boolean;
