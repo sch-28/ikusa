@@ -11,7 +11,6 @@
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
-	import Chart from '../../../components/chart/chart.svelte';
 
 	let selected_guild: Local_Guild | undefined;
 
@@ -82,11 +81,11 @@
 	</div>
 	<div class="flex gap-4 sm:flex-row flex-col sm:h-[30rem] ">
 		<div
-			class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-1 gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2"
+			class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-1 gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 auto-rows-min"
 		>
 			{#each war.local_guilds as local_guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0"
+					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-fit"
 					on:click={() =>
 						(selected_guild = selected_guild === local_guild ? undefined : local_guild)}
 				>
@@ -113,8 +112,9 @@
 				</button>
 			{/each}
 		</div>
-		<div class="w-full h-[30rem]">
+		<div class="w-full">
 			<Table
+				height={480}
 				{header}
 				{rows}
 				searchable
