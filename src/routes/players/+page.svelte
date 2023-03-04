@@ -20,7 +20,10 @@
 				format(player.average_duration_percentage),
 				player.locals.length,
 				player.guilds[player.guilds.length - 1].name
-			]
+			],
+			onclick() {
+				goto(`/players/${player.name}`);
+			}
 		} as Row;
 	});
 
