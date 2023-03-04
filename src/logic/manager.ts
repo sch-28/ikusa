@@ -1,11 +1,19 @@
 import dayjs from 'dayjs';
-import { parse } from 'flatted';
+import { parse, stringify } from 'flatted';
 import { LoaderManager } from '../components/loader/loader-store';
 import { Log, War, Player, Guild, Local_Guild, Local_Guild_Player, Event } from './data';
 import type { ManagerUpdated, UpdateManager, UpdateProgress } from './manager-worker';
-import type { User } from './user';
+import LZString from 'lz-string';
 
-
+export interface User {
+	discord_data?: {
+		id: string;
+		username: string;
+		discriminator: string;
+		avatar: string;
+	};
+	name?: string;
+}
 
 export interface War_JSON {
 	guild_name: string;
@@ -86,8 +94,9 @@ export class ManagerClass {
 		return player;
 	}
 
-	static from_json(wars: War_JSON[], browser = true) {
+	static wars_from_json(wars: War_JSON[]) {
 		const manager = new ManagerClass();
+		if (wars.length == 0 || !wars.length) return manager;
 
 		for (const [index, war] of wars.entries()) {
 			war.logs = war.logs.map((l) => new Log(l.player_one, l.player_two, l.kill, l.guild, l.time));
@@ -98,24 +107,74 @@ export class ManagerClass {
 				won: war.won,
 				logs: war.logs
 			});
-			if (!browser) {
-				const message: UpdateProgress = {
-					msg: 'update_progress',
-					data: { progress: Math.floor(((index + 1) / wars.length) * 100) }
-				};
-				postMessage(message);
-			}
+			const message: UpdateProgress = {
+				msg: 'update_progress',
+				data: { progress: Math.floor(((index + 1) / wars.length) * 100) }
+			};
+			postMessage(message);
 		}
+
+		return manager;
+	}
+
+	static from_json(data: string) {
+		/* const manager = new ManagerClass();
+		manager.user = user;
+		if (wars.length == 0 || !wars.length) return manager;
+
+		for (const [index, war] of wars.entries()) {
+			war.logs = war.logs.map((l) => new Log(l.player_one, l.player_two, l.kill, l.guild, l.time));
+			manager.add_war({
+				guild_name: war.guild_name,
+				name: war.name,
+				date: war.date,
+				won: war.won,
+				logs: war.logs
+			});
+		} */
+		const manager_data = parse(LZString.decompress(data) ?? '') as ManagerClass;
+		// assign all data to their classes
+		/* const manager = Object.assign(new ManagerClass(), manager_data); */
+
+		const manager = new ManagerClass();
+		manager.user = manager_data.user;
+
+		const default_guild = new Guild('Default');
+		const default_player = new Player('Default', default_guild);
+		const default_war = new War('Default', 'Default', 'Default', false, []);
+		const default_log = new Log('Default', 'Default', false, 'Default', 'Default');
+		const default_local_guild = new Local_Guild(default_war, default_guild);
+		const default_local_player = new Local_Guild_Player(default_local_guild, default_player);
+
+		manager.wars = manager_data.wars.map((war) => {
+			const new_war = Object.assign(default_war, war);
+			new_war.logs = war.logs.map((log) => Object.assign(default_log, log));
+			return new_war;
+		});
+		manager.players = manager_data.players.map((player) => {
+			const new_player = Object.assign(default_player, player);
+			player.locals.map((local) => Object.assign(default_local_player, local));
+
+			return new_player;
+		});
+		manager.guilds = manager_data.guilds.map((guild) => {
+			const new_guild = Object.assign(default_guild, guild);
+			guild.locals.map((local) => Object.assign(default_local_guild, local));
+
+			return new_guild;
+		});
+
 		return manager;
 	}
 
 	get_json() {
-		const json_wars = [];
+		/* const json_wars = [];
 		for (const war of this.wars) {
 			json_wars.push(war.to_json());
 		}
 
-		return JSON.stringify(json_wars);
+		return JSON.stringify({ wars: json_wars, user: this.user }); */
+		return LZString.compress(stringify(this));
 	}
 
 	add_war({
@@ -123,13 +182,15 @@ export class ManagerClass {
 		name,
 		date,
 		won,
-		logs
+		logs,
+		save = true
 	}: {
 		guild_name: string;
 		name: string;
 		date: string;
 		won: boolean;
 		logs: Log[];
+		save?: boolean;
 	}) {
 		if (this.wars.find((war) => war.id == date + name)) {
 			return undefined;
@@ -196,7 +257,7 @@ export class ManagerClass {
 		// Prevents empty guilds (happens if guild name changes mid fight)
 		war.local_guilds = war.local_guilds.filter((g) => g.local_players.length > 0);
 		war.update();
-		this.save_callback?.();
+		save && this.save_callback?.();
 		return war;
 	}
 

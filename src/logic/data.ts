@@ -60,7 +60,16 @@ export class Guild {
 	}
 }
 
-export class War {
+export interface RawWar {
+	date: string;
+	guild_name: string;
+	name: string;
+	won: boolean;
+	logs: Event[] | Log[];
+	id?: string;
+}
+
+export class War implements RawWar {
 	local_guilds: Local_Guild[] = [];
 	local_players: Local_Guild_Player[] = [];
 	date: string;

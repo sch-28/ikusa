@@ -5,7 +5,27 @@ import { ManagerClass } from './manager';
 const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> => {
 	const store = writable(initValue);
 
-	if (!browser || typeof window === 'undefined' || !initValue.worker) return store;
+	if (!browser || typeof window === 'undefined') return store;
+
+	const storedValueStr = localStorage.getItem(key);
+	if (storedValueStr != null) {
+		store.set(ManagerClass.from_json(storedValueStr));
+	}
+	/* store.subscribe((val) => {
+		if (val == null || val == undefined) {
+			localStorage.removeItem(key);
+		} else {
+			localStorage.setItem(key, val.get_json());
+			console.log('saved');
+		}
+	}); */
+
+	get(store).save_callback = () => {
+		if (store) {
+			store.set(get(store));
+			localStorage.setItem(key, get(store).get_json());
+		}
+	};
 
 	// TODO fix this
 	/* window.addEventListener('storage', () => {
@@ -22,7 +42,7 @@ const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> =
 	return store;
 };
 
-export async function load_store(store: Writable<ManagerClass>, key: string) {
+/* export async function load_store(store: Writable<ManagerClass>, key: string) {
 	get(store).save_callback = () => {
 		store && store.set(get(store));
 	};
@@ -39,7 +59,7 @@ export async function load_store(store: Writable<ManagerClass>, key: string) {
 			localStorage.setItem(key, val.get_json());
 		}
 	});
-}
+} */
 
 export default storage;
 

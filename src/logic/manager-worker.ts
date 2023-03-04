@@ -22,7 +22,7 @@ export interface PostMessage<T> {
 }
 onmessage = ({ data }: MessageEvent<UpdateManager>) => {
 	if (data.msg === 'update_manager' && data.data) {
-		const new_manager = ManagerClass.from_json(data.data.wars, false);
+		const new_manager = ManagerClass.wars_from_json(data.data.wars);
 		const message: ManagerUpdated = {
 			msg: 'manager_updated',
 			data: { manager: stringify(new_manager) }
