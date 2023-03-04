@@ -130,7 +130,7 @@
 >
 	{#if searchable}
 		<Input
-			class="mb-2 max-w-[12rem] shrink"
+			class="mb-2 sm:max-w-[12rem] max-w-[8rem] shrink"
 			placeholder="Search..."
 			bind:value={search_string}
 			size="sm"
