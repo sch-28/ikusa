@@ -60,24 +60,6 @@ export class Guild {
 	}
 }
 
-/* interface test {
-	id: string;
-	logs: Event[];
-}
-
-interface test2 {
-	id: never;
-	logs: Log[];
-}
-
-export interface RawWar extends test, test2 {
-	date: string;
-	guild_name: string;
-	name: string;
-	won: boolean;
-	logs: Event[] | Log[];
-	id?: string;
-}  */
 
 interface IWar {
 	local_guilds: Local_Guild[];

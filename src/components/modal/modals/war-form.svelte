@@ -11,7 +11,7 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list';
 	import Autocomplete from '../../elements/auto-complete.svelte';
 	import { ModalManager } from '../modal-store';
-	import { afterUpdate } from 'svelte';
+	import { afterUpdate, onMount } from 'svelte';
 	import { Manager } from '../../../logic/stores';
 	import WarList from '../../war-list.svelte';
 	import { Log, type WarJSON, type WarType } from '../../../logic/data';
@@ -22,7 +22,7 @@
 	let war_won: boolean = false;
 
 	let wars: WarJSON[] = [];
-	let wars_guild_name: string = '';
+	let wars_guild_name: string = $Manager.user.last_guild ?? '';
 	let setted_wars_guild_name: boolean = false;
 
 	let states = ['upload', 'edit', 'logs', 'multi'] as const;
@@ -35,6 +35,11 @@
 	}
 
 	$: setted_wars_guild_name && set_wars_guild_name();
+
+	onMount(() => {
+		wars_guild_name = $Manager.user.last_guild ?? '';
+		if (war_guild_name.length == 0) war_guild_name = $Manager.user.last_guild ?? '';
+	});
 
 	function set_wars_guild_name() {
 		if (wars_guild_name) {
@@ -65,7 +70,7 @@
 
 	$: files && check_files();
 
-	let war_guild_name: string = '';
+	let war_guild_name: string = $Manager.user.last_guild ?? '';
 	let war_guild_name_suggestions: string[] = [];
 	$: war_guild_name_suggestions = $Manager.guilds
 		.map((guild) => {
@@ -255,7 +260,8 @@
 
 	afterUpdate(() => {
 		const valid_war =
-			$Manager.is_valid_war(war_date, war_name) || (war !== undefined && war.name === war_name && wars.length === 0);
+			$Manager.is_valid_war(war_date, war_name) ||
+			(war !== undefined && war.name === war_name && wars.length === 0);
 		form_validity = valid_war && form && form.checkValidity();
 
 		if (!valid_war) {

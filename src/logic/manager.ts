@@ -43,13 +43,14 @@ export interface User {
 		avatar: string;
 	};
 	name?: string;
+	last_guild?: string;
 }
 
 export class ManagerClass {
 	wars: War[];
 	players: Player[];
 	guilds: Guild[];
-	user: User | null;
+	user: User;
 	save_callback: (() => void) | undefined;
 	worker: Worker | undefined;
 
@@ -57,7 +58,7 @@ export class ManagerClass {
 		this.wars = [];
 		this.players = [];
 		this.guilds = [];
-		this.user = null;
+		this.user = {};
 	}
 
 	get sorted_players() {
@@ -213,6 +214,8 @@ export class ManagerClass {
 		if (this.wars.find((war) => war.id == date + name)) {
 			return undefined;
 		}
+
+		this.user.last_guild = guild_name;
 
 		const events: Event[] = [];
 		const guilds = new Set<Guild>();
