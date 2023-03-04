@@ -60,16 +60,47 @@ export class Guild {
 	}
 }
 
-export interface RawWar {
+/* interface test {
+	id: string;
+	logs: Event[];
+}
+
+interface test2 {
+	id: never;
+	logs: Log[];
+}
+
+export interface RawWar extends test, test2 {
 	date: string;
 	guild_name: string;
 	name: string;
 	won: boolean;
 	logs: Event[] | Log[];
 	id?: string;
+}  */
+
+interface IWar {
+	local_guilds: Local_Guild[];
+	local_players: Local_Guild_Player[];
+	date: string;
+	guild_name: string;
+	name: string;
+	logs: Event[];
+	won: boolean;
+	formatted_date: string;
+	enemy_guilds: Local_Guild[];
+	kill_events: Event[];
+	death_events: Event[];
+	sorted_guilds: Local_Guild[];
+	id: string;
+	duration: number;
+
+	update(): void;
+	get_duration(): number;
+	to_json(): WarType;
 }
 
-export class War implements RawWar {
+export class War implements IWar {
 	local_guilds: Local_Guild[] = [];
 	local_players: Local_Guild_Player[] = [];
 	date: string;
@@ -122,7 +153,7 @@ export class War implements RawWar {
 		return end.diff(start, 'minutes');
 	}
 
-	to_json() {
+	to_json(): WarType {
 		return {
 			guild_name: this.guild_name,
 			name: this.name,
@@ -141,6 +172,22 @@ export class War implements RawWar {
 		};
 	}
 }
+
+type WarObject = {
+	id: string;
+} & IWar;
+
+export type WarJSON = {
+	id?: never
+	date: string;
+	guild_name: string;
+	name: string;
+	won: boolean;
+	logs: Log[];
+};
+
+export type WarType = WarObject | WarJSON;
+
 
 export class Player {
 	locals: Local_Guild_Player[] = [];
@@ -393,6 +440,7 @@ export class Event {
 	kill: boolean;
 	time: Dayjs;
 	time_string: string;
+	guild: string;
 
 	constructor(p1: Player, p2: Player, kill: boolean, time_string: string) {
 		this.player_one = p1;
@@ -400,6 +448,7 @@ export class Event {
 		this.kill = kill;
 		this.time_string = time_string;
 		this.time = dayjs(time_string, 'HH:mm:ss');
+		this.guild = '';
 	}
 
 	normalized_kill(guild: Guild) {

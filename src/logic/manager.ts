@@ -1,9 +1,39 @@
 import dayjs from 'dayjs';
 import { parse, stringify } from 'flatted';
 import { LoaderManager } from '../components/loader/loader-store';
-import { Log, War, Player, Guild, Local_Guild, Local_Guild_Player, Event } from './data';
+import {
+	Log,
+	War,
+	Player,
+	Guild,
+	Local_Guild,
+	Local_Guild_Player,
+	Event,
+	type WarType
+} from './data';
 import type { ManagerUpdated, UpdateManager, UpdateProgress } from './manager-worker';
 import LZString from 'lz-string';
+
+function get_default_war() {
+	return new War('Default', 'Default', 'Default', false, []);
+}
+function get_default_local_guild() {
+	return new Local_Guild(get_default_war(), get_default_guild());
+}
+function get_default_local_player() {
+	return new Local_Guild_Player(get_default_local_guild(), get_default_player());
+}
+
+function get_default_guild() {
+	return new Guild('Default');
+}
+
+function get_default_player() {
+	return new Player('Default', get_default_guild());
+}
+function get_default_event() {
+	return new Event(get_default_player(), get_default_player(), false, '');
+}
 
 export interface User {
 	discord_data?: {
@@ -13,14 +43,6 @@ export interface User {
 		avatar: string;
 	};
 	name?: string;
-}
-
-export interface War_JSON {
-	guild_name: string;
-	name: string;
-	date: string;
-	won: boolean;
-	logs: Log[];
 }
 
 export class ManagerClass {
@@ -94,12 +116,15 @@ export class ManagerClass {
 		return player;
 	}
 
-	static wars_from_json(wars: War_JSON[]) {
+	static wars_from_json(wars: WarType[]) {
 		const manager = new ManagerClass();
 		if (wars.length == 0 || !wars.length) return manager;
 
 		for (const [index, war] of wars.entries()) {
-			war.logs = war.logs.map((l) => new Log(l.player_one, l.player_two, l.kill, l.guild, l.time));
+			war.logs = war.logs.map(
+				(l) =>
+					new Log(l.player_one as string, l.player_two as string, l.kill, l.guild, l.time as string)
+			);
 			manager.add_war({
 				guild_name: war.guild_name,
 				name: war.name,
@@ -139,27 +164,20 @@ export class ManagerClass {
 		const manager = new ManagerClass();
 		manager.user = manager_data.user;
 
-		const default_guild = new Guild('Default');
-		const default_player = new Player('Default', default_guild);
-		const default_war = new War('Default', 'Default', 'Default', false, []);
-		const default_log = new Log('Default', 'Default', false, 'Default', 'Default');
-		const default_local_guild = new Local_Guild(default_war, default_guild);
-		const default_local_player = new Local_Guild_Player(default_local_guild, default_player);
-
 		manager.wars = manager_data.wars.map((war) => {
-			const new_war = Object.assign(default_war, war);
-			new_war.logs = war.logs.map((log) => Object.assign(default_log, log));
+			const new_war = Object.assign(get_default_war(), war);
+			new_war.logs = war.logs.map((log) => Object.assign(get_default_event(), log));
 			return new_war;
 		});
 		manager.players = manager_data.players.map((player) => {
-			const new_player = Object.assign(default_player, player);
-			player.locals.map((local) => Object.assign(default_local_player, local));
+			const new_player = Object.assign(get_default_player(), player);
+			player.locals.map((local) => Object.assign(get_default_local_player(), local));
 
 			return new_player;
 		});
 		manager.guilds = manager_data.guilds.map((guild) => {
-			const new_guild = Object.assign(default_guild, guild);
-			guild.locals.map((local) => Object.assign(default_local_guild, local));
+			const new_guild = Object.assign(get_default_guild(), guild);
+			guild.locals.map((local) => Object.assign(get_default_local_guild(), local));
 
 			return new_guild;
 		});
@@ -247,6 +265,7 @@ export class ManagerClass {
 								event.local_player_one = local_player;
 							} else {
 								event.local_player_two = local_player;
+								event.guild = local_player.local_guild.guild.name;
 							}
 						}
 					}
@@ -259,6 +278,12 @@ export class ManagerClass {
 		war.update();
 		save && this.save_callback?.();
 		return war;
+	}
+
+	async add_wars(new_wars: WarType[]) {
+		const wars = this.wars.map((w) => w.to_json());
+
+		await this.update_data([...wars, ...new_wars]);
 	}
 
 	reset() {
@@ -297,7 +322,7 @@ export class ManagerClass {
 		await this.update_data(wars_json);
 	}
 
-	async update_data(wars: War_JSON[]) {
+	async update_data(wars: WarType[]) {
 		if (!this.worker) return;
 		this.reset();
 

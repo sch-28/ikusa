@@ -1,8 +1,9 @@
 import { stringify } from 'flatted';
-import { ManagerClass, type War_JSON } from './manager';
+import type { WarType } from './data';
+import { ManagerClass } from './manager';
 
-export interface UpdateManager extends PostMessage<{ wars: War_JSON[] }> {
-	data: { wars: War_JSON[] };
+export interface UpdateManager extends PostMessage<{ wars: WarType[] }> {
+	data: { wars: WarType[] };
 	msg: 'update_manager';
 }
 
@@ -31,4 +32,4 @@ onmessage = ({ data }: MessageEvent<UpdateManager>) => {
 	}
 };
 
-export {}
+export {};
