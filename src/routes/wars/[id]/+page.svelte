@@ -80,9 +80,7 @@
 		<div class="pl-2">{war.duration} minutes</div>
 	</div>
 	<div class="flex gap-4 sm:flex-row flex-col sm:h-[30rem] ">
-		<div
-			class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-1 gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 auto-rows-min"
-		>
+		<div class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap">
 			{#each war.local_guilds as local_guild}
 				<button
 					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-fit"
@@ -106,8 +104,8 @@
 						<div class="">Deaths</div>
 					</div>
 					<div class="flex gap-1 text-sm font-light">
-						<div class="">{format(local_guild.duration * 100)}</div>
-						<div class="">Joined</div>
+						<div class="">{format(local_guild.duration)}</div>
+						<div class="">min</div>
 					</div>
 				</button>
 			{/each}

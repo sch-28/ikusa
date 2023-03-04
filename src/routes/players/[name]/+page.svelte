@@ -84,7 +84,7 @@
 	</div>
 	<div class="flex gap-4 sm:flex-row flex-col sm:h-[30rem] ">
 		<div
-			class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-1 gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 auto-rows-min"
+			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2"
 		>
 			{#each player.guilds as guild}
 				<button
