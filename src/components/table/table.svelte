@@ -20,7 +20,7 @@
 	let sorted_rows: Row[] = [];
 	let search_string: string = '';
 	let header_element: HTMLDivElement;
-	let current_sort: HeaderColumn<any> | undefined = undefined;
+	let current_sorts: HeaderColumn<any>[] = [];
 	let v_list: HTMLDivElement;
 
 	$: {
@@ -51,50 +51,83 @@
 		v_list.style.width = header_element.scrollWidth + 'px';
 	}
 
-	function handle_sort_change(column: HeaderColumn<any>) {
-		if (current_sort && current_sort !== column) {
-			current_sort.sort_dir = undefined;
+	function handle_sort_change(column: HeaderColumn<any>, multiple = false) {
+		if (!current_sorts.includes(column) && !multiple) {
+			current_sorts.forEach((col) => {
+				col.sort_dir = undefined;
+			});
+			current_sorts = [];
+		} else if (current_sorts.includes(column) && !multiple) {
+			current_sorts.forEach((col) => {
+				if (col !== column) col.sort_dir = undefined;
+			});
+			current_sorts = current_sorts.filter((col) => col === column);
 		}
 
 		if (column.sortable) {
 			if (column.sort_dir === 'asc') {
-				column.sort_dir = 'desc';
-			} else if (column.sort_dir === 'desc') {
+				column.sort_dir = 'des';
+			} else if (column.sort_dir === 'des') {
 				column.sort_dir = undefined;
 			} else {
 				column.sort_dir = 'asc';
 			}
 
-			current_sort = column;
+			current_sorts.push(column);
 			handle_sort();
 		}
 		header = header;
 	}
 
-	function default_sort(a: any, b: any) {
+	function default_sort(a: any, b: any, ...alt: [any, any, 'asc' | 'des'][]): -1 | 0 | 1 {
 		if (a < b) {
 			return -1;
 		} else if (a > b) {
 			return 1;
 		} else {
+			if (alt.length > 0) {
+				if (alt[0][2] === 'asc') return default_sort(alt[0][0], alt[0][1], ...alt.slice(1));
+				else if (alt[0][2] === 'des') return default_sort(alt[0][1], alt[0][0], ...alt.slice(1));
+			}
 			return 0;
 		}
 	}
 
 	function handle_sort() {
 		sorted_rows = [...rows];
-		if (current_sort && current_sort.sortable && current_sort.sort_dir !== undefined) {
-			const col_index = header.indexOf(current_sort);
+		if (current_sorts.length > 0 && current_sorts.some((colum) => colum.sort_dir !== undefined)) {
+			const col_index = header.indexOf(current_sorts[0]);
 			sorted_rows = [...rows].sort((a, b) => {
-				if (!current_sort) return 0;
-
-				const a_val = a.columns[col_index];
+				/* const a_val = a.columns[col_index];
 				const b_val = b.columns[col_index];
 
 				if (current_sort.sort_dir === 'asc') {
 					return current_sort.sort?.(a_val, b_val) ?? default_sort(a_val, b_val);
-				} else if (current_sort.sort_dir === 'desc') {
+				} else if (current_sort.sort_dir === 'des') {
 					return current_sort.sort?.(b_val, a_val) ?? default_sort(b_val, a_val);
+				} else {
+					return 0;
+				} */
+
+				// multiple sort
+
+				const a_val = a.columns[col_index];
+				const b_val = b.columns[col_index];
+
+				const alt: [any, any, 'asc' | 'des'][] = [];
+				for (let i = 1; i < current_sorts.length; i++) {
+					const column = current_sorts[i];
+					if (column.sort_dir === undefined) continue;
+					const col_index = header.indexOf(column);
+					alt.push([a.columns[col_index], b.columns[col_index], column.sort_dir]);
+				}
+
+				const sort = current_sorts[0].sort;
+
+				if (current_sorts[0].sort_dir === 'asc') {
+					return sort?.(a_val, b_val) ?? default_sort(a_val, b_val, ...alt);
+				} else if (current_sorts[0].sort_dir === 'des') {
+					return sort?.(b_val, a_val) ?? default_sort(b_val, a_val, ...alt);
 				} else {
 					return 0;
 				}
@@ -147,13 +180,13 @@
 				class="max-w-full flex items-center font-bold 
 				{index > 0 ? 'justify-self-center' : ''}
 				{head.sortable ? 'cursor-pointer' : 'cursor-default'}"
-				on:click={() => handle_sort_change(head)}
+				on:click={(e) => handle_sort_change(head, e.shiftKey)}
 			>
 				<span class="truncate" title={head.label}>{head.label}</span>
 				{#if head.sortable}
 					{#if head.sort_dir === 'asc'}
 						<Icon class="hidden sm:block" icon={FaSortUp} />
-					{:else if head.sort_dir === 'desc'}
+					{:else if head.sort_dir === 'des'}
 						<Icon class="hidden sm:block" icon={FaSortDown} />
 					{:else}
 						<Icon class="hidden sm:block" icon={FaSort} />

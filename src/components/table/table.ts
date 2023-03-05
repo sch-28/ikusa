@@ -8,5 +8,5 @@ export type HeaderColumn<T> = {
 	width?: number;
 	sort?: (a: T, b: T) => number;
 	sortable?: boolean;
-	sort_dir?: 'asc' | 'desc';
+	sort_dir?: 'asc' | 'des';
 };
