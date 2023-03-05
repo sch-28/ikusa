@@ -7,8 +7,21 @@
 	import type { HeaderColumn, Row } from '../../../components/table/table';
 	import { format } from '../../../logic/util';
 	import { goto } from '$app/navigation';
+	import Chart from '../../../components/chart/chart.svelte';
+	import type { Guild } from '../../../logic/data';
+
+	const chart_annotation = [{ height: 1, label: 'Average' }];
 
 	$: player = $Manager.players.find((player) => player.name === $page.params.name);
+	$: player_locals = selected_guild ? get_locals_for_guild(selected_guild) : player?.locals ?? [];
+	$: chart_data = [
+		{ data: player_locals.map((local) => format(local.performance)) ?? [], name: 'Performance' }
+	];
+	$: chart_labels = player?.locals.map((local) => local.local_guild.war.date) ?? [];
+
+	function get_locals_for_guild(guild: Guild) {
+		return player?.locals.filter((local) => local.local_guild.guild === guild) ?? [];
+	}
 
 	let selected_guild = player?.guilds[player.guilds.length - 1];
 
@@ -40,23 +53,21 @@
 	];
 
 	$: rows =
-		player?.locals
-			.filter((local) => local.local_guild.guild.name === selected_guild?.name || !selected_guild)
-			.map((local) => {
-				return {
-					columns: [
-						local.local_guild.war.date,
-						local.kills,
-						local.deaths,
-						format(local.performance),
-						local.duration,
-						local.local_guild.guild.name
-					],
-					onclick() {
-						goto(`/wars/${local.local_guild.war.id}`);
-					}
-				} as Row;
-			}) ?? [];
+		player_locals.map((local) => {
+			return {
+				columns: [
+					local.local_guild.war.date,
+					local.kills,
+					local.deaths,
+					format(local.performance),
+					local.duration,
+					local.local_guild.guild.name
+				],
+				onclick() {
+					goto(`/wars/${local.local_guild.war.id}`);
+				}
+			} as Row;
+		}) ?? [];
 </script>
 
 {#if player}
@@ -83,9 +94,7 @@
 		<div class="pl-2">{player.locals.length} joined wars</div>
 	</div>
 	<div class="flex gap-4 sm:flex-row flex-col sm:h-[30rem] ">
-		<div
-			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2"
-		>
+		<div class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2">
 			{#each player.guilds as guild}
 				<button
 					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-fit"
@@ -96,17 +105,42 @@
 						<div class="text-lg truncate font-bold">{guild.name}</div>
 					</div>
 					<div class="flex gap-1 text-sm font-light">
-						<div class="">{guild.players.length}</div>
-						<div class="">Members</div>
-					</div>
-					<div class="flex gap-1 text-sm font-light">
-						<div class="">{guild.kills}</div>
+						<div class="">
+							{get_locals_for_guild(guild).reduce((sum, local) => local.kills + sum, 0)}
+						</div>
 						<div class="">Kills</div>
 					</div>
 					<div class="flex gap-1 text-sm font-light">
-						<div class="">{guild.deaths}</div>
+						<div class="">
+							{get_locals_for_guild(guild).reduce((sum, local) => local.deaths + sum, 0)}
+						</div>
 						<div class="">Deaths</div>
 					</div>
+					<div class="flex gap-1 text-sm font-light">
+						<div class="">
+							{format(
+								get_locals_for_guild(guild).reduce((sum, local) => local.performance + sum, 0) /
+									get_locals_for_guild(guild).length
+							)}
+						</div>
+						<div class="">Performance</div>
+					</div>
+					<div class="flex gap-1 text-sm font-light">
+						<div class="">
+							{format(
+								get_locals_for_guild(guild).reduce((sum, local) => local.duration + sum, 0) /
+									get_locals_for_guild(guild).length
+							)}
+						</div>
+						<div class="">Duration</div>
+					</div>
+					<div class="flex gap-1 text-sm font-light">
+						<div class="">
+							{get_locals_for_guild(guild).length}
+						</div>
+						<div class="">Joined</div>
+					</div>
+
 					<!-- <div class="flex gap-1 text-sm font-light">
 						<div class="">{format(guild.duration * 100)}</div>
 						<div class="">Joined</div>
@@ -123,5 +157,15 @@
 				height={480}
 			/>
 		</div>
+	</div>
+	<div class="w-1/2 p-2">
+		<Chart
+			type="area"
+			title="Performance"
+			data={chart_data}
+			labels={chart_labels}
+			annotations={chart_annotation}
+            max={5}
+		/>
 	</div>
 {/if}
