@@ -33,7 +33,7 @@ export class Guild {
 	}
 
 	get_deaths() {
-		return this.locals.reduce((sum, g) => sum + g.kills, 0);
+		return this.locals.reduce((sum, g) => sum + g.deaths, 0);
 	}
 
 	get_average_kill_difference() {
@@ -59,7 +59,6 @@ export class Guild {
 		return [...this.players].sort((a, b) => b.average_performance - a.average_performance);
 	}
 }
-
 
 interface IWar {
 	local_guilds: Local_Guild[];
@@ -160,7 +159,7 @@ type WarObject = {
 } & IWar;
 
 export type WarJSON = {
-	id?: never
+	id?: never;
 	date: string;
 	guild_name: string;
 	name: string;
@@ -169,7 +168,6 @@ export type WarJSON = {
 };
 
 export type WarType = WarObject | WarJSON;
-
 
 export class Player {
 	locals: Local_Guild_Player[] = [];
@@ -265,6 +263,7 @@ export class Local_Guild {
 
 	average_kills = 0;
 	average_deaths = 0;
+	average_performance = 0;
 	kd = 0;
 
 	duration = 0;
