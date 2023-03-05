@@ -17,6 +17,7 @@
 				player.name,
 				format(player.average_kills),
 				format(player.average_deaths),
+                format(player.average_performance),
 				format(player.average_duration_percentage),
 				player.locals.length,
 				player.guilds[player.guilds.length - 1].name
@@ -40,6 +41,10 @@
 			label: 'Deaths',
 			sortable: true
 		},
+        {
+            label: 'Performance',
+            sortable: true
+        },
 		{
 			label: 'Duration',
 			sortable: true
