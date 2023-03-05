@@ -12,6 +12,9 @@
 	export let type: 'area' | 'donut' = 'area';
 	export let labels: string[] = [];
 	export let data: { name: string; data: number[] }[] | number[] = [];
+	export let min: number = 0;
+	export let max: number | undefined = undefined;
+	export let annotations: { height: number; label: string }[] = [];
 
 	let render = false;
 
@@ -23,15 +26,34 @@
 				easing: 'easeout',
 				speed: 500
 			},
-			toolbar: {
-				show: false
-			},
 			fontFamily: 'inherit',
 			foreColor: '#f5cd40'
 		},
 		series: data,
 		xaxis: {
 			categories: labels
+		},
+		yaxis: {
+			min: min,
+			max: max,
+			forceNiceScale: true
+		},
+		annotations: {
+			yaxis: annotations.map((annotation) => {
+				return {
+					y: annotation.height,
+					borderColor: 'red',
+                    strokeDashArray: 0,
+					label: {
+						text: annotation.label,
+						borderColor: 'red',
+						style: {
+							color: '#fff',
+							background: 'red'
+						}
+					}
+				};
+			})
 		},
 		labels: labels,
 		fill: {
@@ -46,9 +68,7 @@
 				format: 'yyyy'
 			}
 		},
-		toolbar: {
-			show: false
-		},
+
 		dataLabels: {
 			enabled: true,
 			style: {
@@ -58,9 +78,8 @@
 				fontWeight: 'normal'
 			},
 			formatter: (value: number, opt: { seriesIndex: number }) => {
-				if (type === 'area') return value
-				else if (type === 'donut')
-					return `${labels[opt.seriesIndex]}: ${data[opt.seriesIndex]}`;
+				if (type === 'area') return value;
+				else if (type === 'donut') return `${labels[opt.seriesIndex]}: ${data[opt.seriesIndex]}`;
 			}
 		},
 		subtitle: {
@@ -81,6 +100,6 @@
 	});
 </script>
 
-{#if render}
+{#key render || data || labels || options}
 	<div use:chart={options} class="flex-grow" />
-{/if}
+{/key}
