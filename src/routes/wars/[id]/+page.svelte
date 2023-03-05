@@ -79,18 +79,17 @@
 		<div class="pl-2">{war.local_players.length} Players</div>
 		<div class="pl-2">{war.duration} minutes</div>
 	</div>
-	<div class="flex gap-4 sm:flex-row flex-col sm:h-[30rem] ">
-		<div class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap">
+	<div class="flex gap-4 sm:flex-row flex-col border border-gold border-dashed p-2 rounded-lg">
+		<div
+			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[30rem] justify-center sm:justify-start"
+		>
 			{#each war.local_guilds as local_guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-fit"
+					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square"
 					on:click={() =>
 						(selected_guild = selected_guild === local_guild ? undefined : local_guild)}
 				>
-					<div class="flex flex-col">
-						<!-- <img src={local_guild.guild.icon} class="w-[5rem] h-[5rem]" /> -->
-						<div class="text-lg truncate font-bold">{local_guild.guild.name}</div>
-					</div>
+					<div class="text-lg truncate font-bold w-full text-left">{local_guild.guild.name}</div>
 					<div class="flex gap-1 text-sm font-light">
 						<div class="">{local_guild.local_players.length}</div>
 						<div class="">Members</div>

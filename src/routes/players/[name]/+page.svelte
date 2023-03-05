@@ -93,17 +93,16 @@
 		</div>
 		<div class="pl-2">{player.locals.length} joined wars</div>
 	</div>
-	<div class="flex gap-4 sm:flex-row flex-col sm:h-[30rem] ">
-		<div class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2">
+	<div class="flex gap-4 sm:flex-row flex-col border border-gold border-dashed p-2 rounded-lg">
+		<div
+			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[30rem] justify-center sm:justify-start"
+		>
 			{#each player.guilds as guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-fit"
+					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[146px] aspect-square"
 					on:click={() => (selected_guild = selected_guild === guild ? undefined : guild)}
 				>
-					<div class="flex flex-col">
-						<!-- <img src={local_guild.icon} class="w-[5rem] h-[5rem]" /> -->
-						<div class="text-lg truncate font-bold">{guild.name}</div>
-					</div>
+					<div class="text-lg truncate font-bold w-full text-left">{guild.name}</div>
 					<div class="flex gap-1 text-sm font-light">
 						<div class="">
 							{get_locals_for_guild(guild).reduce((sum, local) => local.kills + sum, 0)}
@@ -158,14 +157,14 @@
 			/>
 		</div>
 	</div>
-	<div class="w-1/2 p-2">
+	<div class="w-1/2 p-2 mx-auto">
 		<Chart
 			type="area"
 			title="Performance"
 			data={chart_data}
 			labels={chart_labels}
 			annotations={chart_annotation}
-			max={Math.max(3, (player?.average_performance ?? 2)+1)}
+			max={Math.max(3, (player?.average_performance ?? 2) + 1)}
 		/>
 	</div>
 {/if}
