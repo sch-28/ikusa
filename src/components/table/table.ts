@@ -1,7 +1,14 @@
 import { writable } from 'svelte/store';
+import type { Component } from '../modal/modal-store';
+
+export type RowObject = {
+	label: number | string | Component;
+	color: string;
+	value?: number | string;
+};
 
 export type Row = {
-	columns: (number | string)[];
+	columns: (number | string | Component | RowObject)[];
 	onclick?: () => void;
 };
 

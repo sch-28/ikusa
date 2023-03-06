@@ -2,7 +2,7 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list';
 	import { onDestroy, onMount } from 'svelte';
 	import { scrollbar_width } from '../../logic/util';
-	import { TableSort, type HeaderColumn, type Row } from './table';
+	import { TableSort, type HeaderColumn, type Row, type RowObject } from './table';
 	import FaSort from 'svelte-icons/fa/FaSort.svelte';
 	import FaSortUp from 'svelte-icons/fa/FaSortUp.svelte';
 	import FaSortDown from 'svelte-icons/fa/FaSortDown.svelte';
@@ -153,8 +153,21 @@
 		if (current_sorts.length > 0 && current_sorts.some((colum) => colum.sort_dir !== undefined)) {
 			const col_index = header.indexOf(current_sorts[0]);
 			sorted_rows = [...rows].sort((a, b) => {
-				const a_val = a.columns[col_index];
-				const b_val = b.columns[col_index];
+				let a_val;
+				let b_val;
+				if (typeof a.columns[col_index] !== 'object') {
+					a_val = a.columns[col_index];
+				} else {
+					const col = a.columns[col_index] as RowObject;
+					a_val = col.value ?? col.label;
+				}
+
+				if (typeof b.columns[col_index] !== 'object') {
+					b_val = b.columns[col_index];
+				} else {
+					const col = b.columns[col_index] as RowObject;
+					b_val = col.value ?? col.label;
+				}
 
 				const alt: [any, any, 'asc' | 'des'][] = [];
 				for (let i = 1; i < current_sorts.length; i++) {
@@ -245,8 +258,17 @@
 				style={grid_template}
 			>
 				{#each row.columns as column, index}
-					<div class="max-w-full {index > 0 ? 'justify-self-center' : 'justify-self-start'}">
-						{column}
+					<div
+						class="max-w-full {index > 0 ? 'justify-self-center' : 'justify-self-start'}"
+						style="color: {column.color}"
+					>
+						{#if typeof column === 'string' || typeof column === 'number'}
+							<span class="truncate" title={column.toString()}>{column}</span>
+						{:else if typeof column === 'object' && (typeof column.data === 'string' || typeof column.data === 'number')}
+							<span class="truncate" title={column.label.toString()}>{column.label}</span>
+						{:else}
+							<Icon icon={column.label} />
+						{/if}
 					</div>
 				{/each}
 			</button>
