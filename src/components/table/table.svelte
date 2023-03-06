@@ -2,7 +2,7 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list';
 	import { onDestroy, onMount } from 'svelte';
 	import { scrollbar_width } from '../../logic/util';
-	import type { HeaderColumn, Row } from './table';
+	import { TableSort, type HeaderColumn, type Row } from './table';
 	import FaSort from 'svelte-icons/fa/FaSort.svelte';
 	import FaSortUp from 'svelte-icons/fa/FaSortUp.svelte';
 	import FaSortDown from 'svelte-icons/fa/FaSortDown.svelte';
@@ -14,6 +14,7 @@
 	export let searchable: boolean = false;
 	export let title: string = '';
 	export let height: number = 300;
+	export let id: string;
 
 	export let instance: HTMLDivElement | undefined = undefined;
 
@@ -23,6 +24,8 @@
 	let current_sorts: HeaderColumn<any>[] = [];
 	let v_list: HTMLDivElement;
 
+	let v_list_container: VirtualList;
+
 	$: {
 		height;
 		header;
@@ -31,24 +34,63 @@
 		handle_sort();
 	}
 
+	$: {
+		if (search_string) {
+			const table = $TableSort.find((sort) => sort.table_id === id);
+			if (table) {
+				table.search = search_string;
+			} else {
+				$TableSort.push({ table_id: id, search: search_string, scroll_y: 0, sorts: current_sorts });
+			}
+		}
+	}
+
 	$: grid_template =
 		`grid-template-columns:` +
 		header.map((column) => `minmax(75px, ${column.width ?? 1}fr)`).join(' ') +
 		';';
 
-	onMount(() => {
+	$: {
+		if (v_list_container) {
+			update_v_list();
+			load_cached_table();
+		}
+	}
+
+	function update_v_list() {
 		v_list = document.querySelector('svelte-virtual-list-viewport') as HTMLDivElement;
-		handle_resize();
-		sorted_rows = rows;
-		window.addEventListener('resize', handle_resize);
-	});
+		v_list?.addEventListener('scroll', handle_scroll);
+	}
+
+	function load_cached_table() {
+		const table = $TableSort.find((sort) => sort.table_id === id);
+		current_sorts =
+			(table?.sorts
+				.map((sort) => header.find((col) => col.label === sort.label))
+				.filter((col) => col !== undefined) as HeaderColumn<any>[]) ?? [];
+
+		current_sorts.forEach((col) => {
+			col.sort_dir = table?.sorts.find((sort) => sort.label === col.label)?.sort_dir;
+		});
+		search_string = table?.search ?? '';
+		table && handle_sort(table.scroll_y);
+	}
 
 	onDestroy(() => {
-		window.removeEventListener('resize', handle_resize);
+		v_list?.removeEventListener('scroll', handle_scroll);
 	});
 
-	function handle_resize() {
-		v_list.style.width = header_element.scrollWidth + 'px';
+	function handle_scroll() {
+		const data = $TableSort.find((sort) => sort.table_id === id);
+		if (data) {
+			data.scroll_y = v_list.scrollTop;
+		} else {
+			$TableSort.push({
+				table_id: id,
+				sorts: current_sorts,
+				scroll_y: v_list.scrollTop
+			});
+		}
 	}
 
 	function handle_sort_change(column: HeaderColumn<any>, multiple = false) {
@@ -73,10 +115,23 @@
 				column.sort_dir = 'asc';
 			}
 
-			current_sorts.push(column);
-			handle_sort();
+			if (!current_sorts.includes(column)) {
+				current_sorts.push(column);
+				handle_sort();
+			}
 		}
 		header = header;
+
+		const table_sort = $TableSort.find((sort) => sort.table_id === id);
+		if (table_sort) {
+			table_sort.sorts = current_sorts;
+		} else {
+			$TableSort.push({
+				table_id: id,
+				sorts: current_sorts,
+				scroll_y: 0
+			});
+		}
 	}
 
 	function default_sort(a: any, b: any, ...alt: [any, any, 'asc' | 'des'][]): -1 | 0 | 1 {
@@ -93,24 +148,11 @@
 		}
 	}
 
-	function handle_sort() {
+	function handle_sort(scroll_y = 0) {
 		sorted_rows = [...rows];
 		if (current_sorts.length > 0 && current_sorts.some((colum) => colum.sort_dir !== undefined)) {
 			const col_index = header.indexOf(current_sorts[0]);
 			sorted_rows = [...rows].sort((a, b) => {
-				/* const a_val = a.columns[col_index];
-				const b_val = b.columns[col_index];
-
-				if (current_sort.sort_dir === 'asc') {
-					return current_sort.sort?.(a_val, b_val) ?? default_sort(a_val, b_val);
-				} else if (current_sort.sort_dir === 'des') {
-					return current_sort.sort?.(b_val, a_val) ?? default_sort(b_val, a_val);
-				} else {
-					return 0;
-				} */
-
-				// multiple sort
-
 				const a_val = a.columns[col_index];
 				const b_val = b.columns[col_index];
 
@@ -147,12 +189,12 @@
 				}
 			});
 		});
-
-		scroll_top();
+		header = header;
+		scroll_top(scroll_y);
 	}
 
-	function scroll_top() {
-		if (v_list) v_list.scrollTop = 0;
+	function scroll_top(y: number) {
+		if (v_list) setTimeout(() => (v_list.scrollTop = y), 0);
 	}
 </script>
 
@@ -196,7 +238,7 @@
 		{/each}
 	</div>
 	{#key height}
-		<VirtualList items={sorted_rows} let:item={row}>
+		<VirtualList items={sorted_rows} let:item={row} bind:this={v_list_container}>
 			<button
 				on:click={row.onclick}
 				class="grid w-full text-gold-muted hover:text-gold"

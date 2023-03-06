@@ -111,6 +111,7 @@
 		</div>
 		<div class="w-full">
 			<Table
+				id="war-players"
 				height={480}
 				{header}
 				{rows}

@@ -68,4 +68,4 @@
 	<p>{$Manager.players.length} Players</p>
 </div>
 
-<Table {header} {rows} searchable height={table_height} bind:instance={table} />
+<Table id="players" {header} {rows} searchable height={table_height} bind:instance={table} />

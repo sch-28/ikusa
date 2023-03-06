@@ -149,6 +149,7 @@
 		</div>
 		<div class="w-full h-[30rem]">
 			<Table
+				id="player-table"
 				{header}
 				{rows}
 				searchable
