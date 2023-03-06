@@ -45,6 +45,7 @@
 		"flatted": "^3.2.7",
 		"flowbite": "^1.6.3",
 		"flowbite-svelte": "^0.30.4",
+		"generate-unique-id": "^2.0.1",
 		"lz-string": "^1.4.4",
 		"svelte-apexcharts": "^1.0.2",
 		"svelte-french-toast": "^1.0.3",
