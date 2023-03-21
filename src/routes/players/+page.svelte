@@ -35,27 +35,33 @@
 		},
 		{
 			label: 'Kills',
-			sortable: true
+			sortable: true,
+			title: 'Average Kills'
 		},
 		{
 			label: 'Deaths',
-			sortable: true
+			sortable: true,
+			title: 'Average Deaths'
 		},
         {
             label: 'Performance',
-            sortable: true
+            sortable: true,
+			title: 'Average Performance (Kills Compared to Guild Average Kills)'
         },
 		{
 			label: 'Duration',
-			sortable: true
+			sortable: true,
+			title: 'Average Join Duration'
 		},
 		{
 			label: 'Joined',
-			sortable: true
+			sortable: true,
+			title: 'Number of Joined Wars'
 		},
 		{
 			label: 'Guild',
-			sortable: true
+			sortable: true,
+			title: 'Current Guild'
 		}
 	];
 
