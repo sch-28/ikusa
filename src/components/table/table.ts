@@ -18,6 +18,7 @@ export type HeaderColumn<T> = {
 	sort?: (a: T, b: T) => number;
 	sortable?: boolean;
 	sort_dir?: 'asc' | 'des';
+	title?: string;
 };
 
 type TableData = {

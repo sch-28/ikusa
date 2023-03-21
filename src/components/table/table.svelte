@@ -237,7 +237,7 @@
 				{head.sortable ? 'cursor-pointer' : 'cursor-default'}"
 				on:click={(e) => handle_sort_change(head, e.shiftKey)}
 			>
-				<span class="truncate" title={head.label}>{head.label}</span>
+				<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
 				{#if head.sortable}
 					{#if head.sort_dir === 'asc'}
 						<Icon class="hidden sm:block" icon={FaSortUp} />
