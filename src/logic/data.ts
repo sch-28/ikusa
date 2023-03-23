@@ -6,6 +6,7 @@ export class Guild {
 	locals: Local_Guild[] = [];
 	name: string;
 	players: Player[] = [];
+	current_players: Player[] = [];
 
 	average_kill_difference = 0;
 	kills = 0;
@@ -26,6 +27,10 @@ export class Guild {
 		this.average_deaths = this.get_average_deaths();
 		this.average_kill_difference = this.get_average_kill_difference();
 		this.average_members = this.get_average_members();
+
+		this.current_players = this.players.filter(
+			(player) => player.guilds[player.guilds.length - 1].name == this.name
+		);
 	}
 
 	get_kills() {

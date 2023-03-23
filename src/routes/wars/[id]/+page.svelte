@@ -70,7 +70,7 @@
 			<div class="text-xl font-medium">{war.name}</div>
 			<div class="text-base text-gold-muted">{war.date}</div>
 		</div>
-		<button on:click={() => ModalManager.open(WarForm, { war: war })} class="ml-auto"
+		<button on:click={() => ModalManager.open(WarForm, { war: war })} class="ml-auto my-auto"
 			><Icon icon={MdSettings} class="self-center " /></button
 		>
 	</div>

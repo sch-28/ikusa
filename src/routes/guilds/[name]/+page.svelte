@@ -11,21 +11,24 @@
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
+	import GiSwordsEmblem from 'svelte-icons/gi/GiSwordsEmblem.svelte';
+	import Checkbox from '../../../components/elements/checkbox.svelte';
+	import { Toggle } from 'flowbite-svelte';
 
 	$: guild = $Manager.get_guild($page.params.name);
 
-	$: guild && calculate_local_players();
+	$: guild && (show_all || !show_all) && calculate_local_players();
 
 	let rows = [];
+	let show_all = false;
 
 	function calculate_local_players() {
 		if (!guild) return;
 
-		const player_locals = guild?.players.map((player) =>
-			player.locals.filter((local) => local.local_guild.guild.name === guild?.name)
+		const player_locals = guild?.players.filter(player => player.guilds[player.guilds.length-1].name === guild?.name || show_all).map((player) =>
+			player.locals.filter((local) => local.local_guild.guild.name === guild?.name )
 		);
 
-        
 		const player_data_sum = player_locals.map((player_locals) =>
 			player_locals.reduce(
 				(acc, local) => {
@@ -40,17 +43,15 @@
 
 		const player_data = player_data_sum?.map((data, i) => {
 			return {
-				name: guild?.players[i].name,
+				name: player_locals[i][0].player.name,
 				average_kills: data.kills / player_locals[i].length,
 				average_deaths: data.deaths / player_locals[i].length,
 				average_performance: data.kills / player_locals[i].length / (guild?.average_kills ?? 1),
 				average_duration_percentage: player_locals[i].length / player_locals[i].length,
 				locals: player_locals[i].length,
-				guild: guild?.players[i].guilds[guild?.players[i].guilds.length - 1].name
+				guild: player_locals[i][0].player.guilds[player_locals[i][0].player.guilds.length - 1].name
 			};
 		});
-
-        console.log(player_data_sum)
 
 		rows = player_data.map((player) => {
 			return {
@@ -69,7 +70,6 @@
 			} as Row;
 		});
 	}
-
 
 	const header: HeaderColumn<string>[] = [
 		{
@@ -114,18 +114,14 @@
 
 {#if guild}
 	<div class="flex justify-between items-start mb-4">
-		<Icon
-			size="lg"
-			icon={guild.won ? GiCrownedSkull : GiSkullCrack}
-			class="{guild.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center"
-		/>
+		<Icon size="lg" icon={GiSwordsEmblem} class="mr-2 self-center" />
 		<div class="flex flex-col gap-1">
 			<div class="text-xl font-medium">{guild.name}</div>
-			<div class="text-base text-gold-muted">{guild.date}</div>
+			<div class="text-base text-gold-muted">{show_all ? guild.players.length : guild.current_players.length} Members</div>
 		</div>
-		<button on:click={() => ModalManager.open(WarForm, { war: guild })} class="ml-auto"
-			><Icon icon={MdSettings} class="self-center " /></button
-		>
+		<div class="ml-auto my-auto flex gap-2">
+			<Toggle bind:checked={show_all} /> Show all
+		</div>
 	</div>
 	<!-- <div class="mb-4 divide-x-2 space-x-2 flex divide-gold-muted">
 		<div>{guild.local_guilds.length} Guilds</div>
