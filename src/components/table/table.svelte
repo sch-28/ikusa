@@ -62,6 +62,7 @@
 		if (v_list) {
 			v_list.addEventListener('scroll', handle_scroll);
 			v_list.style.minWidth = 'fit-content';
+			v_list.style.overflowY = 'scroll';
 		}
 	}
 
@@ -210,7 +211,7 @@
 	}
 
 	function scroll_top(y: number) {
-		if (v_list) setTimeout(() => (v_list.scrollTop = y), 0);
+		if (v_list) setTimeout(() => v_list.scrollTo({ top: y, behavior: 'smooth'}), 20);
 	}
 </script>
 
