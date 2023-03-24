@@ -59,7 +59,10 @@
 
 	function update_v_list() {
 		v_list = document.querySelector('svelte-virtual-list-viewport') as HTMLDivElement;
-		v_list?.addEventListener('scroll', handle_scroll);
+		if (v_list) {
+			v_list.addEventListener('scroll', handle_scroll);
+			v_list.style.minWidth = 'fit-content';
+		}
 	}
 
 	function load_cached_table() {
