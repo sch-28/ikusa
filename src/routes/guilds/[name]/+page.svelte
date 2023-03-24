@@ -14,12 +14,13 @@
 	import GiSwordsEmblem from 'svelte-icons/gi/GiSwordsEmblem.svelte';
 	import Checkbox from '../../../components/elements/checkbox.svelte';
 	import { Toggle } from 'flowbite-svelte';
+	import { goto } from '$app/navigation';
 
 	$: guild = $Manager.get_guild($page.params.name);
 
 	$: guild && (show_all || !show_all) && calculate_local_players();
 
-	let rows = [];
+	let rows:Row[] = [];
 	let show_all = false;
 
 	function calculate_local_players() {
@@ -123,11 +124,13 @@
 			<Toggle bind:checked={show_all} /> Show all
 		</div>
 	</div>
-	<!-- <div class="mb-4 divide-x-2 space-x-2 flex divide-gold-muted">
-		<div>{guild.local_guilds.length} Guilds</div>
-		<div class="pl-2">{guild.local_players.length} Players</div>
-		<div class="pl-2">{guild.duration} minutes</div>
-	</div> -->
+	<div class="mb-4 divide-x-2 space-x-2 flex divide-gold-muted">
+		<div>{guild.locals.length} Wars</div>
+		<div class="pl-2">{format(guild.average_members)} Avg. Members</div>
+		<div class="pl-2">{format(guild.average_kill_difference)} Avg. Kill Difference</div>
+		<div class="pl-2">{format(guild.average_kills)} Avg. Kills</div>
+		<div class="pl-2">{format(guild.average_deaths)} Avg. Deaths</div>
+	</div>
 	<div class="flex gap-4 sm:flex-row flex-col border border-gold border-dashed p-2 rounded-lg">
 		<!-- <div
 			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[30rem] justify-center sm:justify-start"
