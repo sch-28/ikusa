@@ -18,17 +18,31 @@
 
 	$: guild = $Manager.get_guild($page.params.name);
 
-	$: guild && (show_all || !show_all) && calculate_local_players();
+	$: guild &&
+		(show_all || !show_all) &&
+		(selected_war || !selected_war) &&
+		calculate_local_players();
 
-	let rows:Row[] = [];
+	let rows: Row[] = [];
 	let show_all = false;
+	let selected_war: War | undefined;
 
 	function calculate_local_players() {
 		if (!guild) return;
 
-		const player_locals = guild?.players.filter(player => player.guilds[player.guilds.length-1].name === guild?.name || show_all).map((player) =>
-			player.locals.filter((local) => local.local_guild.guild.name === guild?.name )
-		);
+		const player_locals = guild?.players
+			.filter(
+				(player) =>
+					(player.guilds[player.guilds.length - 1].name === guild?.name || show_all) &&
+					player.locals.some((local) => local.local_guild.war.id === selected_war?.id || !selected_war)
+			)
+			.map((player) =>
+				player.locals.filter(
+					(local) =>
+						local.local_guild.guild.name === guild?.name &&
+						(local.local_guild.war.id === selected_war?.id || !selected_war)
+				)
+			);
 
 		const player_data_sum = player_locals.map((player_locals) =>
 			player_locals.reduce(
@@ -118,7 +132,9 @@
 		<Icon size="lg" icon={GiSwordsEmblem} class="mr-2 self-center" />
 		<div class="flex flex-col gap-1">
 			<div class="text-xl font-medium">{guild.name}</div>
-			<div class="text-base text-gold-muted">{show_all ? guild.players.length : guild.current_players.length} Members</div>
+			<div class="text-base text-gold-muted">
+				{show_all ? guild.players.length : guild.current_players.length} Members
+			</div>
 		</div>
 		<div class="ml-auto my-auto flex gap-2">
 			<Toggle bind:checked={show_all} /> Show all
@@ -132,27 +148,27 @@
 		<div class="pl-2">{format(guild.average_deaths)} Avg. Deaths</div>
 	</div>
 	<div class="flex gap-4 sm:flex-row flex-col border border-gold border-dashed p-2 rounded-lg">
-		<!-- <div
+		<div
 			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[30rem] justify-center sm:justify-start"
 		>
-			{#each guild.local_guilds as local_guild}
+			{#each guild.locals as local_guild}
 				<button
 					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square"
 					on:click={() =>
-						(selected_guild = selected_guild === local_guild ? undefined : local_guild)}
+						(selected_war = selected_war === local_guild.war ? undefined : local_guild.war)}
 				>
-					<div class="text-lg truncate font-bold w-full text-left">{local_guild.guild.name}</div>
+					<div class="text-lg truncate font-bold w-full text-left">{local_guild.war.name}</div>
+					<div class="truncate w-full text-left text-base text-gold-muted">
+						{local_guild.war.date}
+					</div>
+
 					<div class="flex gap-1 text-sm font-light">
 						<div class="">{local_guild.local_players.length}</div>
 						<div class="">Members</div>
 					</div>
 					<div class="flex gap-1 text-sm font-light">
-						<div class="">{local_guild.kills}</div>
-						<div class="">Kills</div>
-					</div>
-					<div class="flex gap-1 text-sm font-light">
-						<div class="">{local_guild.deaths}</div>
-						<div class="">Deaths</div>
+						<div class="">{local_guild.kill_difference}</div>
+						<div class="">Kill Difference</div>
 					</div>
 					<div class="flex gap-1 text-sm font-light">
 						<div class="">{format(local_guild.duration)}</div>
@@ -160,7 +176,7 @@
 					</div>
 				</button>
 			{/each}
-		</div> -->
+		</div>
 		<div class="w-full">
 			<Table
 				height={table_height}
@@ -169,7 +185,7 @@
 				{header}
 				{rows}
 				searchable
-				title={(guild.name ?? 'All') + ' Players'}
+				title={(selected_war?.date ?? 'All') + ' Members'}
 			/>
 		</div>
 	</div>
