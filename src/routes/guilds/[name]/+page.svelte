@@ -34,14 +34,20 @@
 			.filter(
 				(player) =>
 					(player.guilds[player.guilds.length - 1].name === guild?.name || show_all) &&
-					player.locals.some((local) => local.local_guild.war.id === selected_war?.id || !selected_war)
+					(!selected_war ||
+						player.locals.some(
+							(local) =>
+								local.local_guild.war.id === selected_war?.id &&
+								local.local_guild.guild.name === guild?.name
+						))
 			)
 			.map((player) =>
-				player.locals.filter(
-					(local) =>
+				player.locals.filter((local) => {
+					return (
 						local.local_guild.guild.name === guild?.name &&
 						(local.local_guild.war.id === selected_war?.id || !selected_war)
-				)
+					);
+				})
 			);
 
 		const player_data_sum = player_locals.map((player_locals) =>
@@ -55,7 +61,6 @@
 				{ kills: 0, deaths: 0, duration: 0 }
 			)
 		);
-
 		const player_data = player_data_sum?.map((data, i) => {
 			return {
 				name: player_locals[i][0].player.name,
@@ -122,9 +127,6 @@
 			title: 'Current Guild'
 		}
 	];
-
-	let table: HTMLDivElement;
-	$: table_height = get_remaining_height(table, 16);
 </script>
 
 {#if guild}
@@ -179,8 +181,7 @@
 		</div>
 		<div class="w-full">
 			<Table
-				height={table_height}
-				bind:instance={table}
+				height={480}
 				id="guild"
 				{header}
 				{rows}
