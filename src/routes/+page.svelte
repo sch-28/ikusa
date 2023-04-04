@@ -13,6 +13,6 @@
 	</p>
 	<div class="mt-4 flex gap-2">
 		<Button on:click={() => goto('/dashboard')}>Dashboard</Button>
-		<Button color="secondary" on:click={() => goto('/dashboard')}>Get Started</Button>
+		<Button color="secondary" on:click={() => goto('/docs/introduction')}>Get Started</Button>
 	</div>
 </div>
