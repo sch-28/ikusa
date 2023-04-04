@@ -27,7 +27,7 @@
 	</div>
 	<div class="flex gap-4 items-end h-[2.25rem]">
 		<a
-			href="/documentation"
+			href="/docs"
 			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
 			>Documentation</a
 		>
