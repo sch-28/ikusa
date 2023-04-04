@@ -12,6 +12,7 @@
 	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
 	import Table from '../../components/table/table.svelte';
 	import type { HeaderColumn, Row } from '../../components/table/table';
+	import { get_remaining_height } from '../../logic/util';
 
 	const header: HeaderColumn<any>[] = [
 		{
@@ -70,18 +71,24 @@
 			}
 		} as Row;
 	});
+
+	let table: HTMLDivElement;
+	$: table_height = get_remaining_height(table, 16);
 </script>
 
 <div class="flex justify-between mb-4">
 	<p>All Wars</p>
 	<p>{$Manager.wars.length} Wars</p>
+	<Button
+		class="absolute left-1/2 -translate-x-1/2"
+		on:click={() => ModalManager.open(WarForm, { war: undefined })}
+	>
+		<Icon icon={MdAdd} />
+		Add War
+	</Button>
 </div>
 
 <!-- <div class="flex flex-col">
 	<WarList editable wars={$Manager.wars} on_click={(war) => goto(`wars/${war.id}`)} />
 </div> -->
-<Table id="wars" {header} {rows} searchable />
-<Button class="mx-auto mt-2" on:click={() => ModalManager.open(WarForm, { war: undefined })}>
-	<Icon icon={MdAdd} />
-	Add War
-</Button>
+<Table id="wars" {header} {rows} searchable height={table_height} bind:instance={table} />
