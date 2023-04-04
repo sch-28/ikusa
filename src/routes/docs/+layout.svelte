@@ -34,7 +34,7 @@
 		{
 			title: 'Configuration',
 			description: 'Learn how to configure the combat logger',
-			link: '/docs/usage'
+			link: '/docs/configuration'
 		},
 		{
 			title: 'Usage',
@@ -62,6 +62,11 @@
 			description: 'Learn how to share wars with other users',
 			link: '/docs/sharing-wars'
 		},
+        {
+            title: 'Explanation of statistics',
+            description: 'Learn about the statistics displayed on the dashboard',
+            link: '/docs/explanation-of-statistics'
+        },
 
 		{ title: 'Appendix' },
 		{

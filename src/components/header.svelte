@@ -28,9 +28,9 @@
 	<div class="flex gap-4 items-end h-[2.25rem]">
 		<a
 			href="/docs"
-			class={is_selected('documentation') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
-			>Documentation</a
+			class={is_selected('docs') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
+			>Docs</a
 		>
-		<a href="/login" class="bg-gold text-black rounded-lg px-2 py-1 font-bold">Log in</a>
+		<!-- <a href="/login" class="bg-gold text-black rounded-lg px-2 py-1 font-bold">Log in</a> -->
 	</div>
 </header>
