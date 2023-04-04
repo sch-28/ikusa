@@ -4,4 +4,4 @@
 	const entry = $page.params.entry;
 </script>
 
-<p>{entry}</p>
+<p class="capitalize">{entry}</p>
