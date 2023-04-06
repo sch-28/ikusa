@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import type { Writable } from 'svelte/store';
 import { writable, get } from 'svelte/store';
+import type { War, WarJSON } from './data';
 
 const storage = <T extends { [key: string]: any }>(key: string, initValue: T): Writable<T> => {
 	const store = writable(initValue);
@@ -48,16 +49,13 @@ const storage = <T extends { [key: string]: any }>(key: string, initValue: T): W
 export default storage;
 
 export interface User {
-    discord_data?: {
-        id: string;
-        username: string;
-        discriminator: string;
-        avatar: string;
-    };
-    name?: string;
-    
+	discord_data?: {
+		id: string;
+		username: string;
+		discriminator: string;
+	};
+	name?: string;
+	wars?: WarJSON[];
 }
 
-export const User = storage<User>('settings', {
-	
-});
+export const User = storage<User>('settings', {});

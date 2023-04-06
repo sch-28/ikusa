@@ -314,7 +314,7 @@ export class ManagerClass {
 		const wars = this.wars.filter((w) => w != war);
 		const wars_json = wars.map((w) => w.to_json());
 
-		await this.update_data([...wars_json, { guild_name, name, date, won, logs }]);
+		await this.update_data([...wars_json, { guild_name, name, date, won, logs, unique_id: war.unique_id }]);
 
 		return this.wars.find((w) => w.id == date + name);
 	}

@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import generateUniqueId from 'generate-unique-id';
 dayjs.extend(customParseFormat);
 
 export class Guild {
@@ -84,6 +85,8 @@ interface IWar {
 	update(): void;
 	get_duration(): number;
 	to_json(): WarType;
+
+	unique_id: string;
 }
 
 export class War implements IWar {
@@ -103,6 +106,8 @@ export class War implements IWar {
 	id: string;
 	duration = 0;
 
+	unique_id: string;
+
 	constructor(guild_name: string, name: string, date: string, won: boolean, logs: Event[]) {
 		this.date = date;
 		this.name = name;
@@ -111,6 +116,8 @@ export class War implements IWar {
 		this.won = won;
 		this.formatted_date = new Date(this.date).toLocaleDateString();
 		this.id = this.date + this.name;
+
+		this.unique_id = generateUniqueId();
 	}
 
 	update() {
@@ -145,6 +152,7 @@ export class War implements IWar {
 			name: this.name,
 			date: this.date,
 			won: this.won,
+			unique_id: this.unique_id,
 			logs: this.logs.map(
 				(e) =>
 					new Log(
@@ -170,6 +178,7 @@ export type WarJSON = {
 	name: string;
 	won: boolean;
 	logs: Log[];
+	unique_id: string;
 };
 
 export type WarType = WarObject | WarJSON;
