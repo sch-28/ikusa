@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String @id @unique
+  username      String
+  name          String
+  discriminator String
+  wars          War[]
+}
+
+model War {
+  date       String
+  name       String
+  won        Boolean
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  guild_name String
+  guilds     String
+  data       String
+  id         String  @id @unique
+}
