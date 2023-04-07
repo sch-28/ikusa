@@ -95,8 +95,8 @@
 			show_toast('You need to login via discord to share a war', 'error');
 			return;
 		}
-
-		if (war) {
+		
+		if (war && !$User.wars?.find((w) => w.unique_id == war?.unique_id)) {
 			const prisma_war: Omit<PrismaWar, 'userId'> = {
 				date: war.date,
 				guild_name: war.guild_name,
