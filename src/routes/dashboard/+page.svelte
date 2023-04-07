@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 	import { chart } from 'svelte-apexcharts';
 	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
 	import Chart from '../../components/chart/chart.svelte';
@@ -7,6 +8,7 @@
 	import Icon from '../../components/elements/icon.svelte';
 	import { ModalManager } from '../../components/modal/modal-store';
 	import Upload from '../../components/modal/modals/war-form.svelte';
+	import { User } from '../../logic/user';
 
 	const data = [
 		{
@@ -16,6 +18,11 @@
 	];
 
 	const labels = ['19.02', '21.02', '25.02', '26.02', '28.02', '03.03', '04.03', '07.03', '10.03'];
+
+	function signout() {
+		$User.discord_data = undefined;
+		goto('/discord/signout');
+	}
 </script>
 
 <div class="flex justify-between mb-4">
@@ -76,3 +83,4 @@
 	<Icon icon={MdAdd} />
 	Add War
 </Button>
+<Button on:click={signout}>Signout</Button>
