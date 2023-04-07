@@ -22,16 +22,16 @@
 				<div class="relative p-4 overflow-auto">
 					<div class="flex flex-col items-center justify-center gap-2">
 						<div
-							class="w-12 h-12 [&_svg]:!fill-blue-500 [&_svg]:!text-gray-300 [&_svg]:dark:!text-dark-muted"
+							class="w-12 h-12 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted"
 						>
 							<LoadingCircle />
 						</div>
 						<div class="w-80 items-center">
 							<div
-								class="h-2 bg-gray-300 dark:bg-dark-muted rounded-full overflow-hidden relative transition-all duration-300"
+								class="h-2 bg-gold-800 dark:bg-dark-muted rounded-full overflow-hidden relative transition-all duration-300"
 							>
 								<div
-									class="bg-blue-500 dark:bg-blue-500 h-full transition-all duration-300"
+									class="bg-gold dark:bg-gold h-full transition-all duration-300"
 									style="width: {loader.progress ? loader.progress : 0}%;"
 								/>
 							</div>
