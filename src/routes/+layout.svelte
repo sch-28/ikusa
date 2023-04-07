@@ -6,8 +6,15 @@
 	import Loader from '../components/loader/loader.svelte';
 	import { onMount } from 'svelte';
 	import { Manager } from '../logic/stores';
+	import { User } from '../logic/user';
 
 	let is_mounted = false;
+
+	export let data: User | undefined;
+
+	if (data && Object.keys(data).length > 0) {
+		User.set(data);
+	}
 
 	onMount(async () => {
 		const worker = await import('../logic/manager-worker?worker');

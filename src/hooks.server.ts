@@ -4,21 +4,28 @@ import { prisma } from './logic/prisma';
 import type { User } from './logic/user';
 import { refresh_discord_token } from './logic/refresh';
 
+type DiscordUser = {
+	username: string;
+	discriminator: string;
+	avatar: string;
+	id: string;
+};
+
 async function set_session(
 	request: {
 		event: RequestEvent<Partial<Record<string, string>>>;
 	},
-	user: User
+	user: DiscordUser
 ): Promise<User | undefined> {
-	if (!user.discord_data) return;
 	const prisma_user = await prisma.user.upsert({
-		where: { id: user.discord_data.id },
+		where: { id: user.id },
 		update: {},
 		create: {
-			id: user.discord_data.id,
-			discriminator: user.discord_data.discriminator,
-			username: user.discord_data.username,
-			name: user.name ?? ''
+			id: user.id,
+			discriminator: user.discriminator,
+			username: user.username,
+			name: '',
+			guild: ''
 		},
 		include: {
 			wars: {}
@@ -27,11 +34,12 @@ async function set_session(
 
 	return {
 		discord_data: {
-			discriminator: user.discord_data.discriminator,
-			id: user.discord_data.id,
-			username: user.discord_data.username
+			discriminator: prisma_user.discriminator,
+			id: prisma_user.id,
+			username: prisma_user.username
 		},
-		name: user.name,
+		name: prisma_user.name,
+		guild: prisma_user.guild,
 		wars: prisma_user.wars.map((war) => {
 			return {
 				won: war.won,
@@ -47,7 +55,6 @@ async function set_session(
 
 export const handle: Handle = async (request) => {
 	const cookies = request.event.cookies;
-
 	const refresh_token = cookies.get('refresh_token');
 	const access_token = cookies.get('access_token');
 
@@ -71,7 +78,7 @@ export const handle: Handle = async (request) => {
 
 			// returns a discord user if JWT was valid
 			const response = await discord_request.json();
-
+			('hi');
 			if (response.id) {
 				request.event.locals.user = await set_session(request, response);
 			}

@@ -108,7 +108,7 @@ export class War implements IWar {
 
 	unique_id: string;
 
-	constructor(guild_name: string, name: string, date: string, won: boolean, logs: Event[]) {
+	constructor(guild_name: string, name: string, date: string, won: boolean, logs: Event[], unique_id?: string) {
 		this.date = date;
 		this.name = name;
 		this.guild_name = guild_name;
@@ -117,7 +117,7 @@ export class War implements IWar {
 		this.formatted_date = new Date(this.date).toLocaleDateString();
 		this.id = this.date + this.name;
 
-		this.unique_id = generateUniqueId();
+		this.unique_id = unique_id ?? generateUniqueId();
 	}
 
 	update() {
@@ -452,6 +452,12 @@ export class Event {
 		}
 		return !this.kill;
 	}
+
+	get message() {
+		return `[${this.time_string}] ${this.player_one.name} ${this.kill ? 'has killed' : 'died to'} ${
+			this.player_two.name
+		} from ${this.guild}`;
+	}
 }
 
 export class Log {
@@ -494,5 +500,11 @@ export class Log {
 					l.time_string
 				)
 		);
+	}
+
+	get message() {
+		return `${this.player_one} ${this.kill ? 'has killed' : 'died to'} ${this.player_two} from ${
+			this.guild
+		}`;
 	}
 }

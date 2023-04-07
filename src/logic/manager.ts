@@ -13,6 +13,7 @@ import {
 } from './data';
 import type { ManagerUpdated, UpdateManager, UpdateProgress } from './manager-worker';
 import LZString from 'lz-string';
+import type { User } from './user';
 
 function get_default_war() {
 	return new War('Default', 'Default', 'Default', false, []);
@@ -33,17 +34,6 @@ function get_default_player() {
 }
 function get_default_event() {
 	return new Event(get_default_player(), get_default_player(), false, '');
-}
-
-export interface User {
-	discord_data?: {
-		id: string;
-		username: string;
-		discriminator: string;
-		avatar: string;
-	};
-	name?: string;
-	last_guild?: string;
 }
 
 export class ManagerClass {
@@ -131,7 +121,8 @@ export class ManagerClass {
 				name: war.name,
 				date: war.date,
 				won: war.won,
-				logs: war.logs
+				logs: war.logs,
+				unique_id: war.unique_id
 			});
 			const message: UpdateProgress = {
 				msg: 'update_progress',
@@ -202,7 +193,8 @@ export class ManagerClass {
 		date,
 		won,
 		logs,
-		save = true
+		save = true,
+		unique_id: uniqueId
 	}: {
 		guild_name: string;
 		name: string;
@@ -210,12 +202,13 @@ export class ManagerClass {
 		won: boolean;
 		logs: Log[];
 		save?: boolean;
+		unique_id?: string;
 	}) {
 		if (this.wars.find((war) => war.id == date + name)) {
 			return undefined;
 		}
 
-		this.user.last_guild = guild_name;
+		this.user.guild = guild_name;
 
 		const events: Event[] = [];
 		const guilds = new Set<Guild>();
@@ -239,7 +232,7 @@ export class ManagerClass {
 			events.push(event);
 		}
 
-		const war = new War(guild_name, name, date, won, events);
+		const war = new War(guild_name, name, date, won, events, uniqueId);
 		this.wars.push(war);
 
 		for (const guild of guilds) {
@@ -314,7 +307,10 @@ export class ManagerClass {
 		const wars = this.wars.filter((w) => w != war);
 		const wars_json = wars.map((w) => w.to_json());
 
-		await this.update_data([...wars_json, { guild_name, name, date, won, logs, unique_id: war.unique_id }]);
+		await this.update_data([
+			...wars_json,
+			{ guild_name, name, date, won, logs, unique_id: war.unique_id }
+		]);
 
 		return this.wars.find((w) => w.id == date + name);
 	}

@@ -5,12 +5,21 @@
 	import WarForm from '../../../components/modal/modals/war-form.svelte';
 	import type { HeaderColumn, Row } from '../../../components/table/table';
 	import Table from '../../../components/table/table.svelte';
-	import type { Local_Guild, War } from '../../../logic/data';
+	import { Log, type Local_Guild, type War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
-	import { format } from '../../../logic/util';
+	import { format, show_toast } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
+	import Button from '../../../components/elements/button.svelte';
+	import IoIosShareAlt from 'svelte-icons/io/IoIosShareAlt.svelte';
+	import IoIosClose from 'svelte-icons/io/IoIosClose.svelte';
+	import { User } from '../../../logic/user';
+	import { goto } from '$app/navigation';
+
+	import type { War as PrismaWar } from '@prisma/client';
+	import LZString from 'lz-string';
+	import { ManagerClass } from '../../../logic/manager';
 
 	let selected_guild: Local_Guild | undefined;
 
@@ -25,9 +34,32 @@
 
 	let war: War | undefined;
 	$: {
-		const id = $page.params.id;
+		get_war($page.params.id);
+	}
+
+	async function get_war(id?: string) {
 		if (id) {
 			war = $Manager.get_war(id);
+			if (!war) {
+				const result = (await fetch('/api/war/' + id).then((r) => r.json())) as PrismaWar;
+				if (result) {
+					const data = LZString.decompressFromEncodedURIComponent(result.data);
+					if (!data) return;
+					const results = [...data.matchAll(/\[.*\] (\w*) (died to|has killed) (\w*) from (\w*)/g)];
+					if (results.length > 0) {
+						const logs = results.map((log) => Log.parse_log(log[0]));
+						const manager = new ManagerClass();
+						war = manager.add_war({
+							guild_name: result.guild_name,
+							date: result.date,
+							logs: logs,
+							name: result.name,
+							unique_id: result.id,
+							won: result.won
+						});
+					}
+				}
+			}
 			update_rows();
 		}
 	}
@@ -57,6 +89,34 @@
 
 	$: chart_data = war?.local_guilds.map((local_guild) => local_guild.local_players.length) ?? [];
 	$: chart_labels = war?.local_guilds.map((local_guild) => local_guild.guild.name) ?? [];
+
+	async function share_war() {
+		if (!$User.discord_data) {
+			show_toast('You need to login via discord to share a war', 'error');
+			return;
+		}
+
+		if (war) {
+			const prisma_war: Omit<PrismaWar, 'userId'> = {
+				date: war.date,
+				guild_name: war.guild_name,
+				name: war.name,
+				data: LZString.compressToEncodedURIComponent(war.logs.map((l) => l.message).join('\n')),
+				guilds: war.guild_name,
+				id: war.unique_id,
+				won: war.won
+			};
+
+			const result = await fetch('/api/share', {
+				method: 'POST',
+				body: JSON.stringify(prisma_war)
+			});
+			if (result.status == 200) {
+				$User.wars?.push(war.to_json());
+			}
+		}
+		goto(`/wars/${war?.unique_id}`);
+	}
 </script>
 
 {#if war}
@@ -70,8 +130,13 @@
 			<div class="text-xl font-medium">{war.name}</div>
 			<div class="text-base text-gold-muted">{war.date}</div>
 		</div>
-		<button on:click={() => ModalManager.open(WarForm, { war: war })} class="ml-auto my-auto"
-			><Icon icon={MdSettings} class="self-center " /></button
+		<button on:click={share_war} title="Share" class="my-auto ml-auto"
+			><Icon icon={IoIosShareAlt} class="self-center " /></button
+		>
+		<button
+			on:click={() => ModalManager.open(WarForm, { war: war })}
+			title="Edit"
+			class="ml-2 my-auto"><Icon icon={MdSettings} class="self-center " /></button
 		>
 	</div>
 	<div class="mb-4 divide-x-2 space-x-2 flex divide-gold-muted">

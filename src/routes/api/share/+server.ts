@@ -1,11 +1,13 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { prisma } from '../../../logic/prisma';
 import type { WarJSON } from '../../../logic/data';
+import LZString from 'lz-string';
+import type { War } from '@prisma/client';
 
 export const POST: RequestHandler = async (event) => {
 	const user = event.locals.user;
-	const war = (await event.request.json()) as WarJSON;
-	if (!war || !war.date || !war.logs || !war.name) {
+	const war = (await event.request.json()) as Omit<War, 'userId'>;
+	if (!war || !war.date || !war.data || !war.name) {
 		return new Response('Invalid body', { status: 500 });
 	}
 	if (!user?.discord_data) {
@@ -22,9 +24,9 @@ export const POST: RequestHandler = async (event) => {
 						date: war.date,
 						guild_name: war.guild_name,
 						name: war.name,
-						data: war.logs.map((l) => l.player_one).join('\n'),
+						data: war.data,
 						guilds: war.guild_name,
-						id: war.unique_id,
+						id: war.id,
 						won: war.won
 					}
 				}
@@ -33,6 +35,7 @@ export const POST: RequestHandler = async (event) => {
 
 		return new Response(null, { status: 200 });
 	} catch (e) {
+		console.error(e)
 		return new Response(JSON.stringify(e), { status: 500 });
 	}
 };

@@ -22,7 +22,7 @@
 	let war_won: boolean = false;
 
 	let wars: WarJSON[] = [];
-	let wars_guild_name: string = $Manager.user.last_guild ?? '';
+	let wars_guild_name: string = $Manager.user.guild ?? '';
 	let setted_wars_guild_name: boolean = false;
 
 	let states = ['upload', 'edit', 'logs', 'multi'] as const;
@@ -37,8 +37,8 @@
 	$: setted_wars_guild_name && set_wars_guild_name();
 
 	onMount(() => {
-		wars_guild_name = $Manager.user.last_guild ?? '';
-		if (war_guild_name.length == 0) war_guild_name = $Manager.user.last_guild ?? '';
+		wars_guild_name = $Manager.user.guild ?? '';
+		if (war_guild_name.length == 0) war_guild_name = $Manager.user.guild ?? '';
 	});
 
 	function set_wars_guild_name() {
@@ -70,7 +70,7 @@
 
 	$: files && check_files();
 
-	let war_guild_name: string = $Manager.user.last_guild ?? '';
+	let war_guild_name: string = $Manager.user.guild ?? '';
 	let war_guild_name_suggestions: string[] = [];
 	$: war_guild_name_suggestions = $Manager.guilds
 		.map((guild) => {
@@ -97,7 +97,8 @@
 						name: files?.[index].name.split('.')[0] ?? '',
 						date: new Date().toISOString().split('T')[0],
 						won: false,
-						logs: logs
+						logs: logs,
+						unique_id: '',
 					};
 				});
 			} else if (results && results.length === 1) {
