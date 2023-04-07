@@ -1,6 +1,7 @@
 import type { Action } from 'svelte/types/runtime/action';
 import toast from 'svelte-french-toast';
 import { browser } from '$app/environment';
+import generateUniqueId from 'generate-unique-id';
 
 export function show_toast(message: string, type: 'success' | 'error') {
 	toast[type](message, {
@@ -54,4 +55,8 @@ export function get_remaining_height(el: HTMLElement, margin = 0) {
 	const { top } = el.getBoundingClientRect();
 	const { innerHeight } = window;
 	return innerHeight - top - margin;
+}
+
+export function generate_id() {
+	return generateUniqueId() as string;
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Dropzone, Label, Toggle } from 'flowbite-svelte';
-	import { show_toast } from '../../../logic/util';
+	import { generate_id, show_toast } from '../../../logic/util';
 	import Button from '../../elements/button.svelte';
 	import Input from '../../elements/input.svelte';
 	import Icon from '../../elements/icon.svelte';
@@ -98,7 +98,7 @@
 						date: new Date().toISOString().split('T')[0],
 						won: false,
 						logs: logs,
-						unique_id: '',
+						unique_id: generate_id(),
 					};
 				});
 			} else if (results && results.length === 1) {
