@@ -20,6 +20,7 @@
 	import type { War as PrismaWar } from '@prisma/client';
 	import LZString from 'lz-string';
 	import { ManagerClass } from '../../../logic/manager';
+	import LoadingCircle from '../../../components/elements/loading-circle.svelte';
 
 	let selected_guild: Local_Guild | undefined;
 
@@ -95,7 +96,8 @@
 			show_toast('You need to login via discord to share a war', 'error');
 			return;
 		}
-		
+		console.log(war);
+
 		if (war && !$User.wars?.find((w) => w.unique_id == war?.unique_id)) {
 			const prisma_war: Omit<PrismaWar, 'userId'> = {
 				date: war.date,
@@ -188,4 +190,10 @@
 	<!-- <div class="w-[450px] mt-4">
 		<Chart data={chart_data} labels={chart_labels} type="donut" />
 	</div> -->
+{:else}
+	<div
+		class="w-12 h-12 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+	>
+		<LoadingCircle />
+	</div>
 {/if}
