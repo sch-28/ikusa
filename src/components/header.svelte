@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import Icon from './elements/icon.svelte';
 	import IoMdHelp from 'svelte-icons/io/IoMdHelp.svelte';
+	import { User } from '../logic/user';
 
 	$: is_selected = (url: string) => {
 		return $page.route.id?.includes(url);
@@ -31,6 +32,10 @@
 				? 'text-gold'
 				: 'text-gold-muted hover:text-gold'} self-center mt-2"><Icon icon={IoMdHelp} /></a
 		>
-		<a href="/discord/auth" class="bg-gold text-black rounded-lg px-2 py-1 font-bold">Log in</a>
+		<a
+			href={$User.discord_data ? '/dashboard' : '/discord/auth'}
+			class="bg-gold text-black rounded-lg px-2 py-1 font-bold"
+			>{$User.discord_data ? $User.discord_data.username : 'Log in'}</a
+		>
 	</div>
 </header>
