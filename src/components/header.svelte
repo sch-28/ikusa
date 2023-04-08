@@ -19,7 +19,7 @@
 
 <header class="flex items-center justify-between py-4 ">
 	<div class="flex gap-2 items-end">
-		<a class="text-3xl font-bold mr-2" href="/">Ikusa</a>
+		<a class="text-3xl font-bold mr-2" href={$User.discord_data ? '/dashboard' : '/'}>Ikusa</a>
 		<a href="/wars" class={is_selected('wars') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
 			>Wars</a
 		>
