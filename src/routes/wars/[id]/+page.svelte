@@ -34,21 +34,32 @@
 	let rows: Row[] = [];
 
 	let war: War | undefined;
+	let logs: Log[] = [];
 	$: {
 		get_war($page.params.id);
 	}
+
+	let is_public = false;
+
+	Manager.subscribe((manager) => {
+		if (war && !manager.wars.includes(war) && !is_public) {
+			goto('/wars');
+		}
+	});
 
 	async function get_war(id?: string) {
 		if (id) {
 			war = $Manager.get_war(id);
 			if (!war) {
-				const result = (await fetch('/api/war/' + id).then((r) => r.json())) as PrismaWar;
+				const result = (await fetch('/api/war/' + id)
+					.then((r) => r.json())
+					.catch((e) => console.error(e))) as PrismaWar;
 				if (result) {
 					const data = LZString.decompressFromEncodedURIComponent(result.data);
 					if (!data) return;
 					const results = [...data.matchAll(/\[.*\] (\w*) (died to|has killed) (\w*) from (\w*)/g)];
 					if (results.length > 0) {
-						const logs = results.map((log) => Log.parse_log(log[0]));
+						logs = results.map((log) => Log.parse_log(log[0]));
 						const manager = new ManagerClass();
 						war = manager.add_war({
 							guild_name: result.guild_name,
@@ -58,8 +69,14 @@
 							unique_id: result.id,
 							won: result.won
 						});
+						is_public = true;
 					}
 				}
+			} else {
+				is_public = false;
+			}
+			if (!war) {
+				goto('/wars');
 			}
 			update_rows();
 		}
@@ -118,6 +135,20 @@
 		}
 		goto(`/wars/${war?.unique_id}`);
 	}
+
+	function add_war() {
+		if (war) {
+			$Manager.add_war({
+				guild_name: war.guild_name,
+				date: war.date,
+				logs: logs,
+				name: war.name,
+				unique_id: war.unique_id,
+				won: war.won
+			});
+			goto(`/wars/${war.id}`);
+		}
+	}
 </script>
 
 {#if war}
@@ -131,14 +162,24 @@
 			<div class="text-xl font-medium">{war.name}</div>
 			<div class="text-base text-gold-muted">{war.date}</div>
 		</div>
-		<button on:click={share_war} title="Share" class="my-auto ml-auto"
-			><Icon icon={IoIosShareAlt} class="self-center " /></button
-		>
-		<button
-			on:click={() => ModalManager.open(WarForm, { war: war })}
-			title="Edit"
-			class="ml-2 my-auto"><Icon icon={MdSettings} class="self-center " /></button
-		>
+		{#if !is_public}
+			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id)}
+				<Button class="my-auto ml-auto" on:click={() => goto("/wars/" + war?.unique_id)}>Shared</Button>
+			{:else}
+				<button on:click={share_war} title="Share" class="my-auto ml-auto"
+					><Icon icon={IoIosShareAlt} class="self-center " /></button
+				>
+			{/if}
+			<button
+				on:click={() => ModalManager.open(WarForm, { war: war })}
+				title="Edit"
+				class="ml-2 my-auto"><Icon icon={MdSettings} class="self-center " /></button
+			>
+		{:else if $Manager.get_war_by_id(war.unique_id)}
+			<Button on:click={() => goto(`/wars/${war?.id}`)} class="my-auto ml-auto">View in Dashboard</Button>
+		{:else}
+			<Button on:click={add_war} class="my-auto ml-auto">Add to Dashboard</Button>
+		{/if}
 	</div>
 	<div class="mb-4 divide-x-2 space-x-2 flex divide-gold-muted">
 		<div>{war.local_guilds.length} Guilds</div>

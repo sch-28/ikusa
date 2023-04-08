@@ -63,6 +63,10 @@ export class ManagerClass {
 		return this.wars.find((war) => war.id == id);
 	}
 
+	get_war_by_id(id: string) {
+		return this.wars.find((war) => war.unique_id == id);
+	}
+
 	get_player(player_name: string) {
 		return this.players.find((p) => p.name === player_name);
 	}
