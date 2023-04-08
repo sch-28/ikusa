@@ -5,6 +5,7 @@
 		id?: string;
 		color?: 'primary' | 'secondary';
 		disabled?: boolean;
+		size?: 'sm' | 'md' | 'lg';
 	}
 </script>
 
@@ -18,7 +19,12 @@
 			$$props.disabled ? '!bg-gray-700 text-gray-400' : 'border-gold'
 		}`}
 	{$$props.color === 'secondary' && 'bg-black  focus:ring-gray-400 border border-gold'}
-	text-center font-medium focus:ring-4 focus:outline-none flex items-center justify-center px-5 py-2.5 text-sm rounded-lg {$$props.class} h-10"
+	text-center font-medium focus:ring-4 focus:outline-none flex items-center justify-center rounded-lg {$$props.class}
+	{($$props.size === 'md' || !$$props.size) && 'h-10 px-5 text-sm'}
+	{$$props.size === 'sm' && 'h-8 px-4 text-xs'}
+	{$$props.size === 'lg' && 'h-12 px-6 text-lg'}
+	
+	"
 >
 	<slot />
 </Button>
