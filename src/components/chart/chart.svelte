@@ -34,7 +34,17 @@
 			categories: labels
 		},
 		yaxis: {
-			min: min,
+			min:
+				min || typeof data[0] === 'number'
+					? (data as number[]).reduce((a, b) => Math.min(a, b), 0)
+					: (data as { name: string; data: number[] }[]).reduce(
+							(a, b) =>
+								Math.min(
+									a,
+									b.data.reduce((a, b) => Math.min(a, b), 0)
+								),
+							0
+					  ),
 			max: max,
 			forceNiceScale: true
 		},
@@ -43,7 +53,7 @@
 				return {
 					y: annotation.height,
 					borderColor: 'red',
-                    strokeDashArray: 0,
+					strokeDashArray: 0,
 					label: {
 						text: annotation.label,
 						borderColor: 'red',
