@@ -1,4 +1,4 @@
-import { error, type RequestHandler } from '@sveltejs/kit';
+/* import { error, type RequestHandler } from '@sveltejs/kit';
 import { prisma } from '$root/components/prisma';
 
 export const DELETE: RequestHandler = async (event) => {
@@ -28,3 +28,4 @@ export const DELETE: RequestHandler = async (event) => {
 	console.error("Could not delete: ", result);
 	throw error(500, 'Something went wrong');
 };
+ */

@@ -1,5 +1,12 @@
-import PrismaClientPkg from '@prisma/client';
+import type { PrismaClient as ImportedPrismaClient } from '@prisma/client';
+import { createRequire } from 'module';
 
-// Prisma doesn't support ES Modules so we have to do this
-const PrismaClient = PrismaClientPkg.PrismaClient;
+const require = createRequire(import.meta.url ?? __filename);
+
+const { PrismaClient: RequiredPrismaClient } = require('@prisma/client');
+
+const _PrismaClient: typeof ImportedPrismaClient = RequiredPrismaClient;
+
+class PrismaClient extends _PrismaClient {}
+
 export const prisma = new PrismaClient();
