@@ -347,6 +347,7 @@
 				<div>
 					<Label class="mb-2" for="guild">Guild</Label>
 					<Autocomplete
+						id="guild"
 						input_class="w-full"
 						bind:value={war_guild_name}
 						items={$Manager.guilds.map((g) => g.name)}
@@ -395,6 +396,7 @@
 				<div>
 					<Label class="mb-2" for="guild">Guild Name</Label>
 					<Autocomplete
+					id="guild"
 						input_class="w-full"
 						placeholder="Enter guild name.."
 						bind:value={wars_guild_name}

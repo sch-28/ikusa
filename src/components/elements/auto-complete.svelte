@@ -9,6 +9,7 @@
 		value?: string;
 		placeholder?: string;
 		required?: boolean;
+		id?: string;
 	}
 
 	export let items: string[] = [];
@@ -89,6 +90,7 @@
 
 <div use:click_outside on:click_outside={() => (show_suggestions = false)}>
 	<Input
+		id={$$props.id}
 		class={$$props.input_class}
 		bind:value
 		on:change
@@ -98,7 +100,7 @@
 		on:focus={() => (show_suggestions = true)}
 	/>
 	<div
-		class="border border-gray-600 mt-1 absolute bg-gray-700 z-50 rounded-lg overflow-hidden {(suggestions.length ===
+		class="border border-gray-600 mt-1 absolute bg-black z-50 rounded-lg overflow-hidden {(suggestions.length ===
 			0 ||
 			!show_suggestions) &&
 			'hidden'}"
@@ -106,7 +108,7 @@
 	>
 		{#each suggestions as suggestion}
 			<button
-				class="p-2 w-full text-left text-white hover:bg-gold hover:text-black outline-none focus:bg-gold focus:text-black"
+				class="p-2 w-full text-left text-gold-muted  hover:text-gold outline-none focus:bg-gold focus:text-black"
 				bind:this={suggestion.button}
 				on:click={() => (value = suggestion.name)}>{suggestion.name}</button
 			>
