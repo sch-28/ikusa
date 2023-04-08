@@ -60,7 +60,7 @@
 				>
 			</Dropdown>
 		{:else}
-			<a href="/discord/auth" class="bg-gold text-black rounded-lg px-2 py-1 font-bold">Log in</a>
+			<Button size="sm" on:click={() => goto('/discord/auth')}>Login</Button>
 		{/if}
 	</div>
 </header>

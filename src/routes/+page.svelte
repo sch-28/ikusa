@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Button from '../components/elements/button.svelte';
+	import { User } from '../logic/user';
 </script>
 
 <div
@@ -12,7 +13,11 @@
 		into your combat performance.
 	</p>
 	<div class="mt-4 flex gap-2">
-		<Button on:click={() => goto('/dashboard')}>Dashboard</Button>
+		{#if $User.discord_data}
+			<Button on:click={() => goto('/dashboard')}>Dashboard</Button>
+		{:else}
+			<Button on:click={() => goto('/discord/auth')}>Login with Discord</Button>
+		{/if}
 		<Button color="secondary" on:click={() => goto('/docs/introduction')}>Get Started</Button>
 	</div>
 </div>
