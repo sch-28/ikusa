@@ -17,6 +17,9 @@ export class Guild {
 	average_deaths = 0;
 	average_members = 0;
 
+	wins = 0;
+	losses = 0;
+
 	constructor(name: string) {
 		this.name = name;
 	}
@@ -28,6 +31,8 @@ export class Guild {
 		this.average_deaths = this.get_average_deaths();
 		this.average_kill_difference = this.get_average_kill_difference();
 		this.average_members = this.get_average_members();
+		this.wins = this.get_wins();
+		this.losses = this.locals.length - this.wins;
 
 		this.current_players = this.players.filter(
 			(player) => player.guilds[player.guilds.length - 1].name == this.name
@@ -63,6 +68,10 @@ export class Guild {
 
 	get sorted_player() {
 		return [...this.players].sort((a, b) => b.average_performance - a.average_performance);
+	}
+
+	get_wins() {
+		return this.locals.filter((g) => g.war.won).length;
 	}
 }
 
@@ -108,7 +117,14 @@ export class War implements IWar {
 
 	unique_id: string;
 
-	constructor(guild_name: string, name: string, date: string, won: boolean, logs: Event[], unique_id?: string) {
+	constructor(
+		guild_name: string,
+		name: string,
+		date: string,
+		won: boolean,
+		logs: Event[],
+		unique_id?: string
+	) {
 		this.date = date;
 		this.name = name;
 		this.guild_name = guild_name;

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
+	import { A } from 'flowbite-svelte';
 	import { chart } from 'svelte-apexcharts';
 	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
 	import Chart from '../../components/chart/chart.svelte';
@@ -8,6 +9,7 @@
 	import Icon from '../../components/elements/icon.svelte';
 	import { ModalManager } from '../../components/modal/modal-store';
 	import Upload from '../../components/modal/modals/war-form.svelte';
+	import { Player } from '../../logic/data';
 	import { Manager } from '../../logic/stores';
 	import { User } from '../../logic/user';
 
@@ -24,6 +26,9 @@
 		$User.discord_data = undefined;
 		goto('/discord/signout');
 	}
+
+	$: player = $User.name ? $Manager.players.find((p) => p.name === $User.name) : undefined;
+	$: guild = $User.guild ? $Manager.guilds.find((g) => g.name === $User.guild) : undefined;
 </script>
 
 <div class="flex justify-between mb-4">
@@ -44,40 +49,52 @@
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">Your Stats</p>
-			<div class="font-light text-sm">54 kills</div>
-			<div class="font-light text-sm">20 deaths</div>
-			<div class="font-light text-sm">6 Wars</div>
-			<div class="font-light text-sm">124min playtime</div>
+			{#if player}
+				<div class="font-light text-sm">{player.kills} Kills</div>
+				<div class="font-light text-sm">{player.deaths} Deaths</div>
+				<div class="font-light text-sm">{player.locals.length} Wars</div>
+				<div class="font-light text-sm">
+					{player.locals.reduce((sum, local) => sum + local.duration, 0)} Minutes
+				</div>
+			{:else}
+				<div class="font-light text-sm">No data, set your family name in the settings.</div>
+			{/if}
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
-			<p class="font-bold text-lg">ORY Stats</p>
-			<div class="font-light text-sm">4 Wins</div>
-			<div class="font-light text-sm">3 Losses</div>
-			<div class="font-light text-sm">23 Members</div>
-			<div class="font-light text-sm">2.3 Performance</div>
+			{#if guild}
+				<p class="font-bold text-lg">{guild.name} Stats</p>
+				<div class="font-light text-sm">{guild.wins} Wins</div>
+				<div class="font-light text-sm">{guild.losses} Losses</div>
+				<div class="font-light text-sm">{guild.players.length} Members</div>
+				<div class="font-light text-sm">{guild.average_kill_difference} Avg. Kill Diff.</div>
+			{:else}
+				<p class="font-bold text-lg">Guild Stats</p>
+				<p class="font-light text-sm">No data, set your guild in the settings.</p>
+			{/if}
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">Recent Wars</p>
-			<div class="font-light text-sm">Guild War vs Ecchi</div>
-			<div class="font-light text-sm">21.02.2023</div>
-			<div class="font-light text-sm">Yolo Nodewar</div>
-			<div class="font-light text-sm">Epic fight</div>
-			<div class="font-light text-sm">18.02.2023</div>
+			<div class="flex flex-col">
+				{#each $Manager.wars.slice($Manager.wars.length - 5, $Manager.wars.length) as war}
+					<a class="font-light text-sm" href="/wars/{war.id}">{war.name}</a>
+				{/each}
+			</div>
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">Top Players</p>
-			<div class="font-light text-sm">Basedman</div>
-			<div class="font-light text-sm">Cake</div>
-			<div class="font-light text-sm">Eflcaller</div>
-			<div class="font-light text-sm">Hoizemann</div>
-			<div class="font-light text-sm">Baba</div>
+			<div class="flex flex-col">
+				{#each $Manager.sorted_players.slice(0, 5) as player}
+					<a class="font-light text-sm" href="/players/{player.name}">{player.name}</a>
+				{/each}
+			</div>
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">Top Guilds</p>
-			<div class="font-light text-sm">ORY</div>
-			<div class="font-light text-sm">Athanasy</div>
-			<div class="font-light text-sm">Ecchi</div>
-			<div class="font-light text-sm">Mythic</div>
+			<div class="flex flex-col">
+				{#each $Manager.sorted_guilds.slice(0, 5) as guild}
+					<a class="font-light text-sm" href="/guilds/{guild.name}">{guild.name}</a>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>
@@ -86,4 +103,3 @@
 	<Icon icon={MdAdd} />
 	Add War
 </Button>
-<Button on:click={signout}>Signout</Button>
