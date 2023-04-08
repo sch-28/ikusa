@@ -9,26 +9,21 @@
 	import Icon from '../../components/elements/icon.svelte';
 	import { ModalManager } from '../../components/modal/modal-store';
 	import Upload from '../../components/modal/modals/war-form.svelte';
-	import { Player } from '../../logic/data';
 	import { Manager } from '../../logic/stores';
 	import { User } from '../../logic/user';
-
-	const data = [
-		{
-			name: 'sales',
-			data: [1.2, 2.1, 0.8, 1.5, 1.7, 1.6, 1.5, 2, 1.9]
-		}
-	];
-
-	const labels = ['19.02', '21.02', '25.02', '26.02', '28.02', '03.03', '04.03', '07.03', '10.03'];
-
-	function signout() {
-		$User.discord_data = undefined;
-		goto('/discord/signout');
-	}
+	import { format } from '../../logic/util';
 
 	$: player = $User.name ? $Manager.players.find((p) => p.name === $User.name) : undefined;
 	$: guild = $User.guild ? $Manager.guilds.find((g) => g.name === $User.guild) : undefined;
+
+	$: data = [
+		{
+			name: 'Guild Performance',
+			data: guild?.locals.map((local) => local.kill_difference) || []
+		}
+	];
+
+	$: labels = guild?.locals.map((local) => local.war.date) || [];
 </script>
 
 <div class="flex justify-between mb-4">
@@ -36,13 +31,17 @@
 </div>
 <div class="sm:flex gap-2 items-center">
 	<!-- <div use:chart={options} class="flex-grow" /> -->
-	<Chart type="area" {data} {labels} title="Performance" />
+	<Chart type="area" {data} {labels} title="Performance"  />
 	<div class="grid grid-cols-2 gap-2 mx-auto h-fit w-fit">
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">General Stats</p>
 			<div class="font-light text-sm">{$Manager.players.length} Players</div>
 			<div class="font-light text-sm">{$Manager.guilds.length} Guilds</div>
 			<div class="font-light text-sm">{$Manager.wars.length} Wars</div>
+			<div class="font-light text-sm">
+				{$Manager.wars.reduce((sum, war) => sum + war.duration, 0)} Minutes
+			</div>
+
 			<div class="font-light text-sm">
 				{$Manager.wars.reduce((sum, war) => sum + war.logs.length, 0)} Logs
 			</div>
@@ -52,12 +51,13 @@
 			{#if player}
 				<div class="font-light text-sm">{player.kills} Kills</div>
 				<div class="font-light text-sm">{player.deaths} Deaths</div>
+				<div class="font-light text-sm">{format(player.average_performance)} Avg. Performance</div>
 				<div class="font-light text-sm">{player.locals.length} Wars</div>
 				<div class="font-light text-sm">
 					{player.locals.reduce((sum, local) => sum + local.duration, 0)} Minutes
 				</div>
 			{:else}
-				<div class="font-light text-sm">No data, set your family name in the settings.</div>
+				<div class="font-light text-sm">Set your family name in the settings.</div>
 			{/if}
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
@@ -66,10 +66,13 @@
 				<div class="font-light text-sm">{guild.wins} Wins</div>
 				<div class="font-light text-sm">{guild.losses} Losses</div>
 				<div class="font-light text-sm">{guild.players.length} Members</div>
+				<div class="font-light text-sm">
+					{guild.locals.reduce((sum, war) => sum + war.duration, 0)} Minutes
+				</div>
 				<div class="font-light text-sm">{guild.average_kill_difference} Avg. Kill Diff.</div>
 			{:else}
 				<p class="font-bold text-lg">Guild Stats</p>
-				<p class="font-light text-sm">No data, set your guild in the settings.</p>
+				<p class="font-light text-sm">Set your guild in the settings.</p>
 			{/if}
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
