@@ -4,10 +4,17 @@
 	import Icon from './elements/icon.svelte';
 	import IoMdHelp from 'svelte-icons/io/IoMdHelp.svelte';
 	import { User } from '../logic/user';
+	import { Dropdown, DropdownDivider, DropdownItem } from 'flowbite-svelte';
+	import Button from './elements/button.svelte';
 
 	$: is_selected = (url: string) => {
 		return $page.route.id?.includes(url);
 	};
+
+	function signout() {
+		$User.discord_data = undefined;
+		goto('/discord/signout');
+	}
 </script>
 
 <header class="flex items-center justify-between py-4 ">
@@ -32,10 +39,28 @@
 				? 'text-gold'
 				: 'text-gold-muted hover:text-gold'} self-center mt-2"><Icon icon={IoMdHelp} /></a
 		>
-		<a
-			href={$User.discord_data ? '/dashboard' : '/discord/auth'}
-			class="bg-gold text-black rounded-lg px-2 py-1 font-bold"
-			>{$User.discord_data ? $User.discord_data.username : 'Log in'}</a
-		>
+		{#if $User.discord_data}
+			<Button size="sm">{$User.discord_data.username}</Button>
+			<Dropdown frameClass="!bg-black border rounded-lg">
+				<DropdownItem
+					href="/dashboard"
+					defaultClass="font-medium py-2 px-4 text-sm text-gold-muted hover:text-gold w-full text-left"
+					>Dashboard</DropdownItem
+				>
+				<DropdownItem
+					href="/settings"
+					defaultClass="font-medium py-2 px-4 text-sm text-gold-muted hover:text-gold w-full text-left"
+					>Settings</DropdownItem
+				>
+				<DropdownDivider />
+				<DropdownItem
+					on:click={signout}
+					defaultClass="font-medium py-2 px-4 text-sm text-gold-muted hover:text-gold w-full text-left"
+					>Logout</DropdownItem
+				>
+			</Dropdown>
+		{:else}
+			<a href="/discord/auth" class="bg-gold text-black rounded-lg px-2 py-1 font-bold">Log in</a>
+		{/if}
 	</div>
 </header>

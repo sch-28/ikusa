@@ -8,6 +8,7 @@
 	import Icon from '../../components/elements/icon.svelte';
 	import { ModalManager } from '../../components/modal/modal-store';
 	import Upload from '../../components/modal/modals/war-form.svelte';
+	import { Manager } from '../../logic/stores';
 	import { User } from '../../logic/user';
 
 	const data = [
@@ -26,8 +27,7 @@
 </script>
 
 <div class="flex justify-between mb-4">
-	<p>Welcome back, ORACLE!</p>
-	<p>Last login: 2 days ago</p>
+	<p>Welcome back, {$User.discord_data?.username || $User.name || 'Person'}!</p>
 </div>
 <div class="sm:flex gap-2 items-center">
 	<!-- <div use:chart={options} class="flex-grow" /> -->
@@ -35,9 +35,12 @@
 	<div class="grid grid-cols-2 gap-2 mx-auto h-fit w-fit">
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">General Stats</p>
-			<div class="font-light text-sm">156 Players</div>
-			<div class="font-light text-sm">23 Guilds</div>
-			<div class="font-light text-sm">11 Wars</div>
+			<div class="font-light text-sm">{$Manager.players.length} Players</div>
+			<div class="font-light text-sm">{$Manager.guilds.length} Guilds</div>
+			<div class="font-light text-sm">{$Manager.wars.length} Wars</div>
+			<div class="font-light text-sm">
+				{$Manager.wars.reduce((sum, war) => sum + war.logs.length, 0)} Logs
+			</div>
 		</div>
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">Your Stats</p>
