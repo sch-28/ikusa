@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  ikusa:
+    image: ikusa
+    restart: always
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+      - NODE_ENV=production
+    env_file:
+      - .env
+    volumes:
+      - ./prisma:/usr/src/app/prisma
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+    
