@@ -28,8 +28,8 @@
 		{ label: 'Name', width: 3, sortable: true },
 		{ label: 'Kills', width: 1, sortable: true },
 		{ label: 'Deaths', width: 1, sortable: true },
-		{ label: 'Performance', width: 1, sortable: true },
-		{ label: 'Joined', width: 1, sortable: true }
+		{ label: 'Performance',title:"Average Performance (Kills Compared to Guild Average Kills)", width: 1, sortable: true },
+		{ label: 'Join Duration',title:"Percentage of war joined",  width: 1, sortable: true }
 	];
 	let rows: Row[] = [];
 
@@ -97,7 +97,7 @@
 						local_player.kills,
 						local_player.deaths,
 						format(local_player.performance),
-						format(local_player.duration_percentage * 100)
+						format(local_player.duration_percentage * 100,0) + "%"
 					]
 				});
 			}

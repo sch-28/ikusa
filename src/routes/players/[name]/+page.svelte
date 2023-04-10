@@ -40,10 +40,12 @@
 		},
 		{
 			label: 'Performance',
+			title: "Average Performance (Kills Compared to Guild Average Kills)",
 			sortable: true
 		},
 		{
 			label: 'Duration',
+			title: "Amount of minutes participated",
 			sortable: true
 		},
 		{
