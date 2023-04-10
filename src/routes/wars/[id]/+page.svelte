@@ -28,8 +28,13 @@
 		{ label: 'Name', width: 3, sortable: true },
 		{ label: 'Kills', width: 1, sortable: true },
 		{ label: 'Deaths', width: 1, sortable: true },
-		{ label: 'Performance',title:"Average Performance (Kills Compared to Guild Average Kills)", width: 1, sortable: true },
-		{ label: 'Join Duration',title:"Percentage of war joined",  width: 1, sortable: true }
+		{
+			label: 'Performance',
+			title: 'Average Performance (Kills Compared to Guild Average Kills)',
+			width: 1,
+			sortable: true
+		},
+		{ label: 'Join Duration', title: 'Percentage of war joined', width: 1, sortable: true }
 	];
 	let rows: Row[] = [];
 
@@ -97,7 +102,7 @@
 						local_player.kills,
 						local_player.deaths,
 						format(local_player.performance),
-						format(local_player.duration_percentage * 100,0) + "%"
+						format(local_player.duration_percentage * 100, 0) + '%'
 					]
 				});
 			}
@@ -164,7 +169,9 @@
 		</div>
 		{#if !is_public}
 			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id)}
-				<Button class="my-auto ml-auto" on:click={() => goto("/wars/" + war?.unique_id)}>Shared</Button>
+				<Button class="my-auto ml-auto" on:click={() => goto('/wars/' + war?.unique_id)}
+					>Shared</Button
+				>
 			{:else}
 				<button on:click={share_war} title="Share" class="my-auto ml-auto"
 					><Icon icon={IoIosShareAlt} class="self-center " /></button
@@ -176,7 +183,9 @@
 				class="ml-2 my-auto"><Icon icon={MdSettings} class="self-center " /></button
 			>
 		{:else if $Manager.get_war_by_id(war.unique_id)}
-			<Button on:click={() => goto(`/wars/${war?.id}`)} class="my-auto ml-auto">View in Dashboard</Button>
+			<Button on:click={() => goto(`/wars/${war?.id}`)} class="my-auto ml-auto"
+				>View in Dashboard</Button
+			>
 		{:else}
 			<Button on:click={add_war} class="my-auto ml-auto">Add to Dashboard</Button>
 		{/if}
@@ -192,7 +201,10 @@
 		>
 			{#each war.local_guilds as local_guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square"
+					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square {selected_guild ===
+					local_guild
+						? 'bg-gold text-black'
+						: ''}"
 					on:click={() =>
 						(selected_guild = selected_guild === local_guild ? undefined : local_guild)}
 				>

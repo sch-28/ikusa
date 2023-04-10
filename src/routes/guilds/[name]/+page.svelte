@@ -155,7 +155,10 @@
 		>
 			{#each guild.locals as local_guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square"
+					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square {selected_war ===
+					local_guild.war
+						? 'bg-gold text-black'
+						: ''}"
 					on:click={() =>
 						(selected_war = selected_war === local_guild.war ? undefined : local_guild.war)}
 				>

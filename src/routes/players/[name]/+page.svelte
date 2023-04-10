@@ -40,12 +40,12 @@
 		},
 		{
 			label: 'Performance',
-			title: "Average Performance (Kills Compared to Guild Average Kills)",
+			title: 'Average Performance (Kills Compared to Guild Average Kills)',
 			sortable: true
 		},
 		{
 			label: 'Duration',
-			title: "Amount of minutes participated",
+			title: 'Amount of minutes participated',
 			sortable: true
 		},
 		{
@@ -101,7 +101,10 @@
 		>
 			{#each player.guilds as guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[146px] aspect-square"
+					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[146px] aspect-square {selected_guild ===
+					guild
+						? 'bg-gold text-black'
+						: ''}"
 					on:click={() => (selected_guild = selected_guild === guild ? undefined : guild)}
 				>
 					<div class="text-lg truncate font-bold w-full text-left">{guild.name}</div>
