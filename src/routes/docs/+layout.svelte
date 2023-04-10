@@ -3,6 +3,8 @@
 	import IoIosMenu from 'svelte-icons/io/IoIosMenu.svelte';
 	import IoIosClose from 'svelte-icons/io/IoIosClose.svelte';
 	import Icon from '../../components/elements/icon.svelte';
+	import Footer from '../../components/footer.svelte';
+	import { get_remaining_height } from '../../logic/util';
 
 	type Item = {
 		title: string;
@@ -62,11 +64,11 @@
 			description: 'Learn how to share wars with other users',
 			link: '/docs/sharing-wars'
 		},
-        {
-            title: 'Explanation of statistics',
-            description: 'Learn about the statistics displayed on the dashboard',
-            link: '/docs/explanation-of-statistics'
-        },
+		{
+			title: 'Explanation of statistics',
+			description: 'Learn about the statistics displayed on the dashboard',
+			link: '/docs/explanation-of-statistics'
+		},
 
 		{ title: 'Appendix' },
 		{
@@ -86,46 +88,54 @@
 		}
 	];
 	let visible = false;
+	let container: HTMLElement;
+
+	$: height = get_remaining_height(container);
 </script>
 
-<div class="flex gap-2">
-	<div class="mr-8 sm:mr-0 flex">
-		<button class="sm:hidden absolute place-self-center" on:click={() => (visible = !visible)}>
-			<Icon icon={IoIosMenu} />
-		</button>
-		<div
-			class="sm:w-80 p-2 sm:p-0 sm:relative absolute transition left-0 bg-black border-gold border sm:border-0 sm:border-r rounded-lg sm:rounded-none {visible
-				? 'translate-x-4 sm:translate-x-0'
-				: '-translate-x-[105%] sm:translate-x-0'} "
-		>
-			<div class="sm:hidden flex">
-				<button on:click={() => (visible = !visible)}>
-					<Icon icon={IoIosClose} />
-				</button>
-			</div>
-			<div class="flex flex-col gap-1 ">
-				{#each content as entry}
-					{#if 'link' in entry}
-						<a href={entry.link}>
+<div class="flex flex-col" style="height: {height}px;" bind:this={container}>
+	<div class="flex gap-2">
+		<div class="mr-8 sm:mr-0 flex">
+			<button class="sm:hidden absolute place-self-center" on:click={() => (visible = !visible)}>
+				<Icon icon={IoIosMenu} />
+			</button>
+			<div
+				class="sm:w-80 p-2 sm:p-0 sm:relative absolute transition left-0 bg-black border-gold border sm:border-0 sm:border-r rounded-lg sm:rounded-none {visible
+					? 'translate-x-4 sm:translate-x-0'
+					: '-translate-x-[105%] sm:translate-x-0'} "
+			>
+				<div class="sm:hidden flex">
+					<button on:click={() => (visible = !visible)}>
+						<Icon icon={IoIosClose} />
+					</button>
+				</div>
+				<div class="flex flex-col gap-1 ">
+					{#each content as entry}
+						{#if 'link' in entry}
+							<a href={entry.link}>
+								<p
+									class="font-light {$page.params.entry === entry.link.split('/')[2]
+										? 'text-gold'
+										: 'text-gold-muted'}"
+									title={entry.description}
+								>
+									{entry.title}
+								</p>
+							</a>
+						{:else}
 							<p
-								class="font-light {$page.params.entry === entry.link.split('/')[2]
-									? 'text-gold'
-									: 'text-gold-muted'}"
-								title={entry.description}
+								class="font-bold text-sm text-gold-muted uppercase tracking-wider [&:not(:first-child)]:mt-10"
 							>
 								{entry.title}
 							</p>
-						</a>
-					{:else}
-						<p
-							class="font-bold text-sm text-gold-muted uppercase tracking-wider [&:not(:first-child)]:mt-10"
-						>
-							{entry.title}
-						</p>
-					{/if}
-				{/each}
+						{/if}
+					{/each}
+				</div>
 			</div>
 		</div>
+		<slot />
 	</div>
-	<slot />
+	<div class="mt-auto">
+		<Footer />
+	</div>
 </div>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Button from '../components/elements/button.svelte';
+	import Footer from '../components/footer.svelte';
 	import { User } from '../logic/user';
 </script>
 
@@ -21,3 +22,7 @@
 		<Button color="secondary" on:click={() => goto('/docs/introduction')}>Get Started</Button>
 	</div>
 </div>
+
+<section class="" style="margin-top: 95vh;" />
+
+<Footer />
