@@ -91,12 +91,19 @@
 	let container: HTMLElement;
 
 	$: height = get_remaining_height(container);
+
+	let page_entry = $page.route.id;
+
+	$: {
+		page_entry = $page.route.id;
+		visible = false;
+	}
 </script>
 
 <div class="flex flex-col" style="height: {height}px;" bind:this={container}>
 	<div class="flex gap-2">
 		<div class="mr-8 sm:mr-0 flex">
-			<button class="sm:hidden absolute place-self-center" on:click={() => (visible = !visible)}>
+			<button class="sm:hidden absolute" on:click={() => (visible = !visible)}>
 				<Icon icon={IoIosMenu} />
 			</button>
 			<div
@@ -114,9 +121,7 @@
 						{#if 'link' in entry}
 							<a href={entry.link}>
 								<p
-									class="font-light {$page.params.entry === entry.link.split('/')[2]
-										? 'text-gold'
-										: 'text-gold-muted'}"
+									class="font-light {page_entry === entry.link ? 'text-gold' : 'text-gold-muted'}"
 									title={entry.description}
 								>
 									{entry.title}
