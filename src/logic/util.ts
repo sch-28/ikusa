@@ -7,7 +7,7 @@ import { goto } from '$app/navigation';
 export function show_toast(message: string, type: 'success' | 'error') {
 	toast[type](message, {
 		position: 'top-right',
-		style: `background: #1f2937; color: #fff; min-width: 200px;`
+		style: `background: #f5cd40; color: #00000; min-width: 200px;`
 	});
 }
 
