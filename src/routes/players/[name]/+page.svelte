@@ -5,10 +5,11 @@
 	import MdPerson from 'svelte-icons/md/MdPerson.svelte';
 	import Table from '../../../components/table/table.svelte';
 	import type { HeaderColumn, Row } from '../../../components/table/table';
-	import { format } from '../../../logic/util';
+	import { format, redirect_and_toast } from '../../../logic/util';
 	import { goto } from '$app/navigation';
 	import Chart from '../../../components/chart/chart.svelte';
 	import type { Guild } from '../../../logic/data';
+	import { onMount } from 'svelte';
 
 	const chart_annotation = [{ height: 1, label: 'Average' }];
 
@@ -18,6 +19,12 @@
 		{ data: player_locals.map((local) => format(local.performance)) ?? [], name: 'Performance' }
 	];
 	$: chart_labels = player?.locals.map((local) => local.local_guild.war.date) ?? [];
+
+	onMount(() => {
+		if (!player) {
+			redirect_and_toast('/players', 'Player not found');
+		}
+	});
 
 	function get_locals_for_guild(guild: Guild) {
 		return player?.locals.filter((local) => local.local_guild.guild === guild) ?? [];

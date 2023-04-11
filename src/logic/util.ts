@@ -2,12 +2,18 @@ import type { Action } from 'svelte/types/runtime/action';
 import toast from 'svelte-french-toast';
 import { browser } from '$app/environment';
 import generateUniqueId from 'generate-unique-id';
+import { goto } from '$app/navigation';
 
 export function show_toast(message: string, type: 'success' | 'error') {
 	toast[type](message, {
 		position: 'top-right',
 		style: `background: #1f2937; color: #fff; min-width: 200px;`
 	});
+}
+
+export function redirect_and_toast(destination: string, message: string) {
+	show_toast(message, 'error');
+	goto(destination, { replaceState: true });
 }
 
 export async function sleep(ms?: number) {

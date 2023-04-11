@@ -7,7 +7,7 @@
 	import Table from '../../../components/table/table.svelte';
 	import type { Guild, Local_Guild, War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
-	import { format, get_remaining_height } from '../../../logic/util';
+	import { format, get_remaining_height, redirect_and_toast } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
@@ -15,6 +15,7 @@
 	import Checkbox from '../../../components/elements/checkbox.svelte';
 	import { Toggle } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	$: guild = $Manager.get_guild($page.params.name);
 
@@ -22,6 +23,12 @@
 		(show_all || !show_all) &&
 		(selected_war || !selected_war) &&
 		calculate_local_players();
+
+	onMount(() => {
+		if (!guild) {
+			redirect_and_toast('/guilds', 'Guild not found');
+		}
+	});
 
 	let rows: Row[] = [];
 	let show_all = false;

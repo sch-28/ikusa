@@ -7,7 +7,7 @@
 	import Table from '../../../components/table/table.svelte';
 	import { Log, type Local_Guild, type War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
-	import { format, show_toast } from '../../../logic/util';
+	import { format, redirect_and_toast, show_toast } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
@@ -81,7 +81,7 @@
 				is_public = false;
 			}
 			if (!war) {
-				goto('/wars');
+				redirect_and_toast('/wars', 'War not found');
 			}
 			update_rows();
 		}
