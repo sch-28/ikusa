@@ -7,6 +7,20 @@
 
 	const changes = [
 		{
+			version: '0.0.3',
+			date: '11.04.2023',
+			title: 'Errors and Redirects',
+			changes: [
+				'Added a fallback error page',
+				'Adjusted the discord redirect page to better fit the new design',
+				'Removed the old toast colors and also adjusted it to fit the new design',
+				'The user is now redirected and a toast is shown when a player, war or guild is not found',
+				'Removed the overflow of the landing page',
+				'Added configuration, installation and introduction to the documentation',
+			],
+			author: oracle
+		},
+		{
 			version: '0.0.2',
 			date: '10.04.2023',
 			title: 'Adjustments',
@@ -16,7 +30,7 @@
 				'A selected Guild or War is now indicated by a yellow background',
 				'Added a Footer',
 				'Added this Changelog',
-                'Sidebar autocloses when a link is clicked'
+				'Sidebar autocloses when a link is clicked'
 			],
 			author: oracle
 		},
@@ -42,15 +56,15 @@
 <div class="flex flex-col gap-2">
 	{#each changes as change}
 		<div class="flex flex-col mb-4">
-			<div class="flex items-center gap-2">
+			<div class="flex items-center gap-2 mb-1">
 				<a href={change.author.link} class="text-blue-500"
 					><img src={change.author.image} alt="github user" class="w-8 h-8 rounded-full" /></a
 				>
 
-				<h2 class="text-2xl font-bold">{change.version}</h2>
+				<h2 class="text-2xl font-bold text-gold">{change.version}</h2>
 			</div>
 			<p class="text-gray-500">{change.date}</p>
-			<h3 class="text-xl font-medium">{change.title}</h3>
+			<h3 class="text-xl font-medium text-gold">{change.title}</h3>
 			<ul class="list-disc list-inside flex flex-col text-gold-muted text-sm">
 				{#each change.changes as ch}
 					<li>{ch}</li>
