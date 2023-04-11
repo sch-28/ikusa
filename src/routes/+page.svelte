@@ -3,6 +3,9 @@
 	import Button from '../components/elements/button.svelte';
 	import Footer from '../components/footer.svelte';
 	import { User } from '../logic/user';
+	import { get_remaining_height } from '../logic/util';
+
+	let hero_divider: HTMLElement;
 </script>
 
 <div
@@ -23,6 +26,10 @@
 	</div>
 </div>
 
-<section class="" style="margin-top: 95vh;" />
-
-<Footer />
+<div
+	style="height: {get_remaining_height(hero_divider)}px;"
+	bind:this={hero_divider}
+	class="flex justify-end flex-col"
+>
+	<Footer />
+</div>
