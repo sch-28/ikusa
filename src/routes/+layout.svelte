@@ -24,6 +24,11 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Ikusa</title>
+	<meta name="description" content="Ikusa - BDO Combat Log Analyzer" />
+</svelte:head>
+
 {#if is_mounted}
 	<div class="content">
 		<div class="px-4 max-w-7xl mx-auto">

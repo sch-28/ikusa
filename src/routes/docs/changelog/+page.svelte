@@ -17,6 +17,7 @@
 				'The user is now redirected and a toast is shown when a player, war or guild is not found',
 				'Removed the overflow of the landing page',
 				'Added configuration, installation and introduction to the documentation',
+				'Favicon and Title are now set',
 			],
 			author: oracle
 		},
