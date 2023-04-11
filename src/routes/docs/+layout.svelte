@@ -138,7 +138,9 @@
 				</div>
 			</div>
 		</div>
-		<slot />
+		<div class="text-gold-muted">
+			<slot />
+		</div>
 	</div>
 	<div class="mt-auto">
 		<Footer />
