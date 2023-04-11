@@ -1,8 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { goto } from '$app/navigation';
-	import { A } from 'flowbite-svelte';
-	import { chart } from 'svelte-apexcharts';
 	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
 	import Chart from '../../components/chart/chart.svelte';
 	import Button from '../../components/elements/button.svelte';
@@ -30,8 +26,7 @@
 	<p>Welcome back, {$User.discord_data?.username || $User.name || 'Person'}!</p>
 </div>
 <div class="sm:flex gap-2 items-center">
-	<!-- <div use:chart={options} class="flex-grow" /> -->
-	<Chart type="area" {data} {labels} title="Performance"  />
+	<Chart type="area" {data} {labels} title="Performance" />
 	<div class="grid grid-cols-2 gap-2 mx-auto h-fit w-fit">
 		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
 			<p class="font-bold text-lg">General Stats</p>

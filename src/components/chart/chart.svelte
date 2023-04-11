@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { chart } from 'svelte-apexcharts';
-	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
-	import Button from '../../components/elements/button.svelte';
-	import Icon from '../../components/elements/icon.svelte';
-	import { ModalManager } from '../../components/modal/modal-store';
-	import Upload from '../../components/modal/modals/war-form.svelte';
 
 	export let title: string | undefined = undefined;
 	export let type: 'area' | 'donut' = 'area';
@@ -103,13 +97,81 @@
 		}
 	};
 
-	onMount(() => {
-		if (browser) {
-			render = true;
+	let ApexCharts: {
+		new (arg0: any, arg1: any): any;
+		new (el: any, options: any): ApexCharts;
+		prototype?: any;
+		exec?: (chartID: string, fn: string, ...args: any[]) => any;
+		getChartByID?: (chartID: string /*Ωignore_startΩ*/) => ApexCharts | undefined;
+		initOnLoad?: () => void;
+	};
+	let loaded = false;
+
+	const chart = (
+		node: HTMLDivElement,
+		options: {
+			chart: {
+				type: 'area' | 'donut';
+				animations: { enabled: boolean; easing: string; speed: number };
+				fontFamily: string;
+				foreColor: string;
+			};
+			series: { name: string; data: number[] }[] | number[];
+			xaxis: { categories: string[] };
+			yaxis: { min: number; max: number | undefined; forceNiceScale: boolean };
+			annotations: {
+				yaxis: {
+					y: number /*Ωignore_endΩ*/;
+					borderColor: string;
+					strokeDashArray: number /*Ωignore_startΩ*/;
+					label: {
+						text: string;
+						borderColor: string;
+						style: { color: string; background: string };
+					};
+				}[];
+			};
+			labels: string[];
+			fill: { colors: string[] | undefined };
+			colors: string[] | undefined;
+			tooltip: { enabled: boolean; theme: string; x: { show: boolean; format: string } };
+			dataLabels: {
+				enabled: boolean;
+				style: { colors: string[]; fontSize: string; fontFamily: string; fontWeight: string };
+				formatter: (value: number, opt: { seriesIndex: number }) => string | number | undefined;
+			};
+			subtitle: {
+				text: string | /*Ωignore_endΩ*/ undefined;
+				align: string;
+				style: { fontSize: string; fontFamily: string; fontWeight: string };
+			};
 		}
+	) => {
+		if (!loaded) return;
+
+		let myChart = new ApexCharts(node, options);
+		myChart.render();
+
+		return {
+			update(options: any) {
+				myChart.updateOptions(options);
+			},
+			destroy() {
+				myChart.destroy();
+			}
+		};
+	};
+
+	onMount(async () => {
+		const module = await import('apexcharts');
+		ApexCharts = module.default;
+		(window as any).ApexCharts = ApexCharts;
+		loaded = true;
 	});
 </script>
 
-{#key render || data || labels || options}
-	<div use:chart={options} class="flex-grow" />
-{/key}
+{#if loaded}
+	{#key loaded || data || labels || options}
+		<div use:chart={options} class="flex-grow" />
+	{/key}
+{/if}
