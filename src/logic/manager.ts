@@ -323,6 +323,10 @@ export class ManagerClass {
 		const wars = this.wars.filter((w) => w != war);
 		const wars_json = wars.map((w) => w.to_json());
 		await this.update_data(wars_json);
+		fetch('/api/delete', {
+			method: 'DELETE',
+			body: JSON.stringify({ id: war.unique_id })
+		});
 	}
 
 	async update_data(wars: WarType[]) {

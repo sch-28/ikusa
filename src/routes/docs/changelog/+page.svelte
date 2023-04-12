@@ -9,10 +9,12 @@
 		{
 			version: '0.0.4',
 			date: '12.04.2023',
-			title: 'Documentation & Bugfix',
+			title: 'Documentation & Bugfixes',
 			changes: [
 				'Added usage and contributing documentation',
 				'Apex Charts SSR error fixed',
+				'Apex Charts placeholder',
+				'Re-added deletion of shared wars'
 			],
 			author: oracle
 		},
@@ -27,7 +29,7 @@
 				'The user is now redirected and a toast is shown when a player, war or guild is not found',
 				'Removed the overflow of the landing page',
 				'Added configuration, installation and introduction to the documentation',
-				'Favicon and Title are now set',
+				'Favicon and Title are now set'
 			],
 			author: oracle
 		},
