@@ -55,11 +55,6 @@
 			link: '/docs/adding-a-new-war'
 		},
 		{
-			title: 'Adding multiple wars',
-			description: 'Learn how to add multiple wars to your dashboard',
-			link: '/docs/adding-multiple-wars'
-		},
-		{
 			title: 'Sharing wars',
 			description: 'Learn how to share wars with other users',
 			link: '/docs/sharing-wars'

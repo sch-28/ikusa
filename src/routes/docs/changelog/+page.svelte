@@ -7,6 +7,16 @@
 
 	const changes = [
 		{
+			version: '0.0.4',
+			date: '12.04.2023',
+			title: 'Documentation & Bugfix',
+			changes: [
+				'Added usage and contributing documentation',
+				'Apex Charts SSR error fixed',
+			],
+			author: oracle
+		},
+		{
 			version: '0.0.3',
 			date: '11.04.2023',
 			title: 'Errors and Redirects',
