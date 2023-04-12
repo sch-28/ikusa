@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import LoadingCircle from '../../../components/elements/loading-circle.svelte';
+	import LoadingIndicator from '../../../components/elements/loading-indicator.svelte';
 
 	let config = '';
 
@@ -24,11 +25,7 @@
 	<div class="mt-4">
 		<p>Latest Config:</p>
 		{#if !config}
-			<div
-				class="w-8 h-8 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted mt-4"
-			>
-				<LoadingCircle />
-			</div>
+			<LoadingIndicator />
 		{:else}
 			<pre class="text-white p-4 rounded-lg">{config}</pre>
 		{/if}
