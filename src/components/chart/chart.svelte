@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import LoadingIndicator from '../elements/loading-indicator.svelte';
 
 	export let title: string | undefined = undefined;
 	export let type: 'area' | 'donut' = 'area';
@@ -174,4 +175,8 @@
 	{#key loaded || data || labels || options}
 		<div use:chart={options} class="flex-grow" />
 	{/key}
+{:else}
+	<div class="flex-grow flex items-center justify-center aspect-[685/425]">
+		<LoadingIndicator size="lg"/>
+	</div>
 {/if}
