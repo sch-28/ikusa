@@ -6,10 +6,18 @@ module.exports = {
 	],
 	theme: {
 		extend: {
-			screens:{
-				xs: '500px',
+			screens: {
+				xs: '500px'
 			},
 			colors: {
+				background: {
+					DEFAULT: 'rgb(28,28,28)',
+					secondary: '#1f1f1f'
+				},
+				foreground: {
+					DEFAULT: 'rgb(255, 255, 255, 0.9)',
+					secondary: 'rgb(255, 255, 255, 0.65)'
+				},
 				gold: {
 					DEFAULT: '#f5cd40',
 					muted: '#bd8e28',
@@ -19,6 +27,7 @@ module.exports = {
 					300: '#f5cd40',
 					400: '#bd8e28',
 					500: '#9e6f14',
+
 					600: '#81560d',
 					700: '#63400c',
 					800: '#442c0b',
