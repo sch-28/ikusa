@@ -52,8 +52,8 @@
 </script>
 
 <div>
-	<p class="capitalize font-semibold text-lg">User Settings</p>
-	<div class="text-gold-muted mb-2">
+	<p class="capitalize font-semibold text-lg text-gold">User Settings</p>
+	<div class="text-foreground-secondary mb-2">
 		Setting your family name and guild here will allow you to get a overview of your current
 		performance in the <a href="/dashboard" class="underline">Dashboard</a>.
 	</div>

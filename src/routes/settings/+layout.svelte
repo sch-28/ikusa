@@ -34,7 +34,7 @@
 			<Icon icon={IoIosMenu} />
 		</button>
 		<div
-			class="sm:w-80 p-2 sm:p-0 sm:relative absolute transition left-0 bg-background border-gold border sm:border-0 sm:border-r rounded-lg sm:rounded-none {visible
+			class="sm:w-80 p-2 sm:p-0 sm:relative absolute transition left-0 bg-background border-foreground border sm:border-0 sm:border-r rounded-lg sm:rounded-none {visible
 				? 'translate-x-4 sm:translate-x-0'
 				: '-translate-x-[105%] sm:translate-x-0'} "
 		>
@@ -48,7 +48,7 @@
 					{#if 'link' in entry}
 						<a href={entry.link}>
 							<p
-								class="font-light {page_entry === entry.link ? 'text-gold' : 'text-gold-muted'}"
+								class="font-light {page_entry === entry.link ? 'text-foreground' : 'text-foreground-secondary'}"
 								title={entry.description}
 							>
 								{entry.title}
@@ -56,7 +56,7 @@
 						</a>
 					{:else}
 						<p
-							class="font-bold text-sm text-gold-muted uppercase tracking-wider [&:not(:first-child)]:mt-10"
+							class="font-bold text-sm text-foreground-secondary uppercase tracking-wider [&:not(:first-child)]:mt-10"
 						>
 							{entry.title}
 						</p>
