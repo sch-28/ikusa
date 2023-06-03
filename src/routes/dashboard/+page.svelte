@@ -23,13 +23,19 @@
 </script>
 
 <div class="flex justify-between mb-4">
-	<p>Welcome back, {$User.discord_data?.username || $User.name || 'Person'}!</p>
+	<p>
+		Welcome back, <span class="text-gold"
+			>{$User.discord_data?.username || $User.name || 'Person'}</span
+		>!
+	</p>
 </div>
 <div class="sm:flex gap-2 items-center">
 	<Chart type="area" {data} {labels} title="Performance" />
 	<div class="grid grid-cols-2 gap-2 mx-auto h-fit w-fit">
-		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
-			<p class="font-bold text-lg">General Stats</p>
+		<div
+			class="border border-foreground p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40"
+		>
+			<p class="font-bold text-lg text-foreground">General Stats</p>
 			<div class="font-light text-sm">{$Manager.players.length} Players</div>
 			<div class="font-light text-sm">{$Manager.guilds.length} Guilds</div>
 			<div class="font-light text-sm">{$Manager.wars.length} Wars</div>
@@ -41,8 +47,10 @@
 				{$Manager.wars.reduce((sum, war) => sum + war.logs.length, 0)} Logs
 			</div>
 		</div>
-		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
-			<p class="font-bold text-lg">Your Stats</p>
+		<div
+			class="border border-foreground p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40"
+		>
+			<p class="font-bold text-lg text-foreground">Your Stats</p>
 			{#if player}
 				<div class="font-light text-sm">{player.kills} Kills</div>
 				<div class="font-light text-sm">{player.deaths} Deaths</div>
@@ -55,9 +63,11 @@
 				<div class="font-light text-sm">Set your family name in the settings.</div>
 			{/if}
 		</div>
-		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
+		<div
+			class="border border-foreground p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40"
+		>
 			{#if guild}
-				<p class="font-bold text-lg">{guild.name} Stats</p>
+				<p class="font-bold text-lg text-foreground">{guild.name} Stats</p>
 				<div class="font-light text-sm">{guild.wins} Wins</div>
 				<div class="font-light text-sm">{guild.losses} Losses</div>
 				<div class="font-light text-sm">{guild.players.length} Members</div>
@@ -66,28 +76,34 @@
 				</div>
 				<div class="font-light text-sm">{guild.average_kill_difference} Avg. Kill Diff.</div>
 			{:else}
-				<p class="font-bold text-lg">Guild Stats</p>
+				<p class="font-bold text-lg text-foreground">Guild Stats</p>
 				<p class="font-light text-sm">Set your guild in the settings.</p>
 			{/if}
 		</div>
-		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
-			<p class="font-bold text-lg">Recent Wars</p>
+		<div
+			class="border border-foreground p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40"
+		>
+			<p class="font-bold text-lg text-foreground">Recent Wars</p>
 			<div class="flex flex-col">
 				{#each $Manager.wars.slice($Manager.wars.length - 5, $Manager.wars.length) as war}
 					<a class="font-light text-sm" href="/wars/{war.id}">{war.name}</a>
 				{/each}
 			</div>
 		</div>
-		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
-			<p class="font-bold text-lg">Top Players</p>
+		<div
+			class="border border-foreground p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40"
+		>
+			<p class="font-bold text-lg text-foreground">Top Players</p>
 			<div class="flex flex-col">
 				{#each $Manager.sorted_players.slice(0, 5) as player}
 					<a class="font-light text-sm" href="/players/{player.name}">{player.name}</a>
 				{/each}
 			</div>
 		</div>
-		<div class="border border-gold p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40">
-			<p class="font-bold text-lg">Top Guilds</p>
+		<div
+			class="border border-foreground p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40"
+		>
+			<p class="font-bold text-lg text-foreground">Top Guilds</p>
 			<div class="flex flex-col">
 				{#each $Manager.sorted_guilds.slice(0, 5) as guild}
 					<a class="font-light text-sm" href="/guilds/{guild.name}">{guild.name}</a>
