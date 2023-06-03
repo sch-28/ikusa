@@ -100,7 +100,7 @@
 		on:focus={() => (show_suggestions = true)}
 	/>
 	<div
-		class="border border-gray-600 mt-1 absolute bg-black z-50 rounded-lg overflow-hidden {(suggestions.length ===
+		class="border border-gray-600 mt-1 absolute bg-background z-50 rounded-lg overflow-hidden {(suggestions.length ===
 			0 ||
 			!show_suggestions) &&
 			'hidden'}"

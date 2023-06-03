@@ -164,7 +164,7 @@
 			class="{war.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center"
 		/>
 		<div class="flex flex-col gap-1">
-			<div class="text-xl font-medium">{war.name}</div>
+			<div class="text-xl font-medium text-foreground">{war.name}</div>
 			<div class="text-base text-gold-muted">{war.date}</div>
 		</div>
 		{#if !is_public}
@@ -190,20 +190,20 @@
 			<Button on:click={add_war} class="my-auto ml-auto">Add to Dashboard</Button>
 		{/if}
 	</div>
-	<div class="mb-4 divide-x-2 space-x-2 flex divide-gold-muted">
+	<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary">
 		<div>{war.local_guilds.length} Guilds</div>
 		<div class="pl-2">{war.local_players.length} Players</div>
 		<div class="pl-2">{war.duration} minutes</div>
 	</div>
-	<div class="flex gap-4 sm:flex-row flex-col border border-gold border-dashed p-2 rounded-lg">
+	<div class="flex gap-4 sm:flex-row flex-col border border-foreground border-dashed p-2 rounded-lg">
 		<div
-			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[30rem] justify-center sm:justify-start"
+			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[480px] justify-center sm:justify-start"
 		>
 			{#each war.local_guilds as local_guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square {selected_guild ===
+					class="flex flex-col p-2 border border-foreground rounded-lg min-w-0 h-[126px] aspect-square {selected_guild ===
 					local_guild
-						? 'bg-gold text-black'
+						? 'bg-foreground text-black'
 						: ''}"
 					on:click={() =>
 						(selected_guild = selected_guild === local_guild ? undefined : local_guild)}

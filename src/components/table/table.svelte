@@ -236,7 +236,7 @@
 	>
 		{#each header as head, index}
 			<button
-				class="max-w-full flex items-center font-bold 
+				class="max-w-full flex items-center font-bold text-foreground
 				{index > 0 ? 'justify-self-center' : ''}
 				{head.sortable ? 'cursor-pointer' : 'cursor-default'}"
 				on:click={(e) => handle_sort_change(head, e.shiftKey)}
@@ -258,7 +258,7 @@
 		<VirtualList items={sorted_rows} let:item={row} bind:this={v_list_container}>
 			<button
 				on:click={row.onclick}
-				class="grid w-full text-gold-muted hover:text-gold"
+				class="grid w-full text-foreground-secondary hover:text-foreground"
 				style={grid_template}
 			>
 				{#each row.columns as column, index}

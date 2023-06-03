@@ -17,50 +17,60 @@
 	}
 </script>
 
-<header class="flex items-center justify-between py-4 ">
-	<div class="flex gap-2 items-end">
-		<a class="text-3xl font-bold mr-2" href={$User.discord_data ? '/dashboard' : '/'}>Ikusa</a>
-		<a href="/wars" class={is_selected('wars') ? 'text-gold' : 'text-gold-muted hover:text-gold'}
-			>Wars</a
+<header class="flex items-center justify-between py-4">
+	<div class="flex gap-2 items-baseline">
+		<a class="text-3xl font-bold mr-2 text-gold" href={$User.discord_data ? '/dashboard' : '/'}
+			>Ikusa</a
+		>
+		<a
+			href="/wars"
+			class={is_selected('wars')
+				? 'text-foreground'
+				: 'text-foreground-secondary hover:text-foreground'}>Wars</a
 		>
 		<a
 			href="/players"
-			class={is_selected('players') ? 'text-gold' : 'text-gold-muted hover:text-gold'}>Players</a
+			class={is_selected('players')
+				? 'text-foreground'
+				: 'text-foreground-secondary hover:text-foreground'}>Players</a
 		>
 		<a
 			href="/guilds"
-			class={is_selected('guilds') ? 'text-gold' : 'text-gold-muted hover:text-gold'}>Guilds</a
+			class={is_selected('guilds')
+				? 'text-foreground'
+				: 'text-foreground-secondary hover:text-foreground'}>Guilds</a
 		>
 	</div>
 	<div class="flex gap-3 items-end h-[2.25rem]">
 		<a
 			href="/docs"
 			class="{is_selected('docs')
-				? 'text-gold'
-				: 'text-gold-muted hover:text-gold'} self-center mt-2"><Icon icon={IoMdHelp} /></a
+				? 'text-foreground'
+				: 'text-foreground-secondary hover:text-foreground'} self-center mt-2"
+			><Icon icon={IoMdHelp} /></a
 		>
 		{#if $User.discord_data}
 			<Button size="sm">{$User.discord_data.username}</Button>
-			<Dropdown frameClass="!bg-black border rounded-lg">
+			<Dropdown frameClass="!bg-background border rounded-lg">
 				<DropdownItem
 					href="/dashboard"
-					defaultClass="font-medium py-2 px-4 text-sm text-gold-muted hover:text-gold w-full text-left"
+					defaultClass="font-medium py-2 px-4 text-sm text-foreground-secondary hover:text-foreground w-full text-left"
 					>Dashboard</DropdownItem
 				>
 				<DropdownItem
 					href="/settings"
-					defaultClass="font-medium py-2 px-4 text-sm text-gold-muted hover:text-gold w-full text-left"
+					defaultClass="font-medium py-2 px-4 text-sm text-foreground-secondary hover:text-foreground w-full text-left"
 					>Settings</DropdownItem
 				>
 				<DropdownDivider />
 				<DropdownItem
 					on:click={signout}
-					defaultClass="font-medium py-2 px-4 text-sm text-gold-muted hover:text-gold w-full text-left"
+					defaultClass="font-medium py-2 px-4 text-sm text-foreground-secondary hover:text-foreground w-full text-left"
 					>Logout</DropdownItem
 				>
 			</Dropdown>
 		{:else}
-			<Button size="sm" on:click={() => goto('/discord/auth')}>Login</Button>
+			<Button size="sm" color="secondary" on:click={() => goto('/discord/auth')}>Login</Button>
 		{/if}
 	</div>
 </header>

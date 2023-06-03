@@ -27,6 +27,10 @@
 	id={$$props.id}
 	on:input={handleInput}
 	on:focus
-	class="{$$props.size === 'sm' ? 'py-1.5 px-2 text-xs' : $$props.size === 'lg' ? 'py-3 px-4' : 'p-2.5'}
-	outline-none block disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-gold focus:!ring-gold bg-black text-white placeholder-gray-400 border-gold text-sm rounded-lg {$$props.class}"
+	class="{$$props.size === 'sm'
+		? 'py-1.5 px-2 text-xs'
+		: $$props.size === 'lg'
+		? 'py-3 px-4'
+		: 'p-2.5'}
+	outline-none block disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-foreground focus:!ring-foreborder-foreground bg-background text-white placeholder-gray-400 border-foreground text-sm rounded-lg {$$props.class}"
 />

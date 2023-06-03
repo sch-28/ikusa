@@ -102,7 +102,7 @@
 				<Icon icon={IoIosMenu} />
 			</button>
 			<div
-				class="sm:w-80 p-2 sm:p-0 sm:relative absolute transition left-0 bg-black border-gold border sm:border-0 sm:border-r rounded-lg sm:rounded-none {visible
+				class="sm:w-80 p-2 sm:p-0 sm:relative absolute transition left-0 bg-background border-gold border sm:border-0 sm:border-r rounded-lg sm:rounded-none {visible
 					? 'translate-x-4 sm:translate-x-0'
 					: '-translate-x-[105%] sm:translate-x-0'} "
 			>

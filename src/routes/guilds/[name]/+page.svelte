@@ -140,7 +140,7 @@
 	<div class="flex justify-between items-start mb-4">
 		<Icon size="lg" icon={GiSwordsEmblem} class="mr-2 self-center" />
 		<div class="flex flex-col gap-1">
-			<div class="text-xl font-medium">{guild.name}</div>
+			<div class="text-xl font-medium text-foreground">{guild.name}</div>
 			<div class="text-base text-gold-muted">
 				{show_all ? guild.players.length : guild.current_players.length} Members
 			</div>
@@ -149,22 +149,24 @@
 			<Toggle bind:checked={show_all} /> Show all
 		</div>
 	</div>
-	<div class="mb-4 divide-x-2 space-x-2 flex divide-gold-muted">
+	<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary">
 		<div>{guild.locals.length} Wars</div>
 		<div class="pl-2">{format(guild.average_members)} Avg. Members</div>
 		<div class="pl-2">{format(guild.average_kill_difference)} Avg. Kill Difference</div>
 		<div class="pl-2">{format(guild.average_kills)} Avg. Kills</div>
 		<div class="pl-2">{format(guild.average_deaths)} Avg. Deaths</div>
 	</div>
-	<div class="flex gap-4 sm:flex-row flex-col border border-gold border-dashed p-2 rounded-lg">
+	<div
+		class="flex gap-4 sm:flex-row flex-col border border-foreground border-dashed p-2 rounded-lg"
+	>
 		<div
-			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[30rem] justify-center sm:justify-start"
+			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[480px] justify-center sm:justify-start"
 		>
 			{#each guild.locals as local_guild}
 				<button
-					class="flex flex-col p-2 border border-gold rounded-lg min-w-0 h-[126px] aspect-square {selected_war ===
+					class="flex flex-col p-2 border border-foreground rounded-lg min-w-0 h-[126px] aspect-square {selected_war ===
 					local_guild.war
-						? 'bg-gold text-black'
+						? 'bg-foreground text-black'
 						: ''}"
 					on:click={() =>
 						(selected_war = selected_war === local_guild.war ? undefined : local_guild.war)}

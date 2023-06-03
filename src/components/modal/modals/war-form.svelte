@@ -98,7 +98,7 @@
 						date: new Date().toISOString().split('T')[0],
 						won: false,
 						logs: logs,
-						unique_id: generate_id(),
+						unique_id: generate_id()
 					};
 				});
 			} else if (results && results.length === 1) {
@@ -305,7 +305,7 @@
 			on:dragover={(event) => event.preventDefault()}
 			multiple
 			id="dropzone"
-			defaultClass="h-[264px] flex flex-col justify-center items-center w-full bg-black rounded-lg cursor-pointer"
+			defaultClass="h-[264px] flex flex-col justify-center items-center w-full bg-background rounded-lg cursor-pointer"
 		>
 			<svg
 				aria-hidden="true"
@@ -396,7 +396,7 @@
 				<div>
 					<Label class="mb-2" for="guild">Guild Name</Label>
 					<Autocomplete
-					id="guild"
+						id="guild"
 						input_class="w-full"
 						placeholder="Enter guild name.."
 						bind:value={wars_guild_name}

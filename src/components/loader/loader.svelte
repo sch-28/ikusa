@@ -15,7 +15,7 @@
 
 {#if loader && loader.visible}
 	<div
-		class="z-[51] fixed top-0 left-0 w-screen h-screen flex flex-col justify-center bg-black bg-opacity-90"
+		class="z-[51] fixed top-0 left-0 w-screen h-screen flex flex-col justify-center bg-background bg-opacity-90"
 	>
 		<div class="relative m-2 max-h-full">
 			<div class="relative w-fit max-w-full max-h-full my-2 mx-auto ">
