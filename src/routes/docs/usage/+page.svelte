@@ -13,7 +13,7 @@
 	</p>
 	<div class="mt-4">
 		<p>Following arguments are available:</p>
-		<pre class="text-white p-4 rounded-lg">
+		<pre class="text-foreground p-4 rounded-lg">
 -h, --help                    show this help message and exit
 -f FILE, --file FILE          instead of sniffing for bdo packages, it will use the given *.pcap file
 -o OUTPUT, --output OUTPUT    custom output file    

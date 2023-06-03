@@ -27,7 +27,7 @@
 		{#if !config}
 			<LoadingIndicator />
 		{:else}
-			<pre class="text-white p-4 rounded-lg">{config}</pre>
+			<pre class="text-foreground p-4 rounded-lg">{config}</pre>
 		{/if}
 	</div>
 
