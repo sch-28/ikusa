@@ -1,5 +1,5 @@
 {
-	"name": "war-analyzer-3",
+	"name": "ikusa",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -28,7 +28,7 @@
 		"postcss": "^8.4.21",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
-		"prisma": "^4.12.0",
+		"prisma": "^4.15.0",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"svelte-simple-modal": "^1.5.2",
