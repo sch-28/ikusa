@@ -12,10 +12,9 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"build:db": "prisma db push",
-		"vercel-build": "prisma generate && prisma migrate deploy && vite build"
+		"vercel-build": "prisma generate && vite build"
 	},
 	"devDependencies": {
-		"@prisma/client": "^4.12.0",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^3.0.1",
 		"@sveltejs/kit": "^1.5.0",
@@ -42,6 +41,7 @@
 	"type": "module",
 	"dependencies": {
 		"@popperjs/core": "^2.11.6",
+		"@prisma/client": "^4.15.0",
 		"@sveltejs/adapter-node": "^1.2.0",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"apexcharts": "^3.37.1",
