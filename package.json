@@ -12,7 +12,7 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"build:db": "prisma db push",
-		"vercel-build": "prisma generate && vite build",
+		"vercel-build": "prisma generate && prisma migrate deploy && vite build",
 		"postinstall": "prisma generate"
 	},
 	"devDependencies": {
