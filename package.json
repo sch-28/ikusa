@@ -11,7 +11,8 @@
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"build:db": "prisma db push"
+		"build:db": "prisma db push",
+		"vercel-build": "prisma generate && prisma migrate deploy && vite build"
 	},
 	"devDependencies": {
 		"@prisma/client": "^4.12.0",
