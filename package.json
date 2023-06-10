@@ -6,7 +6,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"vercel-postbuild": "cp -r node_modules/@prisma/client/ .vercel/output/functions/fn.func/node_modules/",
-		"vercel-build": "prisma generate && npm run build && npm run vercel-postbuild",
+		"vercel-build": "prisma generate && prisma migrate deploy && vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -16,7 +16,6 @@
 		"build:db": "prisma db push"
 	},
 	"devDependencies": {
-		"@prisma/client": "4.11.0",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^3.0.1",
 		"@sveltejs/kit": "^1.5.0",
@@ -30,7 +29,7 @@
 		"postcss": "^8.4.21",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
-		"prisma": "^4.11.0",
+		"prisma": "^4.15.0",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"svelte-simple-modal": "^1.5.2",
