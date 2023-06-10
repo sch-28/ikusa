@@ -1,9 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { prisma } from '../../../logic/prisma';
-import type { WarJSON } from '../../../logic/data';
-import LZString from 'lz-string';
 import type { War } from '@prisma/client';
-
 export const POST: RequestHandler = async (event) => {
 	const user = event.locals.user;
 	const war = (await event.request.json()) as Omit<War, 'userId'>;

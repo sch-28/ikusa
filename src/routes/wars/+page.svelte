@@ -13,6 +13,9 @@
 	import Table from '../../components/table/table.svelte';
 	import type { HeaderColumn, Row } from '../../components/table/table';
 	import { get_remaining_height } from '../../logic/util';
+	import { onMount } from 'svelte';
+	import type { Log } from '../../logic/data';
+	import { parse } from 'flatted';
 
 	const header: HeaderColumn<any>[] = [
 		{
@@ -74,6 +77,17 @@
 
 	let table: HTMLDivElement;
 	$: table_height = get_remaining_height(table, 16);
+
+	onMount(async () => {
+		const params = new URLSearchParams(window.location.search);
+		const id = params.get('id');
+		if (id) {
+			const stored_logs: Log[] = parse((await (await fetch(`/api/create?id=${id}`)).json()).logs);
+			if (stored_logs.length > 0) {
+				ModalManager.open(WarForm, { war: undefined, logs: stored_logs });
+			}
+		}
+	});
 </script>
 
 <div class="flex justify-between mb-4">

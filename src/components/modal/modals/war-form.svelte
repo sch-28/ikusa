@@ -28,6 +28,7 @@
 	let states = ['upload', 'edit', 'logs', 'multi'] as const;
 	let state: (typeof states)[number] = 'edit';
 	export let war: WarType | undefined = undefined;
+	export let logs: Log[] = [];
 
 	$: {
 		war;
@@ -39,6 +40,12 @@
 	onMount(() => {
 		wars_guild_name = $Manager.user.guild ?? '';
 		if (war_guild_name.length == 0) war_guild_name = $Manager.user.guild ?? '';
+
+		if (logs.length > 0) {
+			war_logs = logs;
+			war_date = new Date().toISOString().split('T')[0];
+			state = 'edit';
+		}
 	});
 
 	function set_wars_guild_name() {
