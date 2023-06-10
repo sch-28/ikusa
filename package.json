@@ -14,7 +14,7 @@
 		"build:db": "prisma db push",
 		"vercel-build": "prisma generate && prisma migrate deploy && vite build",
 		"postinstall": "prisma generate",
-		"postbuild": "cp node_modules/@prisma/engines/query-engine-* .vercel_build_output/functions/node/render/;cp prisma/schema.prisma .vercel_build_output/functions/node/render/"
+		"postbuild": "cp -R node_modules/@prisma/engines/* .vercel_build_output/functions/node/render/;cp prisma/schema.prisma .vercel_build_output/functions/node/render/"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
