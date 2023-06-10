@@ -4,16 +4,15 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "prisma generate && prisma db push && vite build",
+		"vercel-build": "prisma generate && prisma db push && vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"build:db": "prisma db push",
-		"vercel-build": "prisma generate && prisma migrate deploy && npm run build",
-		"postinstall": "prisma generate"
+		"build:db": "prisma db push"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
