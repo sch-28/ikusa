@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"vercel-postbuild": "cp node_modules/@prisma/engines/*query* .vercel/output/functions/fn.func/ && cp prisma/schema.prisma .vercel/output/functions/fn.func/",
+		"vercel-postbuild": "cp node_modules/@prisma/client/ .vercel/output/functions/fn.func/node_modules/",
 		"vercel-build": "prisma generate && npm run build && npm run vercel-postbuild",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
