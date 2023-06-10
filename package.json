@@ -7,6 +7,7 @@
 		"build": "vite build",
 		"vercel-postbuild": "cp -r node_modules/@prisma/client/ .vercel/output/functions/fn.func/node_modules/",
 		"vercel-build": "prisma generate && prisma migrate deploy && vite build",
+		"postinstall": "prisma generate",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
