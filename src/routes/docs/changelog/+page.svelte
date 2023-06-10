@@ -7,7 +7,33 @@
 
 	const changes = [
 		{
-			version: '0.0.4',
+			version: '0.2.1',
+			date: '10.06.2023',
+			title: 'Ikusa Logger',
+			changes: [
+				'Connected the Logger to the Ikusa API',
+				'Logger auto patcher',
+				'Logger config settings',
+				'Logger installer'
+			],
+			author: oracle
+		},
+		{
+			version: '0.2.0',
+			date: '09.06.2023',
+			title: 'Deployment',
+			changes: ['Deployed the website'],
+			author: oracle
+		},
+		{
+			version: '0.1.4',
+			date: '03.06.2023',
+			title: 'Visual Overhaul',
+			changes: ['Adjusted the overall theme', 'Fixed some minor bugs'],
+			author: oracle
+		},
+		{
+			version: '0.1.3',
 			date: '12.04.2023',
 			title: 'Documentation & Bugfixes',
 			changes: [
@@ -19,7 +45,7 @@
 			author: oracle
 		},
 		{
-			version: '0.0.3',
+			version: '0.1.2',
 			date: '11.04.2023',
 			title: 'Errors and Redirects',
 			changes: [
@@ -34,7 +60,7 @@
 			author: oracle
 		},
 		{
-			version: '0.0.2',
+			version: '0.1.1',
 			date: '10.04.2023',
 			title: 'Adjustments',
 			changes: [
@@ -48,7 +74,7 @@
 			author: oracle
 		},
 		{
-			version: '0.0.1',
+			version: '0.1.0',
 			date: '10.04.2023',
 			title: 'Alpha Release',
 			changes: [
@@ -78,7 +104,7 @@
 			</div>
 			<p class="text-gray-500">{change.date}</p>
 			<h3 class="text-xl font-medium text-gold">{change.title}</h3>
-			<ul class="list-disc list-inside flex flex-col text-gold-muted text-sm">
+			<ul class="list-disc list-inside flex flex-col text-sm">
 				{#each change.changes as ch}
 					<li>{ch}</li>
 				{/each}

@@ -1,0 +1,40 @@
+<script lang="ts">
+	type Question = {
+		title: string;
+		description: string;
+	};
+
+	const questions: Question[] = [
+		{
+			title: 'What happens to my uploaded logs?',
+			description:
+				"Your uploaded logs are only stored locally in your browser. If you clear your browser cache, they will be deleted. You can share wars with other users by clicking the share button. This will upload the war to Ikusa's servers and generate a link you can share."
+		},
+		{
+			title: 'Is the Ikusa Logger safe to use?',
+			description:
+				'The application does not send any network data to others. It does not contain any viruses or malware. You can check the entire source code on GitHub.'
+		},
+		{
+			title: 'How can I contribute?',
+			description:
+				'This project is open source and is a hobby project of mine. If you want to contribute, feel free to create a ticket, join the discord to discuss & leave feedback or message me directly.'
+		}
+	];
+</script>
+
+<div>
+	<p class="text-xl font-bold text-gold">Frequently Asked Questions</p>
+	<ul>
+		{#each questions as question}
+			<li class="mt-4">
+				<p class="font-bold text-foreground">{question.title}</p>
+				<p>{question.description}</p>
+			</li>
+		{/each}
+	</ul>
+
+	<div class="mt-8">
+		Next: <a href="/docs/changelog" class="underline">Changelog</a>
+	</div>
+</div>

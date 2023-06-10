@@ -10,9 +10,9 @@
 		combat performance.
 	</p>
 	<p>
-		Ikusa is currently in its alpha. If you encounter any issues, please report them in the <a
-			href="https://github.com/sch-28/ikusa"
-			class="underline">GitHub repository</a
+		Ikusa is still under development. If you encounter any issues, please report them in the <a
+			href="https://discord.gg/nXSYGnxXJ5"
+			class="underline">Discord</a
 		>.
 	</p>
 

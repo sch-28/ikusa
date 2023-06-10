@@ -34,19 +34,9 @@
 			link: '/docs/installation'
 		},
 		{
-			title: 'Configuration',
-			description: 'Learn how to configure the combat logger',
-			link: '/docs/configuration'
-		},
-		{
 			title: 'Usage',
 			description: 'Learn how to use the combat logger',
 			link: '/docs/usage'
-		},
-		{
-			title: 'Contributing',
-			description: 'Learn how to contribute to the combat logger',
-			link: '/docs/contributing'
 		},
 		{ title: 'Dashboard' },
 		{
@@ -111,12 +101,14 @@
 						<Icon icon={IoIosClose} />
 					</button>
 				</div>
-				<div class="flex flex-col gap-1 ">
+				<div class="flex flex-col gap-1">
 					{#each content as entry}
 						{#if 'link' in entry}
 							<a href={entry.link}>
 								<p
-									class="font-light {page_entry === entry.link ? 'text-foreground' : 'text-foreground-secondary'}"
+									class="font-light {page_entry === entry.link
+										? 'text-foreground'
+										: 'text-foreground-secondary'}"
 									title={entry.description}
 								>
 									{entry.title}
