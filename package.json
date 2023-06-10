@@ -13,7 +13,9 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"build:db": "prisma db push",
 		"vercel-build": "prisma generate && prisma migrate deploy && vite build",
-		"postinstall": "prisma generate"
+		"postinstall": "prisma generate",
+		"@prisma/client": "4.15.0",
+		"prisma": "^4.15.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
@@ -29,8 +31,6 @@
 		"postcss": "^8.4.21",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
-		"@prisma/client": "4.15.0",
-		"prisma": "^4.15.0",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"svelte-simple-modal": "^1.5.2",
