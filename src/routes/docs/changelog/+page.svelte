@@ -13,6 +13,10 @@
 			changes: [
 				'Extended Landing page',
 				'Refactored documentation',
+				'List of shared wars',
+				'Shared wars can now be deleted',
+				'Graph date format toggle',
+				'Multi-Add improvements',
 				'Slight style adjustments',
 				'Minor fixes'
 			],
