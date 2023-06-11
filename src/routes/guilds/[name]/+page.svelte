@@ -182,7 +182,7 @@
 					</div>
 					<div class="flex gap-1 text-sm font-light">
 						<div class="">{local_guild.kill_difference}</div>
-						<div class="">Kill Difference</div>
+						<div class="">Kill Diff.</div>
 					</div>
 					<div class="flex gap-1 text-sm font-light">
 						<div class="">{format(local_guild.duration)}</div>
