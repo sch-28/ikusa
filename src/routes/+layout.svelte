@@ -7,6 +7,10 @@
 	import { onMount } from 'svelte';
 	import { Manager } from '../logic/stores';
 	import { User } from '../logic/user';
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+
+	inject({ mode: dev ? 'development' : 'production' });
 
 	let is_mounted = false;
 
