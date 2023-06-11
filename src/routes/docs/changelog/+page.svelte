@@ -10,7 +10,12 @@
 			version: '0.2.2',
 			date: '11.06.2023',
 			title: 'Landing Page & Documentation',
-			changes: ['Extended Landing page','Refactored documentation', 'Slight style adjustments'],
+			changes: [
+				'Extended Landing page',
+				'Refactored documentation',
+				'Slight style adjustments',
+				'Minor fixes'
+			],
 			author: oracle
 		},
 		{

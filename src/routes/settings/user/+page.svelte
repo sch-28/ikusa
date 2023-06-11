@@ -32,12 +32,12 @@
 		}
 
 		if (!$Manager.players.find((p) => p.name === family_name)) {
-			form_error = 'Family name is not valid';
+			form_error = 'Family name is not valid, it could not be found in your uploaded logs';
 			return false;
 		}
 
 		if (!$Manager.guilds.find((g) => g.name === guild_name)) {
-			form_error = 'Guild name is not valid';
+			form_error = 'Guild name is not valid, it could not be found in your uploaded logs';
 			return false;
 		}
 

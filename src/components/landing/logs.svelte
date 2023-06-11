@@ -37,7 +37,6 @@
 		'[08:10:24] OracIe has killed Sarser from Athanasy',
 		'[08:10:25] Klauss has killed ShiNoLilith from Athanasy',
 		'[08:10:32] ThreeD died to YberDC from Athanasy',
-		'[08:10:32] ThreeD died to YberDC from Athanasy',
 		'[08:10:34] Akmuo has killed VictorMedC from Athanasy',
 		'[08:10:39] REJECT has killed Znmop from Athanasy',
 		'[08:10:43] Pawn has killed Vi_Darquise from Athanasy',
