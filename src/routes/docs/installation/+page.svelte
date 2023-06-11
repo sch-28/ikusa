@@ -1,6 +1,5 @@
 <script lang="ts">
-	import MdInsertDriveFile from 'svelte-icons/md/MdInsertDriveFile.svelte';
-	import Icon from '../../../components/elements/icon.svelte';
+	import DownloadLogger from '../../../components/landing/download-logger.svelte';
 </script>
 
 <div>
@@ -19,13 +18,7 @@
 
 	<p class="text-xl font-bold text-gold mt-4">Installation</p>
 	<p class="mb-2">Download the installer</p>
-	<a
-		class="flex gap-2 items-center border px-2 py-3 w-fit rounded-lg border-gold"
-		href="https://github.com/sch-28/ikusa_logger/releases/download/1.1.1/ikusa-logger-installer.exe"
-	>
-		<Icon icon={MdInsertDriveFile} />
-		Ikusa Logger
-	</a>
+	<DownloadLogger />
 
 	<div class="mt-8">
 		Next: <a href="/docs/usage" class="underline">Usage</a>
