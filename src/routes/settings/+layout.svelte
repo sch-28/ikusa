@@ -23,7 +23,7 @@
 	const content: (Item | Section)[] = [
 		{ title: 'Settings' },
 		{ title: 'User', description: 'User settings', link: '/settings/user' },
-		{ title: 'Dashboard', description: 'Dashboard settings', link: '/settings/dashboard' }
+		{ title: 'Shared Wars', description: 'Dashboard settings', link: '/settings/shared-wars' }
 	];
 	let visible = false;
 </script>
