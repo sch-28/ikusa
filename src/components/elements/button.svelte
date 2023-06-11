@@ -6,11 +6,13 @@
 		color?: 'primary' | 'secondary';
 		disabled?: boolean;
 		size?: 'sm' | 'md' | 'lg';
+		href?: string;
 	}
 </script>
 
 <Button
 	on:click
+	href={$$props.href}
 	disabled={$$props.disabled || false}
 	id={$$props.id}
 	btnClass="
@@ -23,7 +25,7 @@
 	text-center font-medium focus:ring-4 focus:outline-none flex items-center justify-center rounded-lg {$$props.class}
 	{($$props.size === 'md' || !$$props.size) && 'h-10 px-5 text-sm'}
 	{$$props.size === 'sm' && 'h-8 px-4 text-xs'}
-	{$$props.size === 'lg' && 'h-12 px-6 text-lg'}
+	{$$props.size === 'lg' && 'h-12 px-6 text-md'}
 	
 	"
 >
