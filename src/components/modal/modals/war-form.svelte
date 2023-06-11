@@ -99,10 +99,18 @@
 				state = 'multi';
 
 				wars = results.map((logs, index) => {
+					const name = files?.[index].name.split('.')[0] ?? '';
+					let date = new Date().toISOString().split('T')[0];
+					const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+					if (name.match(datePattern)) {
+						date = name;
+					}
+
 					return {
 						guild_name: wars_guild_name,
-						name: files?.[index].name.split('.')[0] ?? '',
-						date: new Date().toISOString().split('T')[0],
+						name: name,
+						date: date,
 						won: false,
 						logs: logs,
 						unique_id: generate_id()
