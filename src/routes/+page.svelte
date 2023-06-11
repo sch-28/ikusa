@@ -2,6 +2,9 @@
 	import { goto } from '$app/navigation';
 	import Button from '../components/elements/button.svelte';
 	import Footer from '../components/footer.svelte';
+	import Guilds from '../components/landing/guilds.svelte';
+	import Logger from '../components/landing/logger.svelte';
+	import Logs from '../components/landing/logs.svelte';
 	import { User } from '../logic/user';
 	import { get_remaining_height } from '../logic/util';
 
@@ -26,10 +29,22 @@
 	</div>
 </div>
 
-<div
-	style="height: {get_remaining_height(hero_divider)}px;"
-	bind:this={hero_divider}
-	class="flex justify-end flex-col"
->
+<div class="flex flex-col w-full justify-center gap-64 pb-20">
+	<section style="padding-top: 95vh;" class="max-w-8xl">
+		<Logs />
+	</section>
+	<section class="max-w-8xl">
+		<Guilds />
+	</section>
+	<section class="max-w-8xl">
+		<Logger />
+	</section>
+	<section class="max-w-8xl flex flex-col items-center">
+		<h1 class="font-bold text-gold text-2xl mb-4">You already have logs?</h1>
+		<Button on:click={() => goto('/dashboard')}>Start Analyzing</Button>
+	</section>
+</div>
+
+<div bind:this={hero_divider} class="flex justify-end flex-col">
 	<Footer />
 </div>
