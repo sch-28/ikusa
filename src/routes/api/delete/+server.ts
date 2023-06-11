@@ -11,6 +11,20 @@ export const DELETE: RequestHandler = async (event) => {
 		throw error(401, 'Not authorized');
 	}
 
+	const war = await prisma.war.findUnique({
+		where: {
+			id: request.id
+		}
+	});
+
+	if(!war) {
+		throw error(404, 'Not found');
+	}
+
+	if(war.userId !== user.discord_data.id) {
+		throw error(401, 'Not authorized');
+	}
+
 	const result = await prisma.war.delete({
 		where: {
 			id: request.id

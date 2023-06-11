@@ -4,6 +4,7 @@
 	import { ModalManager } from '../../../components/modal/modal-store';
 	import WarForm from '../../../components/modal/modals/war-form.svelte';
 	import type { HeaderColumn, Row } from '../../../components/table/table';
+	import MdDelete from 'svelte-icons/md/MdDelete.svelte';
 	import Table from '../../../components/table/table.svelte';
 	import { Log, type Local_Guild, type War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
@@ -45,6 +46,7 @@
 	}
 
 	let is_public = false;
+	let is_own = false;
 
 	Manager.subscribe((manager) => {
 		if (war && !manager.wars.includes(war) && !is_public) {
@@ -75,6 +77,7 @@
 							won: result.won
 						});
 						is_public = true;
+						is_own = result.userId == $User.discord_data?.id;
 					}
 				}
 			} else {
@@ -154,6 +157,13 @@
 			goto(`/wars/${war.id}`);
 		}
 	}
+
+	async function delete_war() {
+		if (war) {
+			$Manager.delete_public_war(war);
+			goto('/wars');
+		}
+	}
 </script>
 
 {#if war}
@@ -174,18 +184,25 @@
 				>
 			{:else}
 				<button on:click={share_war} title="Share" class="my-auto ml-auto"
-					><Icon icon={IoIosShareAlt} class="self-center " /></button
+					><Icon icon={IoIosShareAlt} class="self-center" /></button
 				>
 			{/if}
 			<button
 				on:click={() => ModalManager.open(WarForm, { war: war })}
 				title="Edit"
-				class="ml-2 my-auto"><Icon icon={MdSettings} class="self-center " /></button
+				class="ml-2 my-auto"><Icon icon={MdSettings} class="self-center" /></button
 			>
 		{:else if $Manager.get_war_by_id(war.unique_id)}
-			<Button on:click={() => goto(`/wars/${war?.id}`)} class="my-auto ml-auto"
-				>View in Dashboard</Button
-			>
+			<div class="flex gap-4 ml-auto my-auto">
+				<Button on:click={() => goto(`/wars/${war?.id}`)} class="self-center ml-auto"
+					>View in Dashboard</Button
+				>
+				{#if is_own}
+					<button on:click={delete_war}>
+						<Icon icon={MdDelete} class="self-center text-red-500" />
+					</button>
+				{/if}
+			</div>
 		{:else}
 			<Button on:click={add_war} class="my-auto ml-auto">Add to Dashboard</Button>
 		{/if}
@@ -195,7 +212,9 @@
 		<div class="pl-2">{war.local_players.length} Players</div>
 		<div class="pl-2">{war.duration} minutes</div>
 	</div>
-	<div class="flex gap-4 sm:flex-row flex-col border border-foreground border-dashed p-2 rounded-lg">
+	<div
+		class="flex gap-4 sm:flex-row flex-col border border-foreground border-dashed p-2 rounded-lg"
+	>
 		<div
 			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[480px] justify-center sm:justify-start"
 		>
