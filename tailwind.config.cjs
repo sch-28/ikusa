@@ -9,6 +9,10 @@ module.exports = {
 			screens: {
 				xs: '500px'
 			},
+			maxWidth: {
+				'8xl': '90rem',
+				'9xl': '100rem'
+			},
 			colors: {
 				background: {
 					DEFAULT: 'rgb(28,28,28)',

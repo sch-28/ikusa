@@ -35,7 +35,7 @@
 
 {#if is_mounted}
 	<div class="content">
-		<div class="px-4 max-w-7xl mx-auto">
+		<div class="px-4 max-w-9xl mx-auto">
 			<Header />
 			<div class="mt-16">
 				<slot />

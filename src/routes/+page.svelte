@@ -30,13 +30,13 @@
 </div>
 
 <div class="flex flex-col w-full justify-center gap-64 pb-20">
-	<section style="padding-top: 95vh;" class="max-w-8xl">
+	<section style="padding-top: 95vh;">
 		<Logs />
 	</section>
-	<section class="max-w-8xl">
+	<section>
 		<Guilds />
 	</section>
-	<section class="max-w-8xl">
+	<section>
 		<Logger />
 	</section>
 	<section class="max-w-8xl flex flex-col items-center">
