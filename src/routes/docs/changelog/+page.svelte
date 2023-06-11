@@ -7,6 +7,13 @@
 
 	const changes = [
 		{
+			version: '0.2.2',
+			date: '11.06.2023',
+			title: 'Landing Page & Documentation',
+			changes: ['Extended Landing page','Refactored documentation', 'Slight style adjustments'],
+			author: oracle
+		},
+		{
 			version: '0.2.1',
 			date: '10.06.2023',
 			title: 'Ikusa Logger',

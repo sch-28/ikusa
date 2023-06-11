@@ -18,7 +18,7 @@
 
 	<p class="text-xl font-bold text-gold mt-4">Installation</p>
 	<p class="mb-2">Download the installer</p>
-	<DownloadLogger />
+	<DownloadLogger class="w-fit" />
 
 	<div class="mt-8">
 		Next: <a href="/docs/usage" class="underline">Usage</a>
