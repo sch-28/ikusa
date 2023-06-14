@@ -7,6 +7,13 @@
 
 	const changes = [
 		{
+			version: '0.2.3',
+			date: '14.06.2023',
+			title: 'Table Improvements',
+			changes: ['Resizable table columns', 'Auto fit option', 'Fixed auto scroll issue'],
+			author: oracle
+		},
+		{
 			version: '0.2.2',
 			date: '11.06.2023',
 			title: 'Landing Page & Documentation',
