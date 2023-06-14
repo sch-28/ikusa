@@ -41,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@neodrag/svelte": "^2.0.3",
 		"@popperjs/core": "^2.11.6",
 		"@prisma/client": "^4.15.0",
 		"@sveltejs/adapter-node": "^1.2.4",

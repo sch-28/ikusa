@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@neodrag/svelte': ^2.0.3
   '@popperjs/core': ^2.11.6
   '@prisma/client': ^4.15.0
   '@sveltejs/adapter-auto': ^2.1.0
@@ -41,6 +42,7 @@ specifiers:
   vitest: ^0.25.3
 
 dependencies:
+  '@neodrag/svelte': 2.0.3
   '@popperjs/core': 2.11.8
   '@prisma/client': 4.15.0_prisma@4.15.0
   '@sveltejs/adapter-node': 1.2.4_@sveltejs+kit@1.20.2
@@ -372,6 +374,10 @@ packages:
       - encoding
       - supports-color
     dev: true
+
+  /@neodrag/svelte/2.0.3:
+    resolution: {integrity: sha512-/7k4Byv6guBs6NpfzOnqOep8PM3HjhPg1rRPNsJsGNGDXSJNB+tn9NAi/vTXJBos3vN9XPlbnr3g/lNKGfg+Jg==}
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
