@@ -8,6 +8,7 @@
 	import FaSortDown from 'svelte-icons/fa/FaSortDown.svelte';
 	import Icon from '../elements/icon.svelte';
 	import Input from '../elements/input.svelte';
+	import { draggable } from '@neodrag/svelte';
 
 	export let header: HeaderColumn<any>[] = [];
 	export let rows: Row[] = [];
@@ -45,10 +46,10 @@
 		}
 	}
 
-	$: grid_template =
+	/* $: grid_template =
 		`grid-template-columns:` +
 		header.map((column) => `minmax(75px, ${column.width ?? 1}fr)`).join(' ') +
-		';';
+		';'; */
 
 	$: {
 		if (v_list_container) {
@@ -211,7 +212,7 @@
 	}
 
 	function scroll_top(y: number) {
-		if (v_list) setTimeout(() => v_list.scrollTo({ top: y, behavior: 'smooth'}), 20);
+		if (v_list) setTimeout(() => v_list.scrollTo({ top: y, behavior: 'smooth' }), 20);
 	}
 </script>
 
@@ -230,8 +231,8 @@
 	{/if}
 	<div class="absolute left-1/2 -translate-x-1/2 text-xl font-bold">{title}</div>
 	<div
-		class="items-start grid w-full min-w-0"
-		style={grid_template + `padding-right:${scrollbar_width}px`}
+		class="items-start flex w-full min-w-0 gap-2"
+		style={/* grid_template + */ `padding-right:${scrollbar_width}px`}
 		bind:this={header_element}
 	>
 		{#each header as head, index}
@@ -240,6 +241,7 @@
 				{index > 0 ? 'justify-self-center' : ''}
 				{head.sortable ? 'cursor-pointer' : 'cursor-default'}"
 				on:click={(e) => handle_sort_change(head, e.shiftKey)}
+				style={`min-width: ${head.width ?? 100}px;`}
 			>
 				<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
 				{#if head.sortable}
@@ -252,19 +254,34 @@
 					{/if}
 				{/if}
 			</button>
+
+			<div
+				use:draggable={{
+					onDrag(data) {
+						head.width = Math.max(data.offsetX, 100);
+					},
+					axis: 'x',
+					position: { x: head.width ?? 100, y: 0 },
+					transform({ offsetX, offsetY, rootNode }) {
+						/* head.width = Math.max(offsetX, 100); */
+					}
+				}}
+				class="w-4 h-full flex items-center justify-center cursor-col-resize shrink-0"
+			>
+				<div class="h-2 w-0.5 my-auto bg-foreground-secondary cursor-col-resize" />
+			</div>
 		{/each}
 	</div>
 	{#key height}
 		<VirtualList items={sorted_rows} let:item={row} bind:this={v_list_container}>
 			<button
 				on:click={row.onclick}
-				class="grid w-full text-foreground-secondary hover:text-foreground"
-				style={grid_template}
+				class="flex w-full text-foreground-secondary hover:text-foreground"
 			>
 				{#each row.columns as column, index}
 					<div
-						class="max-w-full {index > 0 ? 'justify-self-center' : 'justify-self-start'}"
-						style="color: {column.color}"
+						class="max-w-full flex items-center"
+						style="color: {column.color}; min-width: calc({header[index].width ?? 100}px + 2rem);"
 					>
 						{#if typeof column === 'string' || typeof column === 'number'}
 							<span class="truncate" title={column.toString()}>{column}</span>
