@@ -15,6 +15,7 @@ export type Row = {
 export type HeaderColumn<T> = {
 	label: string;
 	width?: number;
+	min_width?: number;
 	sort?: (a: T, b: T) => number;
 	sortable?: boolean;
 	sort_dir?: 'asc' | 'des';
@@ -26,6 +27,7 @@ type TableData = {
 	sorts: HeaderColumn<any>[];
 	search?: string;
 	scroll_y: number;
+	columnSizes?: Record<string, number>;
 }[];
 
 export const TableSort = writable<TableData>([]);

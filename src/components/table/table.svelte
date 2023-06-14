@@ -9,6 +9,7 @@
 	import Icon from '../elements/icon.svelte';
 	import Input from '../elements/input.svelte';
 	import { draggable } from '@neodrag/svelte';
+	import MdZoomOutMap from 'svelte-icons/md/MdZoomOutMap.svelte';
 
 	export let header: HeaderColumn<any>[] = [];
 	export let rows: Row[] = [];
@@ -29,7 +30,6 @@
 
 	$: {
 		height;
-		header;
 		rows;
 		search_string;
 		handle_sort();
@@ -46,15 +46,11 @@
 		}
 	}
 
-	/* $: grid_template =
-		`grid-template-columns:` +
-		header.map((column) => `minmax(75px, ${column.width ?? 1}fr)`).join(' ') +
-		';'; */
-
 	$: {
 		if (v_list_container) {
 			update_v_list();
 			load_cached_table();
+			fitTable();
 		}
 	}
 
@@ -122,10 +118,9 @@
 
 			if (!current_sorts.includes(column)) {
 				current_sorts.push(column);
-				handle_sort();
 			}
 		}
-		header = header;
+		handle_sort();
 
 		const table_sort = $TableSort.find((sort) => sort.table_id === id);
 		if (table_sort) {
@@ -212,8 +207,16 @@
 	}
 
 	function scroll_top(y: number) {
-		if (v_list) setTimeout(() => v_list.scrollTo({ top: y, behavior: 'smooth' }), 20);
+		if (v_list) setTimeout(() => v_list.scrollTo({ top: y, behavior: 'auto' }), 20);
 	}
+
+	function fitTable() {
+		if (!instance) return;
+		const width = instance.clientWidth / header.length;
+		header.forEach((col, index) => (col.width = width - 15 - (scrollbar_width ?? 4)));
+		header = header;
+	}
+
 </script>
 
 <div
@@ -231,8 +234,8 @@
 	{/if}
 	<div class="absolute left-1/2 -translate-x-1/2 text-xl font-bold">{title}</div>
 	<div
-		class="items-start flex w-full min-w-0 gap-2"
-		style={/* grid_template + */ `padding-right:${scrollbar_width}px`}
+		class="items-start flex min-w-0 w-fit"
+		style={`padding-right:${scrollbar_width}px`}
 		bind:this={header_element}
 	>
 		{#each header as head, index}
@@ -241,7 +244,7 @@
 				{index > 0 ? 'justify-self-center' : ''}
 				{head.sortable ? 'cursor-pointer' : 'cursor-default'}"
 				on:click={(e) => handle_sort_change(head, e.shiftKey)}
-				style={`min-width: ${head.width ?? 100}px;`}
+				style={`width: ${Math.max(head.width ?? 50, head.min_width ?? 50)}px;`}
 			>
 				<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
 				{#if head.sortable}
@@ -258,15 +261,13 @@
 			<div
 				use:draggable={{
 					onDrag(data) {
-						head.width = Math.max(data.offsetX, 100);
+						head.width = Math.max(data.offsetX, head.min_width ?? 50);
 					},
 					axis: 'x',
-					position: { x: head.width ?? 100, y: 0 },
-					transform({ offsetX, offsetY, rootNode }) {
-						/* head.width = Math.max(offsetX, 100); */
-					}
+					position: { x: Math.max(head.width ?? 50, head.min_width ?? 50), y: 0 },
+					transform({ offsetX, offsetY, rootNode }) {}
 				}}
-				class="w-4 h-full flex items-center justify-center cursor-col-resize shrink-0"
+				class="w-[15px] h-full flex items-center justify-center cursor-col-resize shrink-0"
 			>
 				<div class="h-2 w-0.5 my-auto bg-foreground-secondary cursor-col-resize" />
 			</div>
@@ -280,8 +281,11 @@
 			>
 				{#each row.columns as column, index}
 					<div
-						class="max-w-full flex items-center"
-						style="color: {column.color}; min-width: calc({header[index].width ?? 100}px + 2rem);"
+						class="flex items-center"
+						style="color: {column.color}; width: {Math.max(
+							header[index].width ?? 50,
+							header[index].min_width ?? 50
+						) + 15}px;"
 					>
 						{#if typeof column === 'string' || typeof column === 'number'}
 							<span class="truncate" title={column.toString()}>{column}</span>
@@ -295,4 +299,7 @@
 			</button>
 		</VirtualList>
 	{/key}
+	<div>
+		<button on:click={fitTable} class="flex gap-1"><Icon icon={MdZoomOutMap} /> Fit width</button>
+	</div>
 </div>
