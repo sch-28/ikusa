@@ -9,8 +9,8 @@
 		{
 			version: '0.2.4',
 			date: '15.06.2023',
-			title: 'Table Improvements',
-			changes: ['Consistent table state', 'Individual column width fill'],
+			title: 'Table Improvements & Header Changes',
+			changes: ['Consistent table state', 'Individual column width fill', 'Responsive header'],
 			author: oracle
 		},
 		{
