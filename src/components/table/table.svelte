@@ -1,8 +1,15 @@
 <script lang="ts">
 	import VirtualList from '@sveltejs/svelte-virtual-list';
 	import { onDestroy, onMount } from 'svelte';
-	import { scrollbar_width } from '../../logic/util';
-	import { TableSort, type HeaderColumn, type Row, type RowObject, type RowElement } from './table';
+	import { debounce, scrollbar_width } from '../../logic/util';
+	import {
+		TableSort,
+		type HeaderColumn,
+		type Row,
+		type RowObject,
+		type RowElement,
+		type TableData
+	} from './table';
 	import FaSort from 'svelte-icons/fa/FaSort.svelte';
 	import FaSortUp from 'svelte-icons/fa/FaSortUp.svelte';
 	import FaSortDown from 'svelte-icons/fa/FaSortDown.svelte';
@@ -47,12 +54,40 @@
 		}
 	}
 
+	const update_table_store_debounced = debounce(update_table_store, 500);
+
+	function update_table_store() {
+		const table = $TableSort.find((sort) => sort.table_id === id);
+		const columnSizes = header.reduce((acc: Record<string, number>, col) => {
+			if (col.width) acc[col.label] = col.width;
+			return acc;
+		}, {});
+		if (table) {
+			table.search = search_string;
+			table.columnSizes = columnSizes;
+			$TableSort = $TableSort;
+		} else {
+			$TableSort.push({
+				table_id: id,
+				search: search_string,
+				scroll_y: 0,
+				sorts: current_sorts,
+				columnSizes
+			});
+		}
+	}
+
 	$: {
 		if (v_list_container) {
 			update_v_list();
 			load_cached_table();
-			fitTable();
 		}
+	}
+
+	$: {
+		search_string;
+		header;
+		update_table_store_debounced();
 	}
 
 	function update_v_list() {
@@ -66,16 +101,23 @@
 
 	function load_cached_table() {
 		const table = $TableSort.find((sort) => sort.table_id === id);
+		if (!table) return;
+		if (table.columnSizes === undefined || table.columnSizes.length === 0) {
+			fitTable();
+		}
+		header.forEach((col) => {
+			col.width = table.columnSizes?.[col.label] ?? col.width;
+		});
 		current_sorts =
-			(table?.sorts
+			(table.sorts
 				.map((sort) => header.find((col) => col.label === sort.label))
 				.filter((col) => col !== undefined) as HeaderColumn[]) ?? [];
 
 		current_sorts.forEach((col) => {
-			col.sort_dir = table?.sorts.find((sort) => sort.label === col.label)?.sort_dir;
+			col.sort_dir = table.sorts.find((sort) => sort.label === col.label)?.sort_dir;
 		});
-		search_string = table?.search ?? '';
-		table && handle_sort(table.scroll_y);
+		search_string = table.search ?? '';
+		handle_sort(table.scroll_y);
 	}
 
 	onDestroy(() => {
