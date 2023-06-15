@@ -7,6 +7,13 @@
 
 	const changes = [
 		{
+			version: '0.2.4',
+			date: '15.06.2023',
+			title: 'Table Improvements',
+			changes: ['Consistent table state', 'Individual column width fill'],
+			author: oracle
+		},
+		{
 			version: '0.2.3',
 			date: '14.06.2023',
 			title: 'Table Improvements',
