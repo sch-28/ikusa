@@ -278,11 +278,7 @@
 	}
 </script>
 
-<div
-	class="overflow-x-auto h-full flex flex-col min-w-0 relative"
-	style="height: {height}px;"
-	bind:this={instance}
->
+<div class="h-full flex flex-col min-w-0 relative" style="height: {height}px;" bind:this={instance}>
 	{#if searchable}
 		<Input
 			class="mb-2 sm:max-w-[12rem] max-w-[8rem] shrink"
@@ -292,85 +288,91 @@
 		/>
 	{/if}
 	<div class="absolute left-1/2 -translate-x-1/2 text-xl font-bold">{title}</div>
-	<div
-		class="items-start flex min-w-0 w-fit"
-		style={`padding-right:${scrollbar_width}px`}
-		bind:this={header_element}
-	>
-		{#each header as head, index}
-			<div
-				class="flex items-center group"
-				style={`width: ${Math.max(head.width ?? 50, head.min_width ?? 50)}px;`}
-			>
-				<button
-					class="min-w-0 flex items-center font-bold text-foreground
+	<div class="overflow-x-auto h-full flex flex-col">
+		<div
+			class="items-start flex min-w-0 w-fit"
+			style={`padding-right:${scrollbar_width}px`}
+			bind:this={header_element}
+		>
+			{#each header as head, index}
+				<div
+					class="flex items-center group"
+					style={`width: ${Math.max(head.width ?? 50, head.min_width ?? 50)}px;`}
+				>
+					<button
+						class="min-w-0 flex items-center font-bold text-foreground
 				{index > 0 ? 'justify-self-center' : ''}
 				{head.sortable ? 'cursor-pointer' : 'cursor-default'}
 				"
-					on:click={(e) => handle_sort_change(head, e.shiftKey)}
-				>
-					<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
-					{#if head.sortable && head.width}
-						{#if head.sort_dir === 'asc'}
-							<Icon class="hidden sm:block" icon={FaSortUp} />
-						{:else if head.sort_dir === 'des'}
-							<Icon class="hidden sm:block" icon={FaSortDown} />
-						{:else}
-							<!-- <Icon class="hidden sm:block" icon={FaSort} /> -->
+						on:click={(e) => handle_sort_change(head, e.shiftKey)}
+					>
+						<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
+						{#if head.sortable && head.width}
+							{#if head.sort_dir === 'asc'}
+								<Icon class="hidden sm:block" icon={FaSortUp} />
+							{:else if head.sort_dir === 'des'}
+								<Icon class="hidden sm:block" icon={FaSortDown} />
+							{:else}
+								<!-- <Icon class="hidden sm:block" icon={FaSort} /> -->
+							{/if}
 						{/if}
-					{/if}
-				</button>
-				<div class="ml-auto flex items-center">
-					<button
-						on:click={() => fitColumn(head)}
-						class="hidden {remaining_width > 5 ? 'group-hover:block' : ''}"
-					>
-						<Icon icon={IoMdCode} />
 					</button>
-					<div
-						use:draggable={{
-							onDrag(data) {
-								head.width = Math.max(data.offsetX, head.min_width ?? 50);
-							},
-							axis: 'x',
-							position: { x: Math.max(head.width ?? 50, head.min_width ?? 50), y: 0 },
-							transform({ offsetX, offsetY, rootNode }) {}
-						}}
-						class="w-[15px] h-full flex items-center justify-center cursor-col-resize shrink-0"
-					>
-						<div class="h-2 w-0.5 my-auto bg-foreground-secondary cursor-col-resize" />
+					<div class="ml-auto flex items-center">
+						<button
+							on:click={() => fitColumn(head)}
+							class="hidden {remaining_width > 5 ? 'group-hover:block' : ''}"
+						>
+							<Icon icon={IoMdCode} />
+						</button>
+						<div
+							use:draggable={{
+								onDrag(data) {
+									head.width = Math.max(data.offsetX, head.min_width ?? 50);
+								},
+								axis: 'x',
+								position: {
+									x: Math.max(head.width ?? 50, head.min_width ?? 50),
+									y: 0
+								},
+								transform({ offsetX, offsetY, rootNode }) {}
+							}}
+							class="w-[15px] h-full flex items-center justify-center cursor-col-resize shrink-0"
+						>
+							<div class="h-2 w-0.5 my-auto bg-foreground-secondary cursor-col-resize" />
+						</div>
 					</div>
 				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
+		{#key height}
+			<VirtualList items={sorted_rows} let:item={row} bind:this={v_list_container}>
+				<button
+					on:click={row.onclick}
+					class="flex w-full text-foreground-secondary hover:text-foreground"
+				>
+					{#each row.columns as column, index}
+						<div
+							class="flex items-center"
+							style="color: {column.color}; width: {Math.max(
+								header[index].width ?? 50,
+								header[index].min_width ?? 50
+							)}px;"
+						>
+							{#if typeof column === 'string' || typeof column === 'number'}
+								<span class="truncate" title={column.toString()}>{column}</span>
+							{:else if typeof column === 'object' && (typeof column.data === 'string' || typeof column.data === 'number')}
+								<span class="truncate" title={column.label.toString()}>{column.label}</span>
+							{:else}
+								<Icon icon={column.label} />
+							{/if}
+						</div>
+					{/each}
+				</button>
+			</VirtualList>
+		{/key}
 	</div>
-	{#key height}
-		<VirtualList items={sorted_rows} let:item={row} bind:this={v_list_container}>
-			<button
-				on:click={row.onclick}
-				class="flex w-full text-foreground-secondary hover:text-foreground"
-			>
-				{#each row.columns as column, index}
-					<div
-						class="flex items-center"
-						style="color: {column.color}; width: {Math.max(
-							header[index].width ?? 50,
-							header[index].min_width ?? 50
-						)}px;"
-					>
-						{#if typeof column === 'string' || typeof column === 'number'}
-							<span class="truncate" title={column.toString()}>{column}</span>
-						{:else if typeof column === 'object' && (typeof column.data === 'string' || typeof column.data === 'number')}
-							<span class="truncate" title={column.label.toString()}>{column.label}</span>
-						{:else}
-							<Icon icon={column.label} />
-						{/if}
-					</div>
-				{/each}
-			</button>
-		</VirtualList>
-	{/key}
-	<div>
+
+	<div class="mt-2">
 		<button on:click={fitTable} class="flex gap-1"><Icon icon={MdZoomOutMap} /> Fit width</button>
 	</div>
 </div>
