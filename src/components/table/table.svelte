@@ -101,10 +101,11 @@
 
 	function load_cached_table() {
 		const table = $TableSort.find((sort) => sort.table_id === id);
-		if (!table) return;
-		if (table.columnSizes === undefined || table.columnSizes.length === 0) {
+		if (!table || table.columnSizes === undefined || table.columnSizes.length === 0) {
 			fitTable();
 		}
+		if (!table) return;
+
 		header.forEach((col) => {
 			col.width = table.columnSizes?.[col.label] ?? col.width;
 		});
