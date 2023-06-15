@@ -2,7 +2,7 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list';
 	import { onDestroy, onMount } from 'svelte';
 	import { scrollbar_width } from '../../logic/util';
-	import { TableSort, type HeaderColumn, type Row, type RowObject } from './table';
+	import { TableSort, type HeaderColumn, type Row, type RowObject, type RowElement } from './table';
 	import FaSort from 'svelte-icons/fa/FaSort.svelte';
 	import FaSortUp from 'svelte-icons/fa/FaSortUp.svelte';
 	import FaSortDown from 'svelte-icons/fa/FaSortDown.svelte';
@@ -10,8 +10,9 @@
 	import Input from '../elements/input.svelte';
 	import { draggable } from '@neodrag/svelte';
 	import MdZoomOutMap from 'svelte-icons/md/MdZoomOutMap.svelte';
+	import IoMdCode from 'svelte-icons/io/IoMdCode.svelte';
 
-	export let header: HeaderColumn<any>[] = [];
+	export let header: HeaderColumn[] = [];
 	export let rows: Row[] = [];
 	export let searchable: boolean = false;
 	export let title: string = '';
@@ -23,7 +24,7 @@
 	let sorted_rows: Row[] = [];
 	let search_string: string = '';
 	let header_element: HTMLDivElement;
-	let current_sorts: HeaderColumn<any>[] = [];
+	let current_sorts: HeaderColumn[] = [];
 	let v_list: HTMLDivElement;
 
 	let v_list_container: VirtualList;
@@ -68,7 +69,7 @@
 		current_sorts =
 			(table?.sorts
 				.map((sort) => header.find((col) => col.label === sort.label))
-				.filter((col) => col !== undefined) as HeaderColumn<any>[]) ?? [];
+				.filter((col) => col !== undefined) as HeaderColumn[]) ?? [];
 
 		current_sorts.forEach((col) => {
 			col.sort_dir = table?.sorts.find((sort) => sort.label === col.label)?.sort_dir;
@@ -94,7 +95,7 @@
 		}
 	}
 
-	function handle_sort_change(column: HeaderColumn<any>, multiple = false) {
+	function handle_sort_change(column: HeaderColumn, multiple = false) {
 		if (!current_sorts.includes(column) && !multiple) {
 			current_sorts.forEach((col) => {
 				col.sort_dir = undefined;
@@ -134,7 +135,11 @@
 		}
 	}
 
-	function default_sort(a: any, b: any, ...alt: [any, any, 'asc' | 'des'][]): -1 | 0 | 1 {
+	function default_sort(
+		a: RowElement,
+		b: RowElement,
+		...alt: [RowElement, RowElement, 'asc' | 'des'][]
+	): -1 | 0 | 1 {
 		if (a < b) {
 			return -1;
 		} else if (a > b) {
@@ -169,7 +174,7 @@
 					b_val = col.value ?? col.label;
 				}
 
-				const alt: [any, any, 'asc' | 'des'][] = [];
+				const alt: [RowElement, RowElement, 'asc' | 'des'][] = [];
 				for (let i = 1; i < current_sorts.length; i++) {
 					const column = current_sorts[i];
 					if (column.sort_dir === undefined) continue;
@@ -212,11 +217,22 @@
 
 	function fitTable() {
 		if (!instance) return;
-		const width = instance.clientWidth / header.length;
-		header.forEach((col, index) => (col.width = width - 15 - (scrollbar_width ?? 4)));
+		const width = (instance.clientWidth - (scrollbar_width ?? 4)) / header.length;
+		header.forEach((col, index) => (col.width = width));
 		header = header;
 	}
 
+	$: remaining_width = instance
+		? instance?.clientWidth -
+		  header.reduce((acc, col) => acc + (col.width ?? col.min_width ?? 50), 0) -
+		  (scrollbar_width ?? 4)
+		: 0;
+
+	function fitColumn(selectedHeader: HeaderColumn) {
+		selectedHeader.width =
+			(selectedHeader.width ?? selectedHeader.min_width ?? 50) + remaining_width;
+		header = header;
+	}
 </script>
 
 <div
@@ -239,37 +255,49 @@
 		bind:this={header_element}
 	>
 		{#each header as head, index}
-			<button
-				class="max-w-full flex items-center font-bold text-foreground
-				{index > 0 ? 'justify-self-center' : ''}
-				{head.sortable ? 'cursor-pointer' : 'cursor-default'}"
-				on:click={(e) => handle_sort_change(head, e.shiftKey)}
+			<div
+				class="flex items-center group"
 				style={`width: ${Math.max(head.width ?? 50, head.min_width ?? 50)}px;`}
 			>
-				<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
-				{#if head.sortable}
-					{#if head.sort_dir === 'asc'}
-						<Icon class="hidden sm:block" icon={FaSortUp} />
-					{:else if head.sort_dir === 'des'}
-						<Icon class="hidden sm:block" icon={FaSortDown} />
-					{:else}
-						<Icon class="hidden sm:block" icon={FaSort} />
+				<button
+					class="min-w-0 flex items-center font-bold text-foreground
+				{index > 0 ? 'justify-self-center' : ''}
+				{head.sortable ? 'cursor-pointer' : 'cursor-default'}
+				"
+					on:click={(e) => handle_sort_change(head, e.shiftKey)}
+				>
+					<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
+					{#if head.sortable && head.width}
+						{#if head.sort_dir === 'asc'}
+							<Icon class="hidden sm:block" icon={FaSortUp} />
+						{:else if head.sort_dir === 'des'}
+							<Icon class="hidden sm:block" icon={FaSortDown} />
+						{:else}
+							<!-- <Icon class="hidden sm:block" icon={FaSort} /> -->
+						{/if}
 					{/if}
-				{/if}
-			</button>
-
-			<div
-				use:draggable={{
-					onDrag(data) {
-						head.width = Math.max(data.offsetX, head.min_width ?? 50);
-					},
-					axis: 'x',
-					position: { x: Math.max(head.width ?? 50, head.min_width ?? 50), y: 0 },
-					transform({ offsetX, offsetY, rootNode }) {}
-				}}
-				class="w-[15px] h-full flex items-center justify-center cursor-col-resize shrink-0"
-			>
-				<div class="h-2 w-0.5 my-auto bg-foreground-secondary cursor-col-resize" />
+				</button>
+				<div class="ml-auto flex items-center">
+					<button
+						on:click={() => fitColumn(head)}
+						class="hidden {remaining_width > 5 ? 'group-hover:block' : ''}"
+					>
+						<Icon icon={IoMdCode} />
+					</button>
+					<div
+						use:draggable={{
+							onDrag(data) {
+								head.width = Math.max(data.offsetX, head.min_width ?? 50);
+							},
+							axis: 'x',
+							position: { x: Math.max(head.width ?? 50, head.min_width ?? 50), y: 0 },
+							transform({ offsetX, offsetY, rootNode }) {}
+						}}
+						class="w-[15px] h-full flex items-center justify-center cursor-col-resize shrink-0"
+					>
+						<div class="h-2 w-0.5 my-auto bg-foreground-secondary cursor-col-resize" />
+					</div>
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -285,7 +313,7 @@
 						style="color: {column.color}; width: {Math.max(
 							header[index].width ?? 50,
 							header[index].min_width ?? 50
-						) + 15}px;"
+						)}px;"
 					>
 						{#if typeof column === 'string' || typeof column === 'number'}
 							<span class="truncate" title={column.toString()}>{column}</span>
