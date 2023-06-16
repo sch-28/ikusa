@@ -61,7 +61,7 @@
 	<meta property="twitter:url" content={url} />
 	<meta property="twitter:title" content={title} />
 	<meta property="twitter:domain" content="Ikusa" />
-	
+	<meta name="twitter:image:src" content={image} />
 	<meta property="twitter:description" content={description} />
 	<meta property="twitter:image" content={image} />
 </svelte:head>
