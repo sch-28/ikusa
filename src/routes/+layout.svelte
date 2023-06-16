@@ -9,6 +9,7 @@
 	import { User } from '../logic/user';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
+	import { page } from '$app/stores';
 
 	inject({ mode: dev ? 'development' : 'production' });
 
@@ -26,11 +27,41 @@
 		/* load_store(Manager, 'manager'); */
 		is_mounted = true;
 	});
+
+	const default_title = 'Ikusa | BDO Combat Analyzer';
+	const default_description =
+		'Ikusa is a powerful tool that allows you to analyze your Black Desert Online logs and gain valuable insights into your combat performance.';
+	const default_image = '/thumbnail-4.png';
+
+	const title = $page.data.title ?? default_title;
+	const description = $page.data.description ?? default_description;
+	const url = $page.url.href;
+	const image = $page.data.image ?? default_image;
 </script>
 
 <svelte:head>
-	<title>Ikusa</title>
-	<meta name="description" content="Ikusa - BDO Combat Log Analyzer" />
+	<title>{title}</title>
+	<meta content={title} property="og:title" />
+	<meta name="title" content={title} />
+	<meta name="description" content={description} />
+
+	<meta content={description} property="og:description" />
+	<meta property="twitter:description" content={description} />
+	<meta content={url} property="og:url" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={url} />
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
+	<meta property="og:image" content={image} />
+
+	<!-- Twitter -->
+	<meta property="twitter:card" content={description} />
+	<meta property="twitter:url" content={url} />
+	<meta property="twitter:title" content={title} />
+	<meta property="twitter:description" content={description} />
+	<meta property="twitter:image" content={image} />
 </svelte:head>
 
 {#if is_mounted}

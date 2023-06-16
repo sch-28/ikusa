@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import Button from '../components/elements/button.svelte';
 	import Footer from '../components/footer.svelte';
 	import Guilds from '../components/landing/guilds.svelte';
@@ -10,6 +11,11 @@
 
 	let hero_divider: HTMLElement;
 </script>
+
+<svelte:head>
+	<title>Ikusa | BDO Combat Analyzer</title>
+	<meta name="description" content="Ikusa - BDO Combat Analyzer" />
+</svelte:head>
 
 <div
 	class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex items-center justify-center flex-col"
