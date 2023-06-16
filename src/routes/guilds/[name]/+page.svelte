@@ -191,7 +191,7 @@
 				</button>
 			{/each}
 		</div>
-		<div class="w-full">
+		<div class="w-full min-w-0">
 			<Table
 				height={480}
 				id="guild"
