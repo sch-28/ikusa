@@ -27,7 +27,7 @@
 
 	const header: HeaderColumn[] = [
 		{ label: 'Name', width: 3, sortable: true },
-		{ label: 'Kills', width: 1, sortable: true },
+		{ label: 'Kills', width: 1, sortable: true, sort_dir: 'des' },
 		{ label: 'Deaths', width: 1, sortable: true },
 		{
 			label: 'Performance',
