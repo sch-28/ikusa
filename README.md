@@ -1,38 +1,16 @@
-# create-svelte
+<div align="center">
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+# Ikusa
 
-## Creating a project
+[Introduction](#introduction) • [Features](#features) 
 
-If you're seeing this, you've probably already done this step. Congrats!
+![Status](https://img.shields.io/github/deployments/sch-28/ikusa/production?label=Deployment)
+![Latest commit](https://img.shields.io/github/last-commit/sch-28/ikusa)
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+<a href="https://ikusa.site"><img src="https://github.com/sch-28/ikusa/assets/42447473/80aa566d-ea30-4a08-8540-52561adfd8f3"></a>
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+</div>
+ 
+## Introduction
+Ikusa is a powerful tool that allows you to analyze your game logs and gain valuable insights into your combat performance. 
+Download the Ikusa Logger and keep it running in the background while you play. The logger will automatically detect all kill logs. Then, directly upload your logs to Ikusa to analyze them.
