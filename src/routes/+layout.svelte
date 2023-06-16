@@ -27,11 +27,11 @@
 		/* load_store(Manager, 'manager'); */
 		is_mounted = true;
 	});
-
+	const origin = $page.url.origin;
 	const default_title = 'Ikusa | BDO Combat Analyzer';
 	const default_description =
 		'Ikusa is a powerful tool that allows you to analyze your Black Desert Online logs and gain valuable insights into your combat performance.';
-	const default_image = '/thumbnail-4.png';
+	const default_image = origin + '/meta/thumbnail-4.png';
 
 	const title = $page.data.title ?? default_title;
 	const description = $page.data.description ?? default_description;
@@ -57,9 +57,11 @@
 	<meta property="og:image" content={image} />
 
 	<!-- Twitter -->
-	<meta property="twitter:card" content={description} />
+	<meta property="twitter:card" content="summary_large_image" />
 	<meta property="twitter:url" content={url} />
 	<meta property="twitter:title" content={title} />
+	<meta property="twitter:domain" content="Ikusa" />
+	
 	<meta property="twitter:description" content={description} />
 	<meta property="twitter:image" content={image} />
 </svelte:head>
