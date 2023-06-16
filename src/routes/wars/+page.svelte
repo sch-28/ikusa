@@ -17,7 +17,7 @@
 	import type { Log } from '../../logic/data';
 	import { parse } from 'flatted';
 
-	const header: HeaderColumn<any>[] = [
+	const header: HeaderColumn[] = [
 		{
 			label: 'Name',
 			sortable: true

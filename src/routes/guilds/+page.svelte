@@ -14,7 +14,7 @@
 	import type { HeaderColumn, Row } from '../../components/table/table';
 	import { format, get_remaining_height } from '../../logic/util';
 
-	const header: HeaderColumn<any>[] = [
+	const header: HeaderColumn[] = [
 		{
 			label: 'Name',
 			sortable: true

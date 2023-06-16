@@ -28,7 +28,7 @@
 		} as Row;
 	});
 
-	const header: HeaderColumn<string>[] = [
+	const header: HeaderColumn[] = [
 		{
 			label: 'Name',
 			sortable: true

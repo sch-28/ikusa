@@ -32,7 +32,7 @@
 
 	let selected_guild = player?.guilds[player.guilds.length - 1];
 
-	const header: HeaderColumn<string>[] = [
+	const header: HeaderColumn[] = [
 		{
 			label: 'Date',
 			sortable: true

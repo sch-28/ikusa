@@ -25,7 +25,7 @@
 
 	let selected_guild: Local_Guild | undefined;
 
-	const header: HeaderColumn<string>[] = [
+	const header: HeaderColumn[] = [
 		{ label: 'Name', width: 3, sortable: true },
 		{ label: 'Kills', width: 1, sortable: true },
 		{ label: 'Deaths', width: 1, sortable: true },
