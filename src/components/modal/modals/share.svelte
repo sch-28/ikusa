@@ -35,6 +35,7 @@
 	async function share_war() {
 		if (!$User.discord_data) {
 			show_toast('You need to login via discord to share a war', 'error');
+			close();
 			return;
 		}
 		loading = true;
