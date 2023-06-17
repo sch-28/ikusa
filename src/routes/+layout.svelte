@@ -35,6 +35,7 @@
 	const default_image = origin + '/meta/thumbnail-4.png';
 
 	const title = $page.data.title ?? default_title;
+	const subtitle = $page.data.subtitle ?? 'Ikusa';
 	const description = $page.data.description ?? default_description;
 	const url = $page.url.href;
 	const image = $page.data.image ?? default_image;
@@ -56,6 +57,7 @@
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
 	<meta property="og:image" content={image} />
+	<meta property="og:site_name" content={subtitle} />
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
@@ -65,6 +67,12 @@
 	<meta name="twitter:image:src" content={image} />
 	<meta property="twitter:description" content={description} />
 	<meta property="twitter:image" content={image} />
+
+	<meta property="discord:color" content="#ff0000" />
+	<meta property="discord:field1:name" content="Field 1 Name" />
+	<meta property="discord:field1:value" content="Field 1 Value" />
+	<meta property="discord:field2:name" content="Field 2 Name" />
+	<meta property="discord:field2:value" content="Field 2 Value" />
 </svelte:head>
 
 {#if is_mounted}

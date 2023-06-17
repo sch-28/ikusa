@@ -194,7 +194,7 @@
 		<div class="w-full min-w-0">
 			<Table
 				height={480}
-				id="guild"
+				id="guild-{guild.name}"
 				{header}
 				{rows}
 				searchable

@@ -167,7 +167,7 @@
 				</div>
 				<div class="w-full h-[30rem]">
 					<Table
-						id="player-table"
+						id="player-table-{player.name}"
 						{header}
 						{rows}
 						searchable
