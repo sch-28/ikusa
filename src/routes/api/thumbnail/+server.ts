@@ -1,23 +1,22 @@
+import { dev } from '$app/environment';
+import { CHROME_KEY } from '$env/static/private';
 import { supabase } from '../../../logic/supabase';
-import type { Config, RequestHandler } from '@sveltejs/kit';
-import chromium from 'chrome-aws-lambda';
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import type { RequestHandler } from '@sveltejs/kit';
+import puppeteer from 'puppeteer';
 
-export const config: Config = {
-	runtime: 'edge',
-	preprocess: vitePreprocess()
-};
+const getBrowser = () =>
+	dev
+		? // Run the browser locally while in development
+		  puppeteer.launch()
+		: // Connect to browserless so we don't run Chrome on the same hardware in production
+		  puppeteer.connect({ browserWSEndpoint: `wss://chrome.browserless.io?token=${CHROME_KEY}` });
 
 export const POST: RequestHandler = async (event) => {
 	const { url, id } = await event.request.json();
+	let browser: puppeteer.Browser | null = null;
 	try {
-		const browser = await chromium.puppeteer.launch({
-			args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
-			defaultViewport: chromium.defaultViewport,
-			executablePath: await chromium.executablePath,
-			headless: true,
-			ignoreHTTPSErrors: true
-		});
+		browser = await getBrowser();
+
 		const page = await browser.newPage();
 		await page.setViewport({
 			width: 1200,
@@ -28,6 +27,7 @@ export const POST: RequestHandler = async (event) => {
 		if (!war_container) return new Response('Unable to load webpage', { status: 500 });
 		const buffer = await war_container.screenshot({ type: 'png' });
 		await browser.close();
+		browser = null;
 
 		const { data, error } = await supabase.storage
 			.from('war-thumbnails')
@@ -42,6 +42,10 @@ export const POST: RequestHandler = async (event) => {
 	} catch (e) {
 		console.error(e);
 		return new Response(JSON.stringify(e), { status: 500 });
+	} finally {
+		if (browser) {
+			browser.close();
+		}
 	}
 
 	return new Response(null, { status: 200 });

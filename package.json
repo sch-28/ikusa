@@ -29,6 +29,7 @@
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
 		"prisma": "^4.15.0",
+		"puppeteer": "^10.4.0",
 		"svelte": "^3.59.1",
 		"svelte-check": "^3.0.1",
 		"svelte-simple-modal": "^1.5.2",
@@ -36,8 +37,7 @@
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.3",
 		"vite": "^4.3.9",
-		"vitest": "^0.25.3",
-		"puppeteer": "^10.1.0"
+		"vitest": "^0.25.3"
 	},
 	"type": "module",
 	"dependencies": {
@@ -49,7 +49,6 @@
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"@vercel/analytics": "^1.0.1",
 		"apexcharts": "^3.37.1",
-		"chrome-aws-lambda": "^10.1.0",
 		"classnames": "^2.3.2",
 		"dayjs": "^1.11.7",
 		"flatted": "^3.2.7",
@@ -57,7 +56,6 @@
 		"flowbite-svelte": "^0.30.4",
 		"generate-unique-id": "^2.0.1",
 		"lz-string": "^1.4.4",
-		"puppeteer-core": "10.1.0",
 		"svelte-apexcharts": "^1.0.2",
 		"svelte-french-toast": "^1.0.3",
 		"svelte-icons": "^2.1.0"
