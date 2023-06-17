@@ -16,6 +16,7 @@ specifiers:
   '@vercel/analytics': ^1.0.1
   apexcharts: ^3.37.1
   autoprefixer: ^10.4.13
+  chrome-aws-lambda: ^10.1.0
   classnames: ^2.3.2
   dayjs: ^1.11.7
   eslint: ^8.28.0
@@ -52,6 +53,7 @@ dependencies:
   '@sveltejs/svelte-virtual-list': 3.0.1
   '@vercel/analytics': 1.0.1
   apexcharts: 3.41.0
+  chrome-aws-lambda: 10.1.0
   classnames: 2.3.2
   dayjs: 1.11.8
   flatted: 3.2.7
@@ -1224,6 +1226,15 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /chrome-aws-lambda/10.1.0:
+    resolution: {integrity: sha512-NZQVf+J4kqG4sVhRm3WNmOfzY0OtTSm+S8rg77pwePa9RCYHzhnzRs8YvNI6L9tALIW6RpmefWiPURt3vURXcw==}
+    engines: {node: '>= 10.16'}
+    peerDependencies:
+      puppeteer-core: ^10.1.0
+    dependencies:
+      lambdafs: 2.1.1
+    dev: false
+
   /chromium-bidi/0.4.12_slszgqoozoov7l7e2utet62hsy:
     resolution: {integrity: sha512-yl0ngMHtYUGJa2G0lkcbPvbnUZ9WMQyMNSfYmlrGD1nHRNyI9KOGw3dOaofFugXHHToneUaSmF9iUdgCBamCjA==}
     peerDependencies:
@@ -2144,6 +2155,14 @@ packages:
   /kleur/4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
+
+  /lambdafs/2.1.1:
+    resolution: {integrity: sha512-x5k8JcoJWkWLvCVBzrl4pzvkEHSgSBqFjg3Dpsc4AcTMq7oUMym4cL/gRTZ6VM4mUMY+M0dIbQ+V1c1tsqqanQ==}
+    engines: {node: '>= 10.16'}
+    hasBin: true
+    dev: false
+    bundledDependencies:
+      - tar-fs
 
   /levn/0.3.0:
     resolution: {integrity: sha512-0OO4y2iOHix2W6ujICbKIaEQXvFQHue65vUG3pb5EUomzPI90z9hsA1VsO/dbIIpC53J8gxM9Q4Oho0jrCM/yA==}
