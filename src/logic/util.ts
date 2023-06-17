@@ -1,8 +1,8 @@
 import type { Action } from 'svelte/types/runtime/action';
 import toast from 'svelte-french-toast';
-import { browser } from '$app/environment';
 import generateUniqueId from 'generate-unique-id';
 import { goto } from '$app/navigation';
+import { browser } from '$app/environment';
 
 export function show_toast(message: string, type: 'success' | 'error') {
 	toast[type](message, {
@@ -37,7 +37,7 @@ export const click_outside: Action = (node) => {
 };
 
 function measure_scrollbar() {
-	if (!browser) return;
+	if (!browser || typeof document === 'undefined') return;
 	const div = document.createElement('div');
 	div.style.width = '100px';
 	div.style.height = '100px';
