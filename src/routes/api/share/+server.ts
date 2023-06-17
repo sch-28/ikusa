@@ -33,7 +33,7 @@ export const POST: RequestHandler = async (event) => {
 		});
 
 		const origin = event.url.origin;
-		fetch(`${origin}/api/thumbnail`, {
+		await fetch(`${origin}/api/thumbnail`, {
 			method: 'POST',
 			body: JSON.stringify({
 				url: `${origin}/wars/${id}`,
