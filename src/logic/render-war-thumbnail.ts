@@ -1,12 +1,13 @@
 import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium-min';
 import { supabase } from './supabase';
+import { CHROME_URL } from '$env/static/private';
 
 export async function render_preview(url: string, id: string) {
 	const browser = await puppeteer.launch({
 		args: chromium.args,
 		defaultViewport: chromium.defaultViewport,
-		executablePath: await chromium.executablePath('https://www.example.com/chromiumPack.tar'),
+		executablePath: await chromium.executablePath(CHROME_URL),
 		headless: chromium.headless
 	});
 	const page = await browser.newPage();
