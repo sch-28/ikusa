@@ -1,8 +1,11 @@
 import { supabase } from '../../../logic/supabase';
-import type { RequestHandler } from '@sveltejs/kit';
+import type { Config, RequestHandler } from '@sveltejs/kit';
 import chromium from 'chrome-aws-lambda';
-export const config = {
-	runtime: 'edge'
+import { vitePreprocess } from '@sveltejs/kit/vite';
+
+export const config: Config = {
+	runtime: 'edge',
+	preprocess: vitePreprocess()
 };
 
 export const POST: RequestHandler = async (event) => {
