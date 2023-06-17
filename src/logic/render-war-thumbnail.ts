@@ -23,7 +23,7 @@ export async function render_preview(url: string, id: string) {
 		const buffer = await war_container.screenshot({ type: 'png' });
 		await browser.close();
 
-        console.log(buffer)
+		console.log(buffer);
 
 		const { data, error } = await supabase.storage
 			.from('war-thumbnails')
@@ -31,11 +31,12 @@ export async function render_preview(url: string, id: string) {
 				cacheControl: '3600',
 				upsert: true
 			});
-            console.log(data)
+		console.log(data);
 		if (error) {
 			console.error(error);
 		}
 	} catch (e) {
+		console.error('Something went wrong');
 		console.error(e);
 	}
 }
