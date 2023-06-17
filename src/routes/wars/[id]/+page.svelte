@@ -106,7 +106,10 @@
 				guild_name: war.guild_name,
 				name: war.name,
 				data: LZString.compressToEncodedURIComponent(war.logs.map((l) => l.message).join('\n')),
-				guilds: war.guild_name,
+				guilds: [...war.enemy_guilds]
+					.sort((a, b) => b.kill_difference - a.kill_difference)
+					.map((g) => g.guild.name)
+					.join(', '),
 				id: war.unique_id,
 				won: war.won
 			};
@@ -231,7 +234,7 @@
 		</div>
 		<div class="w-full min-w-0">
 			<Table
-				id="war-players"
+				id="war-players-{war.unique_id}"
 				height={480}
 				{header}
 				{rows}
