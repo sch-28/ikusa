@@ -23,13 +23,15 @@ export async function render_preview(url: string, id: string) {
 		const buffer = await war_container.screenshot({ type: 'png' });
 		await browser.close();
 
+        console.log(buffer)
+
 		const { data, error } = await supabase.storage
 			.from('war-thumbnails')
 			.upload(`${id}.png`, buffer, {
 				cacheControl: '3600',
 				upsert: true
 			});
-
+            console.log(data)
 		if (error) {
 			console.error(error);
 		}
