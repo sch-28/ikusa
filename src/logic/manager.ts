@@ -13,7 +13,6 @@ import {
 import type { ManagerUpdated, UpdateManager, UpdateProgress } from './manager-worker';
 import LZString from 'lz-string';
 import type { User } from './user';
-import { generate_id } from './util';
 
 function get_default_war() {
 	return new War('Default', 'Default', 'Default', false, []);
