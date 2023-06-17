@@ -8,7 +8,8 @@ export async function render_preview(url: string, id: string) {
 		args: chromium.args,
 		defaultViewport: chromium.defaultViewport,
 		executablePath: await chromium.executablePath(CHROME_URL),
-		headless: chromium.headless
+		headless: chromium.headless,
+		ignoreHTTPSErrors: true
 	});
 	const page = await browser.newPage();
 	await page.setViewport({

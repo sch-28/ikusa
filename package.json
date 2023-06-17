@@ -43,7 +43,7 @@
 		"@neodrag/svelte": "^2.0.3",
 		"@popperjs/core": "^2.11.6",
 		"@prisma/client": "^4.15.0",
-		"@sparticuz/chromium-min": "^114.0.0",
+		"@sparticuz/chromium-min": "110.0.1",
 		"@supabase/supabase-js": "^2.25.0",
 		"@sveltejs/adapter-node": "^1.2.4",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
@@ -56,7 +56,7 @@
 		"flowbite-svelte": "^0.30.4",
 		"generate-unique-id": "^2.0.1",
 		"lz-string": "^1.4.4",
-		"puppeteer-core": "10.1.0",
+		"puppeteer-core": "19.6.3",
 		"svelte-apexcharts": "^1.0.2",
 		"svelte-french-toast": "^1.0.3",
 		"svelte-icons": "^2.1.0"
