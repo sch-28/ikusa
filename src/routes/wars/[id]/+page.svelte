@@ -135,7 +135,7 @@
 			<div class="text-base text-gold-muted">{war.date}</div>
 		</div>
 		{#if !is_public}
-			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id)}
+			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
 				<Button class="my-auto ml-auto" on:click={() => open_share()}>Shared</Button>
 			{:else}
 				<button on:click={() => open_share()} title="Share" class="my-auto ml-auto"
