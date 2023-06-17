@@ -4,19 +4,18 @@ specifiers:
   '@neodrag/svelte': ^2.0.3
   '@popperjs/core': ^2.11.6
   '@prisma/client': ^4.15.0
+  '@sparticuz/chromium-min': ^114.0.0
   '@supabase/supabase-js': ^2.25.0
   '@sveltejs/adapter-auto': ^2.1.0
   '@sveltejs/adapter-node': ^1.2.4
   '@sveltejs/adapter-vercel': ^3.0.1
   '@sveltejs/kit': ^1.20.2
   '@sveltejs/svelte-virtual-list': ^3.0.1
-  '@types/lz-string': ^1.3.34
   '@typescript-eslint/eslint-plugin': ^5.45.0
   '@typescript-eslint/parser': ^5.45.0
   '@vercel/analytics': ^1.0.1
   apexcharts: ^3.37.1
   autoprefixer: ^10.4.13
-  chrome-aws-lambda: ^10.1.0
   classnames: ^2.3.2
   dayjs: ^1.11.7
   eslint: ^8.28.0
@@ -48,12 +47,12 @@ dependencies:
   '@neodrag/svelte': 2.0.3
   '@popperjs/core': 2.11.8
   '@prisma/client': 4.15.0_prisma@4.15.0
+  '@sparticuz/chromium-min': 114.0.0
   '@supabase/supabase-js': 2.25.0
   '@sveltejs/adapter-node': 1.2.4_@sveltejs+kit@1.20.2
   '@sveltejs/svelte-virtual-list': 3.0.1
   '@vercel/analytics': 1.0.1
   apexcharts: 3.41.0
-  chrome-aws-lambda: 10.1.0_puppeteer-core@10.1.0
   classnames: 2.3.2
   dayjs: 1.11.8
   flatted: 3.2.7
@@ -70,7 +69,6 @@ devDependencies:
   '@sveltejs/adapter-auto': 2.1.0_@sveltejs+kit@1.20.2
   '@sveltejs/adapter-vercel': 3.0.1_@sveltejs+kit@1.20.2
   '@sveltejs/kit': 1.20.2_svelte@3.59.1+vite@4.3.9
-  '@types/lz-string': 1.5.0
   '@typescript-eslint/eslint-plugin': 5.59.9_3i5bqcvz3xm47mwpahnwyqmg7m
   '@typescript-eslint/parser': 5.59.9_kigkzfftsmftz3xok324pyvzui
   autoprefixer: 10.4.14_postcss@8.4.24
@@ -507,6 +505,16 @@ packages:
       rollup: 3.24.1
     dev: false
 
+  /@sparticuz/chromium-min/114.0.0:
+    resolution: {integrity: sha512-yIv8DFEt7kak+zQr5HM5WJ5loPo/J5qTR/1sqaEk7IM3BaXqiJRZAQQ5kVyuOErOcbGfruNFUGXUxLm5XdcXIQ==}
+    engines: {node: '>= 16'}
+    dependencies:
+      follow-redirects: 1.15.2
+      tar-fs: 2.1.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /@supabase/functions-js/2.1.2:
     resolution: {integrity: sha512-QCR6pwJs9exCl37bmpMisUd6mf+0SUBJ6mUpiAjEkSJ/+xW8TCuO14bvkWHADd5hElJK9MxNlMQXxSA4DRz9nQ==}
     dependencies:
@@ -681,13 +689,6 @@ packages:
 
   /@types/json-schema/7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
-    dev: true
-
-  /@types/lz-string/1.5.0:
-    resolution: {integrity: sha512-s84fKOrzqqNCAPljhVyC5TjAo6BH4jKHw9NRNFNiRUY5QSgZCmVm5XILlWbisiKl+0OcS7eWihmKGS5akc2iQw==}
-    deprecated: This is a stub types definition. lz-string provides its own type definitions, so you do not need this installed.
-    dependencies:
-      lz-string: 1.5.0
     dev: true
 
   /@types/node/20.2.6:
@@ -1149,16 +1150,6 @@ packages:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
     dev: true
-
-  /chrome-aws-lambda/10.1.0_puppeteer-core@10.1.0:
-    resolution: {integrity: sha512-NZQVf+J4kqG4sVhRm3WNmOfzY0OtTSm+S8rg77pwePa9RCYHzhnzRs8YvNI6L9tALIW6RpmefWiPURt3vURXcw==}
-    engines: {node: '>= 10.16'}
-    peerDependencies:
-      puppeteer-core: ^10.1.0
-    dependencies:
-      lambdafs: 2.1.1
-      puppeteer-core: 10.1.0
-    dev: false
 
   /classnames/2.3.2:
     resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
@@ -1662,6 +1653,16 @@ packages:
       mini-svg-data-uri: 1.4.4
     dev: false
 
+  /follow-redirects/1.15.2:
+    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
   /fraction.js/4.2.0:
     resolution: {integrity: sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==}
     dev: true
@@ -1961,14 +1962,6 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
 
-  /lambdafs/2.1.1:
-    resolution: {integrity: sha512-x5k8JcoJWkWLvCVBzrl4pzvkEHSgSBqFjg3Dpsc4AcTMq7oUMym4cL/gRTZ6VM4mUMY+M0dIbQ+V1c1tsqqanQ==}
-    engines: {node: '>= 10.16'}
-    hasBin: true
-    dev: false
-    bundledDependencies:
-      - tar-fs
-
   /levn/0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -2025,6 +2018,7 @@ packages:
   /lz-string/1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
+    dev: false
 
   /magic-string/0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
@@ -2107,6 +2101,10 @@ packages:
       minipass: 3.3.6
       yallist: 4.0.0
     dev: true
+
+  /mkdirp-classic/0.5.3:
+    resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
+    dev: false
 
   /mkdirp/0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
@@ -2914,6 +2912,15 @@ packages:
     dependencies:
       chownr: 1.1.4
       mkdirp: 0.5.6
+      pump: 3.0.0
+      tar-stream: 2.2.0
+    dev: false
+
+  /tar-fs/2.1.1:
+    resolution: {integrity: sha512-V0r2Y9scmbDRLCNex/+hYzvp/zyYjvFbHPNgVTKfQvVrb6guiE/fxP+XblDNR011utopbkex2nM4dHNV6GDsng==}
+    dependencies:
+      chownr: 1.1.4
+      mkdirp-classic: 0.5.3
       pump: 3.0.0
       tar-stream: 2.2.0
     dev: false

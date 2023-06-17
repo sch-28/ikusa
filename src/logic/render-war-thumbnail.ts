@@ -1,24 +1,14 @@
-import chrome from 'chrome-aws-lambda';
 import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium-min';
 import { supabase } from './supabase';
 
 export async function render_preview(url: string, id: string) {
-	const options = process.env.AWS_REGION
-    ? {
-        args: chrome.args,
-        executablePath: await chrome.executablePath,
-        headless: chrome.headless
-      }
-    : {
-        args: [],
-        executablePath:
-          process.platform === 'win32'
-            ? 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
-            : process.platform === 'linux'
-            ? '/usr/bin/google-chrome'
-            : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-      };
-  const browser = await puppeteer.launch(options);
+	const browser = await puppeteer.launch({
+		args: chromium.args,
+		defaultViewport: chromium.defaultViewport,
+		executablePath: await chromium.executablePath('https://www.example.com/chromiumPack.tar'),
+		headless: chromium.headless
+	});
 	const page = await browser.newPage();
 	await page.setViewport({
 		width: 1200,
