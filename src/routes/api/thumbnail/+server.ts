@@ -1,19 +1,17 @@
-import chromium from 'chrome-aws-lambda';
 import { supabase } from '../../../logic/supabase';
 import type { RequestHandler } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+import chromium from 'chrome-aws-lambda';
 export const config = {
 	runtime: 'edge'
 };
 
 export const POST: RequestHandler = async (event) => {
 	const { url, id } = await event.request.json();
-
 	try {
 		const browser = await chromium.puppeteer.launch({
 			args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
 			defaultViewport: chromium.defaultViewport,
-			executablePath: dev ? undefined : await chromium.executablePath,
+			executablePath: await chromium.executablePath,
 			headless: true,
 			ignoreHTTPSErrors: true
 		});
@@ -30,7 +28,7 @@ export const POST: RequestHandler = async (event) => {
 
 		const { data, error } = await supabase.storage
 			.from('war-thumbnails')
-			.upload(`${id}.png`, buffer, {
+			.upload(`${id}.png`, buffer as Buffer, {
 				cacheControl: '3600',
 				upsert: true
 			});
