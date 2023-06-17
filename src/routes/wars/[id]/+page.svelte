@@ -61,7 +61,7 @@
 	let rows: Row[] = [];
 
 	Manager.subscribe((manager) => {
-		if (war && !manager.wars.includes(war) && !is_public) {
+		if (war && !manager.get_war(war.id) && !is_public) {
 			goto('/wars');
 		}
 	});

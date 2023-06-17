@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import type { War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
@@ -39,12 +38,12 @@
 			return;
 		}
 		loading = true;
-
+		const data = LZString.compressToEncodedURIComponent(war.logs.map((l) => l.message).join('\n'));
 		const prisma_war: Omit<PrismaWar, 'userId'> = {
 			date: war.date,
 			guild_name: war.guild_name,
 			name: war.name,
-			data: LZString.compressToEncodedURIComponent(war.logs.map((l) => l.message).join('\n')),
+			data: data,
 			guilds: [...war.enemy_guilds]
 				.sort((a, b) => b.kill_difference - a.kill_difference)
 				.map((g) => g.guild.name)

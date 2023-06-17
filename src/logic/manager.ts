@@ -266,6 +266,7 @@ export class ManagerClass {
 								event.local_player_two = local_player;
 								event.guild = local_player.local_guild.guild.name;
 							}
+							event.message = event.get_message();
 						}
 					}
 				}

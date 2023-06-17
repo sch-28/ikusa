@@ -132,7 +132,7 @@ export class War implements IWar {
 		this.formatted_date = new Date(this.date).toLocaleDateString();
 		this.id = this.date + this.name;
 
-		this.unique_id = unique_id ?? "";
+		this.unique_id = unique_id ?? '';
 	}
 
 	update() {
@@ -451,6 +451,7 @@ export class Event {
 	time: Dayjs;
 	time_string: string;
 	guild: string;
+	message: string;
 
 	constructor(p1: Player, p2: Player, kill: boolean, time_string: string) {
 		this.player_one = p1;
@@ -459,6 +460,7 @@ export class Event {
 		this.time_string = time_string;
 		this.time = dayjs(time_string, 'HH:mm:ss');
 		this.guild = '';
+		this.message = this.get_message();
 	}
 
 	normalized_kill(guild: Guild) {
@@ -468,7 +470,7 @@ export class Event {
 		return !this.kill;
 	}
 
-	get message() {
+	get_message() {
 		return `[${this.time_string}] ${this.player_one.name} ${this.kill ? 'has killed' : 'died to'} ${
 			this.player_two.name
 		} from ${this.guild}`;
