@@ -80,8 +80,19 @@
 	$: {
 		if (v_list_container) {
 			update_v_list();
+			initial_sort();
 			load_cached_table();
 		}
+	}
+
+	function initial_sort() {
+		if ($TableSort.find((sort) => sort.table_id === id)) {
+			header.forEach((col) => {
+				col.sort_dir = undefined;
+			});
+			return;
+		}
+		current_sorts = header.filter((col) => col.sort_dir !== undefined);
 	}
 
 	$: {
