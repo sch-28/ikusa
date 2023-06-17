@@ -11,9 +11,7 @@ const config = {
 		csrf: {
 			checkOrigin: false
 		},
-		adapter: adapter({
-			split: true
-		})
+		adapter: adapter()
 	}
 };
 

@@ -1,14 +1,24 @@
-import chromium from 'chrome-aws-lambda';
+import chrome from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer-core';
 import { supabase } from './supabase';
 
 export async function render_preview(url: string, id: string) {
-	const browser = await chromium.puppeteer.launch({
-		args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
-		defaultViewport: chromium.defaultViewport,
-		executablePath: await chromium.executablePath,
-		headless: true,
-		ignoreHTTPSErrors: true
-	});
+	const options = process.env.AWS_REGION
+    ? {
+        args: chrome.args,
+        executablePath: await chrome.executablePath,
+        headless: chrome.headless
+      }
+    : {
+        args: [],
+        executablePath:
+          process.platform === 'win32'
+            ? 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+            : process.platform === 'linux'
+            ? '/usr/bin/google-chrome'
+            : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      };
+  const browser = await puppeteer.launch(options);
 	const page = await browser.newPage();
 	await page.setViewport({
 		width: 1200,
