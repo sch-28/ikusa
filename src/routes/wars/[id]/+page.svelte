@@ -143,7 +143,6 @@
 		if (war) {
 			$User.wars = $User.wars?.filter((w) => w.unique_id != war?.unique_id);
 			$Manager.delete_public_war(war);
-			await invalidateAll();
 			goto('/wars');
 		}
 	}
