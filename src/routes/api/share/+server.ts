@@ -30,7 +30,7 @@ export const POST: RequestHandler = async (event) => {
 				}
 			}
 		});
-		await render_preview(`${event.url.origin}/wars/${war.id}`, war.id);
+		setTimeout(() => render_preview(`${event.url.origin}/wars/${war.id}`, war.id))
 
 		return new Response(null, { status: 200 });
 	} catch (e) {
