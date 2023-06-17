@@ -21,8 +21,9 @@
 	import { parse } from 'flatted';
 	import Share from '../../../components/modal/modals/share.svelte';
 
-	let selected_guild: Local_Guild | undefined;
+	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
+	let selected_guild: Local_Guild | undefined;
 	export let data: PageData;
 
 	$: ({ war: war_raw, is_public, is_own } = data);
@@ -98,7 +99,7 @@
 				date: war.date,
 				logs: Log.parse_logs(war.logs),
 				name: war.name,
-				unique_id: war.unique_id,
+				unique_id: '',
 				won: war.won
 			});
 			goto(`/wars/${war.id}`, { invalidateAll: true });
@@ -112,10 +113,18 @@
 			goto('/wars');
 		}
 	}
+
+	function open_share() {
+		if ($User.discord_data) {
+			ModalManager.open(Share, { war: war });
+		} else {
+			show_toast('You need to login via discord to share a war', 'error');
+		}
+	}
 </script>
 
 {#if war && !loading}
-	<div class="flex justify-between items-start mb-4">
+	<div class="flex items-start mb-4">
 		<Icon
 			size="lg"
 			icon={war.won ? GiCrownedSkull : GiSkullCrack}
@@ -127,14 +136,10 @@
 		</div>
 		{#if !is_public}
 			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id)}
-				<Button class="my-auto ml-auto" on:click={() => ModalManager.open(Share, { war: war })}
-					>Shared</Button
-				>
+				<Button class="my-auto ml-auto" on:click={() => open_share()}>Shared</Button>
 			{:else}
-				<button
-					on:click={() => ModalManager.open(Share, { war: war })}
-					title="Share"
-					class="my-auto ml-auto"><Icon icon={IoIosShareAlt} class="self-center" /></button
+				<button on:click={() => open_share()} title="Share" class="my-auto ml-auto"
+					><Icon icon={IoIosShareAlt} class="self-center" /></button
 				>
 			{/if}
 			<button
@@ -148,7 +153,7 @@
 					>View in Dashboard</Button
 				>
 			</div>
-		{:else}
+		{:else if !is_puppeteer}
 			<Button on:click={add_war} class="my-auto ml-auto">Add to Dashboard</Button>
 		{/if}
 	</div>

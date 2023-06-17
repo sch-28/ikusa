@@ -22,7 +22,7 @@ export const POST: RequestHandler = async (event) => {
 			width: 1200,
 			height: 628
 		});
-		await page.goto(url, { waitUntil: 'networkidle0' });
+		await page.goto(url + "?puppeteer", { waitUntil: 'networkidle0' });
 		const war_container = await page.$('.mt-16');
 		if (!war_container) return new Response('Unable to load webpage', { status: 500 });
 		const buffer = await war_container.screenshot({ type: 'png' });
