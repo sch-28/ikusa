@@ -282,7 +282,7 @@ export class ManagerClass {
 	async add_wars(new_wars: WarType[]) {
 		const wars = this.wars.map((w) => w.to_json());
 
-		await this.update_data([...wars, ...new_wars]);
+		return await this.update_data([...wars, ...new_wars]);
 	}
 
 	reset() {
@@ -396,6 +396,7 @@ export class ManagerClass {
 		this.guilds = new_manager.guilds.map((guild) => Object.assign(new Guild(''), guild));
 		this.save_callback?.();
 		LoaderManager.close();
+		return this.wars;
 	}
 
 	is_valid_war(date: string, name: string) {
