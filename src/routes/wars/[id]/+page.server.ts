@@ -41,9 +41,25 @@ export const load: PageServerLoad = async (event) => {
 			const { data: supabase_data } = supabase.storage
 				.from('war-thumbnails')
 				.getPublicUrl(`${prisma_war.id}.png`);
+
+			const top_player = war?.local_guilds
+				.flatMap((g) => g.sorted_local_players)
+				.sort((a, b) => b.kills - a.kills)[0];
+
+			const top_guild = war?.sorted_guilds[0];
+
 			return {
 				war: stringify(war),
+				subtitle: war?.formatted_date ?? prisma_war.date,
 				title: prisma_war.name,
+				description: `A war between ${prisma_war.guild_name} and ${prisma_war.guilds} on ${
+					prisma_war.date
+				}.\n
+				Top guild: ${top_guild?.guild.name ?? 'None'}
+				Top player: ${top_player?.player.name ?? 'None'}
+				Duration: ${war?.duration ?? '0'} minutes
+				Won: ${war?.won ?? 'Unknown'}`,
+
 				image: supabase_data.publicUrl,
 				is_public: true,
 				is_own: prisma_war.userId === event.locals.user?.discord_data?.id
