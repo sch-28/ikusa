@@ -36,19 +36,20 @@
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.3",
 		"vite": "^4.3.9",
-		"vitest": "^0.25.3"
+		"vitest": "^0.25.3",
+		"puppeteer": "^10.1.0"
 	},
 	"type": "module",
 	"dependencies": {
 		"@neodrag/svelte": "^2.0.3",
 		"@popperjs/core": "^2.11.6",
 		"@prisma/client": "^4.15.0",
-		"@sparticuz/chromium-min": "110.0.1",
 		"@supabase/supabase-js": "^2.25.0",
 		"@sveltejs/adapter-node": "^1.2.4",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"@vercel/analytics": "^1.0.1",
 		"apexcharts": "^3.37.1",
+		"chrome-aws-lambda": "^10.1.0",
 		"classnames": "^2.3.2",
 		"dayjs": "^1.11.7",
 		"flatted": "^3.2.7",
@@ -56,7 +57,7 @@
 		"flowbite-svelte": "^0.30.4",
 		"generate-unique-id": "^2.0.1",
 		"lz-string": "^1.4.4",
-		"puppeteer-core": "19.6.3",
+		"puppeteer-core": "10.1.0",
 		"svelte-apexcharts": "^1.0.2",
 		"svelte-french-toast": "^1.0.3",
 		"svelte-icons": "^2.1.0"

@@ -1,7 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { prisma } from '../../../logic/prisma';
 import type { War } from '@prisma/client';
-import { render_preview } from '../../../logic/render-war-thumbnail';
 export const POST: RequestHandler = async (event) => {
 	const user = event.locals.user;
 	const war = (await event.request.json()) as Omit<War, 'userId'>;
@@ -30,7 +29,15 @@ export const POST: RequestHandler = async (event) => {
 				}
 			}
 		});
-		setTimeout(() => render_preview(`${event.url.origin}/wars/${war.id}`, war.id))
+
+		const origin = event.url.origin;
+		fetch(`${origin}/api/thumbnail`, {
+			method: 'POST',
+			body: JSON.stringify({
+				url: `${origin}/wars/${war.id}`,
+				id: war.id
+			})
+		});
 
 		return new Response(null, { status: 200 });
 	} catch (e) {
