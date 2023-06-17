@@ -7,6 +7,18 @@
 
 	const changes = [
 		{
+			version: '0.2.5',
+			date: '16.06.2023',
+			title: 'Meta Information & Logger Update',
+			changes: [
+				'Logger update: removed debug inspector & added discord to the footer',
+				'Meta tags: added meta information to the website, and custom meta data for the shared wars',
+				'Table improvements & fixes',
+				'Published ikusa repository on GitHub'
+			],
+			author: oracle
+		},
+		{
 			version: '0.2.4',
 			date: '15.06.2023',
 			title: 'Table Improvements & Header Changes',
