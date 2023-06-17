@@ -119,7 +119,10 @@
 				body: JSON.stringify(prisma_war)
 			});
 			if (result.status == 200) {
+				const id = await result.text();
+				war.unique_id = id;
 				$User.wars?.push(war.to_json());
+				$Manager.update_war_info(war.id, { unique_id: id });
 				loading = false;
 			} else {
 				redirect_and_toast('/wars', 'Something went wrong while sharing the war');

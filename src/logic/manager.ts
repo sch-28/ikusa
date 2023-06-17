@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { parse, stringify } from 'flatted';
 import { LoaderManager } from '../components/loader/loader-store';
 import {
@@ -14,6 +13,7 @@ import {
 import type { ManagerUpdated, UpdateManager, UpdateProgress } from './manager-worker';
 import LZString from 'lz-string';
 import type { User } from './user';
+import { generate_id } from './util';
 
 function get_default_war() {
 	return new War('Default', 'Default', 'Default', false, []);
@@ -319,6 +319,28 @@ export class ManagerClass {
 		return this.wars.find((w) => w.id == date + name);
 	}
 
+	async update_war_info(
+		id: string,
+		{
+			name,
+			date,
+			won,
+			guild_name,
+			unique_id
+		}: { name?: string; date?: string; won?: boolean; guild_name?: string; unique_id?: string }
+	) {
+		const war = this.get_war(id);
+		if (!war) return;
+
+		war.name = name ?? war.name;
+		war.date = date ?? war.date;
+		war.won = won ?? war.won;
+		war.guild_name = guild_name ?? war.guild_name;
+		war.unique_id = unique_id ?? war.unique_id;
+
+		this.save_callback?.();
+	}
+
 	async delete_war(war: War) {
 		const wars = this.wars.filter((w) => w != war);
 		const wars_json = wars.map((w) => w.to_json());
@@ -327,10 +349,16 @@ export class ManagerClass {
 	}
 
 	async delete_public_war(war: War) {
-		return fetch('/api/delete', {
+		const local_war = this.wars.find((w) => w.unique_id == war.unique_id);
+		const result = await fetch('/api/delete', {
 			method: 'DELETE',
 			body: JSON.stringify({ id: war.unique_id })
 		});
+		if (local_war) {
+			local_war.unique_id = '';
+			this.update_war_info(local_war.id, { unique_id: '' });
+		}
+		return result;
 	}
 
 	async update_data(wars: WarType[]) {

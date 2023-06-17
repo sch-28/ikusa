@@ -113,7 +113,7 @@
 						date: date,
 						won: false,
 						logs: logs,
-						unique_id: generate_id()
+						unique_id: ''
 					};
 				});
 			} else if (results && results.length === 1) {

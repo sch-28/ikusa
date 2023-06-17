@@ -1,6 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import generateUniqueId from 'generate-unique-id';
 dayjs.extend(customParseFormat);
 
 export class Guild {
@@ -133,7 +132,7 @@ export class War implements IWar {
 		this.formatted_date = new Date(this.date).toLocaleDateString();
 		this.id = this.date + this.name;
 
-		this.unique_id = unique_id ?? generateUniqueId();
+		this.unique_id = unique_id ?? "";
 	}
 
 	update() {
