@@ -20,6 +20,16 @@ export async function sleep(ms?: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export function copy_to_clipboard(text: string) {
+	try {
+		navigator.clipboard.writeText(text);
+		show_toast('Copied to clipboard!', 'success');
+	} catch (e) {
+		show_toast('Error while copying to clipboard!', 'error');
+		console.log(e);
+	}
+}
+
 export const click_outside: Action = (node) => {
 	const handle_click = (event: MouseEvent) =>
 		node &&

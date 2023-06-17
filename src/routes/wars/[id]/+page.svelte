@@ -13,16 +13,13 @@
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
 	import Button from '../../../components/elements/button.svelte';
 	import IoIosShareAlt from 'svelte-icons/io/IoIosShareAlt.svelte';
-	import IoIosClose from 'svelte-icons/io/IoIosClose.svelte';
 	import { User } from '../../../logic/user';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
-	import type { War as PrismaWar } from '@prisma/client';
-	import LZString from 'lz-string';
-	import { ManagerClass } from '../../../logic/manager';
 	import LoadingCircle from '../../../components/elements/loading-circle.svelte';
 	import { Log, type Local_Guild, type War } from '../../../logic/data';
 	import { parse } from 'flatted';
+	import Share from '../../../components/modal/modals/share.svelte';
 
 	let selected_guild: Local_Guild | undefined;
 
@@ -94,43 +91,6 @@
 	$: chart_data = war?.local_guilds.map((local_guild) => local_guild.local_players.length) ?? [];
 	$: chart_labels = war?.local_guilds.map((local_guild) => local_guild.guild.name) ?? [];
 
-	async function share_war() {
-		if (!$User.discord_data) {
-			show_toast('You need to login via discord to share a war', 'error');
-			return;
-		}
-
-		if (war && !$User.wars?.find((w) => w.unique_id == war?.unique_id)) {
-			const prisma_war: Omit<PrismaWar, 'userId'> = {
-				date: war.date,
-				guild_name: war.guild_name,
-				name: war.name,
-				data: LZString.compressToEncodedURIComponent(war.logs.map((l) => l.message).join('\n')),
-				guilds: [...war.enemy_guilds]
-					.sort((a, b) => b.kill_difference - a.kill_difference)
-					.map((g) => g.guild.name)
-					.join(', '),
-				id: war.unique_id,
-				won: war.won
-			};
-			loading = true;
-			const result = await fetch('/api/share', {
-				method: 'POST',
-				body: JSON.stringify(prisma_war)
-			});
-			if (result.status == 200) {
-				const id = await result.text();
-				war.unique_id = id;
-				$User.wars?.push(war.to_json());
-				$Manager.update_war_info(war.id, { unique_id: id });
-				loading = false;
-			} else {
-				redirect_and_toast('/wars', 'Something went wrong while sharing the war');
-			}
-		}
-		goto(`/wars/${war?.unique_id}`, { invalidateAll: true });
-	}
-
 	async function add_war() {
 		if (war) {
 			$Manager.add_war({
@@ -167,12 +127,14 @@
 		</div>
 		{#if !is_public}
 			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id)}
-				<Button class="my-auto ml-auto" on:click={() => goto('/wars/' + war?.unique_id)}
+				<Button class="my-auto ml-auto" on:click={() => ModalManager.open(Share, { war: war })}
 					>Shared</Button
 				>
 			{:else}
-				<button on:click={share_war} title="Share" class="my-auto ml-auto"
-					><Icon icon={IoIosShareAlt} class="self-center" /></button
+				<button
+					on:click={() => ModalManager.open(Share, { war: war })}
+					title="Share"
+					class="my-auto ml-auto"><Icon icon={IoIosShareAlt} class="self-center" /></button
 				>
 			{/if}
 			<button
@@ -185,11 +147,6 @@
 				<Button on:click={() => goto(`/wars/${war?.id}`)} class="self-center ml-auto"
 					>View in Dashboard</Button
 				>
-				{#if is_own}
-					<button on:click={delete_war}>
-						<Icon icon={MdDelete} class="self-center text-red-500" />
-					</button>
-				{/if}
 			</div>
 		{:else}
 			<Button on:click={add_war} class="my-auto ml-auto">Add to Dashboard</Button>
