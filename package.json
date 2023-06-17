@@ -57,7 +57,6 @@
 		"flowbite-svelte": "^0.30.4",
 		"generate-unique-id": "^2.0.1",
 		"lz-string": "^1.4.4",
-		"puppeteer": "^20.7.2",
 		"puppeteer-core": "10.1.0",
 		"svelte-apexcharts": "^1.0.2",
 		"svelte-french-toast": "^1.0.3",
