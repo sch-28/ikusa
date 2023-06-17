@@ -7,6 +7,17 @@
 
 	const changes = [
 		{
+			version: '0.2.6',
+			date: '17.06.2023',
+			title: 'Sharability & Logger fix',
+			changes: [
+				'Logger update: fixed an issue with the logger executable that caused inaccuracies',
+				'Added share modal w/ copy-to-clipboard functionality',
+				'fixed some minor issues'
+			],
+			author: oracle
+		},
+		{
 			version: '0.2.5',
 			date: '16.06.2023',
 			title: 'Meta Information & Logger Update',
