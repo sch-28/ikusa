@@ -93,6 +93,7 @@
 			return;
 		}
 		current_sorts = header.filter((col) => col.sort_dir !== undefined);
+		handle_sort()
 	}
 
 	$: {
