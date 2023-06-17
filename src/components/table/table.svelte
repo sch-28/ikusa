@@ -287,6 +287,8 @@
 			(selectedHeader.width ?? selectedHeader.min_width ?? 50) + remaining_width;
 		header = header;
 	}
+	let start = 0;
+	let end = 0;
 </script>
 
 <div class="h-full flex flex-col min-w-0 relative" style="height: {height}px;" bind:this={instance}>
@@ -356,34 +358,46 @@
 			{/each}
 		</div>
 		{#key height}
-			<VirtualList items={sorted_rows} let:item={row} bind:this={v_list_container}>
-				<button
-					on:click={row.onclick}
-					class="flex w-full text-foreground-secondary hover:text-foreground"
+			<div class="relativ h-full min-h-0">
+				<VirtualList
+					items={sorted_rows}
+					let:item={row}
+					itemHeight={17.5}
+					bind:this={v_list_container}
+					bind:start
+					bind:end
 				>
-					{#each row.columns as column, index}
-						<div
-							class="flex items-center"
-							style="color: {column.color}; width: {Math.max(
-								header[index].width ?? 50,
-								header[index].min_width ?? 50
-							)}px;"
-						>
-							{#if typeof column === 'string' || typeof column === 'number'}
-								<span class="truncate" title={column.toString()}>{column}</span>
-							{:else if typeof column === 'object' && (typeof column.data === 'string' || typeof column.data === 'number')}
-								<span class="truncate" title={column.label.toString()}>{column.label}</span>
-							{:else}
-								<Icon icon={column.label} />
-							{/if}
-						</div>
-					{/each}
-				</button>
-			</VirtualList>
+					<button
+						on:click={row.onclick}
+						class="flex w-full text-foreground-secondary hover:text-foreground"
+					>
+						{#each row.columns as column, index}
+							<div
+								class="flex items-center"
+								style="color: {column.color}; width: {Math.max(
+									header[index].width ?? 50,
+									header[index].min_width ?? 50
+								)}px;"
+							>
+								{#if typeof column === 'string' || typeof column === 'number'}
+									<span class="truncate" title={column.toString()}>{column}</span>
+								{:else if typeof column === 'object' && (typeof column.data === 'string' || typeof column.data === 'number')}
+									<span class="truncate" title={column.label.toString()}>{column.label}</span>
+								{:else}
+									<Icon icon={column.label} />
+								{/if}
+							</div>
+						{/each}
+					</button>
+				</VirtualList>
+			</div>
 		{/key}
 	</div>
 
-	<div class="mt-2">
+	<div class="mt-2 flex">
 		<button on:click={fitTable} class="flex gap-1"><Icon icon={MdZoomOutMap} /> Fit width</button>
+		<div class="ml-auto">
+			<p>{start}-{end}/{sorted_rows.length}</p>
+		</div>
 	</div>
 </div>
