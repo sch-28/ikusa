@@ -199,7 +199,7 @@
 		</div>
 		<div class="w-full min-w-0">
 			<Table
-				id="war-players-{war.unique_id}"
+				id="war-players-{war.id}"
 				height={480}
 				{header}
 				{rows}
