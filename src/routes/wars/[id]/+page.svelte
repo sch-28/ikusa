@@ -6,7 +6,6 @@
 	import type { HeaderColumn, Row } from '../../../components/table/table';
 	import MdDelete from 'svelte-icons/md/MdDelete.svelte';
 	import Table from '../../../components/table/table.svelte';
-	import { Log, type Local_Guild, type War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
 	import { format, redirect_and_toast, show_toast } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
@@ -16,14 +15,38 @@
 	import IoIosShareAlt from 'svelte-icons/io/IoIosShareAlt.svelte';
 	import IoIosClose from 'svelte-icons/io/IoIosClose.svelte';
 	import { User } from '../../../logic/user';
-	import { goto } from '$app/navigation';
-
+	import { goto, invalidateAll } from '$app/navigation';
+	import type { PageData } from './$types';
 	import type { War as PrismaWar } from '@prisma/client';
 	import LZString from 'lz-string';
 	import { ManagerClass } from '../../../logic/manager';
 	import LoadingCircle from '../../../components/elements/loading-circle.svelte';
+	import { Log, type Local_Guild, type War } from '../../../logic/data';
+	import { parse } from 'flatted';
 
 	let selected_guild: Local_Guild | undefined;
+
+	export let data: PageData;
+
+	$: ({ war: war_raw, is_public, is_own } = data);
+	let war: War | undefined;
+	$: {
+		if (war_raw) {
+			if (!is_public) {
+				war = $Manager.get_war(war_raw);
+			} else {
+				war = parse(war_raw);
+			}
+		}
+
+		if (!war) {
+			redirect_and_toast('/wars', 'War not found');
+		} else {
+			update_rows();
+		}
+	}
+
+	let loading = false;
 
 	const header: HeaderColumn[] = [
 		{ label: 'Name', width: 3, sortable: true },
@@ -39,56 +62,11 @@
 	];
 	let rows: Row[] = [];
 
-	let war: War | undefined;
-	let logs: Log[] = [];
-	$: {
-		get_war($page.params.id);
-	}
-
-	let is_public = false;
-	let is_own = false;
-
 	Manager.subscribe((manager) => {
 		if (war && !manager.wars.includes(war) && !is_public) {
 			goto('/wars');
 		}
 	});
-
-	async function get_war(id?: string) {
-		if (id) {
-			war = $Manager.get_war(id);
-			if (!war) {
-				const result = (await fetch('/api/war/' + id)
-					.then((r) => r.json())
-					.catch((e) => console.error(e))) as PrismaWar;
-				if (result) {
-					const data = LZString.decompressFromEncodedURIComponent(result.data);
-					if (!data) return;
-					const results = [...data.matchAll(/\[.*\] (\w*) (died to|has killed) (\w*) from (\w*)/g)];
-					if (results.length > 0) {
-						logs = results.map((log) => Log.parse_log(log[0]));
-						const manager = new ManagerClass();
-						war = manager.add_war({
-							guild_name: result.guild_name,
-							date: result.date,
-							logs: logs,
-							name: result.name,
-							unique_id: result.id,
-							won: result.won
-						});
-						is_public = true;
-						is_own = result.userId == $User.discord_data?.id;
-					}
-				}
-			} else {
-				is_public = false;
-			}
-			if (!war) {
-				redirect_and_toast('/wars', 'War not found');
-			}
-			update_rows();
-		}
-	}
 
 	$: {
 		selected_guild;
@@ -132,29 +110,32 @@
 				id: war.unique_id,
 				won: war.won
 			};
-
+			loading = true;
 			const result = await fetch('/api/share', {
 				method: 'POST',
 				body: JSON.stringify(prisma_war)
 			});
 			if (result.status == 200) {
 				$User.wars?.push(war.to_json());
+				loading = false;
+			} else {
+				redirect_and_toast('/wars', 'Something went wrong while sharing the war');
 			}
 		}
-		goto(`/wars/${war?.unique_id}`);
+		goto(`/wars/${war?.unique_id}`, { invalidateAll: true });
 	}
 
-	function add_war() {
+	async function add_war() {
 		if (war) {
 			$Manager.add_war({
 				guild_name: war.guild_name,
 				date: war.date,
-				logs: logs,
+				logs: Log.parse_logs(war.logs),
 				name: war.name,
 				unique_id: war.unique_id,
 				won: war.won
 			});
-			goto(`/wars/${war.id}`);
+			goto(`/wars/${war.id}`, { invalidateAll: true });
 		}
 	}
 
@@ -167,7 +148,7 @@
 	}
 </script>
 
-{#if war}
+{#if war && !loading}
 	<div class="flex justify-between items-start mb-4">
 		<Icon
 			size="lg"

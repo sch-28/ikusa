@@ -1,6 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { prisma } from '../../../logic/prisma';
 import type { War } from '@prisma/client';
+import { render_preview } from '../../../logic/render-war-thumbnail';
 export const POST: RequestHandler = async (event) => {
 	const user = event.locals.user;
 	const war = (await event.request.json()) as Omit<War, 'userId'>;
@@ -11,7 +12,7 @@ export const POST: RequestHandler = async (event) => {
 		return new Response('Not logged in', { status: 500 });
 	}
 	try {
-		const prisma_war = await prisma.user.update({
+		await prisma.user.update({
 			where: {
 				id: user.discord_data.id
 			},
@@ -29,10 +30,11 @@ export const POST: RequestHandler = async (event) => {
 				}
 			}
 		});
+		render_preview(`${event.url.origin}/wars/${war.id}`, war.id);
 
 		return new Response(null, { status: 200 });
 	} catch (e) {
-		console.error(e)
+		console.error(e);
 		return new Response(JSON.stringify(e), { status: 500 });
 	}
 };
