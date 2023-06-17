@@ -9,7 +9,8 @@
 	import { User } from '../logic/user';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
-	import { page } from '$app/stores';
+	import { navigating, page } from '$app/stores';
+	import LoadingCircle from '../components/elements/loading-circle.svelte';
 
 	inject({ mode: dev ? 'development' : 'production' });
 
@@ -71,7 +72,15 @@
 		<div class="px-4 max-w-9xl mx-auto">
 			<Header />
 			<div class="mt-16">
-				<slot />
+				{#if $navigating}
+					<div
+						class="w-12 h-12 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+					>
+						<LoadingCircle />
+					</div>
+				{:else}
+					<slot />
+				{/if}
 			</div>
 		</div>
 		<Modal />
