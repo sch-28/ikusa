@@ -198,7 +198,7 @@ export class ManagerClass {
 		won,
 		logs,
 		save = true,
-		unique_id: uniqueId
+		unique_id
 	}: {
 		guild_name: string;
 		name: string;
@@ -236,7 +236,7 @@ export class ManagerClass {
 			events.push(event);
 		}
 
-		const war = new War(guild_name, name, date, won, events, uniqueId);
+		const war = new War(guild_name, name, date, won, events, unique_id);
 		this.wars.push(war);
 
 		for (const guild of guilds) {
