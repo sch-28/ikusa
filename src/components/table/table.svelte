@@ -93,7 +93,7 @@
 			return;
 		}
 		current_sorts = header.filter((col) => col.sort_dir !== undefined);
-		handle_sort()
+		handle_sort();
 	}
 
 	$: {
@@ -293,15 +293,17 @@
 </script>
 
 <div class="h-full flex flex-col min-w-0 relative" style="height: {height}px;" bind:this={instance}>
-	{#if searchable}
-		<Input
-			class="mb-2 sm:max-w-[12rem] max-w-[8rem] shrink"
-			placeholder="Search..."
-			bind:value={search_string}
-			size="sm"
-		/>
-	{/if}
-	<div class="absolute left-1/2 -translate-x-1/2 text-xl font-bold">{title}</div>
+	<div class="flex w-full gap-2 flex-wrap mb-2">
+		{#if searchable}
+			<Input
+				class="sm:max-w-[12rem] max-w-[8rem] self-start"
+				placeholder="Search..."
+				bind:value={search_string}
+				size="sm"
+			/>
+		{/if}
+		<div class="text-xl font-bold sm:absolute sm:left-1/2 sm:-translate-x-1/2 static shrink-0">{title}</div>
+	</div>
 	<div class="overflow-x-auto h-full flex flex-col">
 		<div
 			class="items-start flex min-w-0 w-fit"
