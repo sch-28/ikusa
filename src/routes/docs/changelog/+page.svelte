@@ -25,7 +25,7 @@
 			changes: [
 				'Logger update: fixed an issue with the logger executable that caused inaccuracies',
 				'Added share modal w/ copy-to-clipboard functionality',
-				'fixed some minor issues'
+				'Fixed some minor issues'
 			],
 			author: oracle
 		},
