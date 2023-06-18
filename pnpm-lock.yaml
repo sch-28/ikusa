@@ -20,6 +20,7 @@ specifiers:
   eslint: ^8.28.0
   eslint-config-prettier: ^8.5.0
   eslint-plugin-svelte3: ^4.0.0
+  file-saver: ^2.0.5
   flatted: ^3.2.7
   flowbite: ^1.6.3
   flowbite-svelte: ^0.30.4
@@ -53,6 +54,7 @@ dependencies:
   apexcharts: 3.41.0
   classnames: 2.3.2
   dayjs: 1.11.8
+  file-saver: 2.0.5
   flatted: 3.2.7
   flowbite: 1.6.5
   flowbite-svelte: 0.30.7_zxzz3jvirzjobvy6wdyzs3vlma
@@ -1584,6 +1586,10 @@ packages:
     dependencies:
       flat-cache: 3.0.4
     dev: true
+
+  /file-saver/2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+    dev: false
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
