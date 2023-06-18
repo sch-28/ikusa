@@ -7,6 +7,18 @@
 
 	const changes = [
 		{
+			version: '0.2.7',
+			date: '18.06.2023',
+			title: 'Exports & Responsiveness',
+			changes: [
+				'Wars can now be exported as *.log files',
+				'Fixed naming issue of wars',
+				'Fixed mobile overflow of tables',
+				'Fixed the logger upload option'
+			],
+			author: oracle
+		},
+		{
 			version: '0.2.6',
 			date: '17.06.2023',
 			title: 'Sharability & Logger fix',
