@@ -8,9 +8,10 @@ import { ManagerClass } from '../../../logic/manager';
 import { stringify } from 'flatted';
 
 export const load: PageServerLoad = async (event) => {
-	const war_id = event.params.id;
+	const war_id = decodeURIComponent(event.params.id);
 
-	if (war_id.includes('-')) {
+	//check if id includes any symbols
+	if (war_id.match(/[^a-zA-Z0-9]/g)) {
 		return {
 			war: war_id,
 			is_public: false,

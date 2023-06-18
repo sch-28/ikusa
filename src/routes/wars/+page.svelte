@@ -70,7 +70,7 @@
 				} */
 			],
 			onclick() {
-				goto(`/wars/${war.id}`);
+				goto(`/wars/${encodeURIComponent(war.id)}`);
 			}
 		} as Row;
 	});
