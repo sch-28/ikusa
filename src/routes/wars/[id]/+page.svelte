@@ -4,7 +4,6 @@
 	import { ModalManager } from '../../../components/modal/modal-store';
 	import WarForm from '../../../components/modal/modals/war-form.svelte';
 	import type { HeaderColumn, Row } from '../../../components/table/table';
-	import MdDelete from 'svelte-icons/md/MdDelete.svelte';
 	import Table from '../../../components/table/table.svelte';
 	import { Manager } from '../../../logic/stores';
 	import { format, redirect_and_toast, show_toast } from '../../../logic/util';
@@ -20,6 +19,8 @@
 	import { Log, type Local_Guild, type War } from '../../../logic/data';
 	import { parse } from 'flatted';
 	import Share from '../../../components/modal/modals/share.svelte';
+	import MdFileDownload from 'svelte-icons/md/MdFileDownload.svelte';
+	import { saveAs } from 'file-saver';
 
 	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
@@ -106,20 +107,19 @@
 		}
 	}
 
-	async function delete_war() {
-		if (war) {
-			$User.wars = $User.wars?.filter((w) => w.unique_id != war?.unique_id);
-			$Manager.delete_public_war(war);
-			goto('/wars');
-		}
-	}
-
 	function open_share() {
 		if ($User.discord_data) {
 			ModalManager.open(Share, { war: war });
 		} else {
 			show_toast('You need to login via discord to share a war', 'error');
 		}
+	}
+
+	function download_logs() {
+		const blob = new Blob([war?.logs.map((l) => l.message).join('\n') ?? ''], {
+			type: 'text/plain;charset=utf-8'
+		});
+		saveAs(blob, `${war?.name}.log`);
 	}
 </script>
 
@@ -134,28 +134,27 @@
 			<div class="text-xl font-medium text-foreground">{war.name}</div>
 			<div class="text-base text-gold-muted">{war.date}</div>
 		</div>
-		{#if !is_public}
-			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
-				<Button class="my-auto ml-auto" on:click={() => open_share()}>Shared</Button>
-			{:else}
-				<button on:click={() => open_share()} title="Share" class="my-auto ml-auto"
-					><Icon icon={IoIosShareAlt} class="self-center" /></button
-				>
+		<div class="flex gap-2 ml-auto justify-center my-auto">
+			{#if !is_puppeteer}
+				<button on:click={download_logs}>
+					<Icon icon={MdFileDownload} />
+				</button>
 			{/if}
-			<button
-				on:click={() => ModalManager.open(WarForm, { war: war })}
-				title="Edit"
-				class="ml-2 my-auto"><Icon icon={MdSettings} class="self-center" /></button
-			>
-		{:else if $Manager.get_war_by_id(war.unique_id)}
-			<div class="flex gap-4 ml-auto my-auto">
-				<Button on:click={() => goto(`/wars/${war?.id}`)} class="self-center ml-auto"
-					>View in Dashboard</Button
+			{#if !is_public}
+				{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
+					<Button on:click={() => open_share()}>Shared</Button>
+				{:else}
+					<button on:click={() => open_share()} title="Share"><Icon icon={IoIosShareAlt} /></button>
+				{/if}
+				<button on:click={() => ModalManager.open(WarForm, { war: war })} title="Edit"
+					><Icon icon={MdSettings} /></button
 				>
-			</div>
-		{:else if !is_puppeteer}
-			<Button on:click={add_war} class="my-auto ml-auto">Add to Dashboard</Button>
-		{/if}
+			{:else if $Manager.get_war_by_id(war.unique_id)}
+				<Button on:click={() => goto(`/wars/${war?.id}`)}>View in Dashboard</Button>
+			{:else if !is_puppeteer}
+				<Button on:click={add_war}>Add to Dashboard</Button>
+			{/if}
+		</div>
 	</div>
 	<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary">
 		<div>{war.local_guilds.length} Guilds</div>
