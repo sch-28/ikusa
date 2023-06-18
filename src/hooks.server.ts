@@ -100,7 +100,6 @@ export const handle: Handle = async (request) => {
 		response.headers.set('Set-Cookie', new_cookies);
 		response.headers.set('etag', '');
 	}
-	console.error('TEST', request.event);
 
 	// Apply CORS header for API routes
 	if (request.event.url.pathname.startsWith('/api/create')) {
