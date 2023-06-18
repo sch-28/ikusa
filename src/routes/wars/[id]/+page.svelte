@@ -166,7 +166,7 @@
 		class="flex gap-4 sm:flex-row flex-col border border-foreground border-dashed p-2 rounded-lg"
 	>
 		<div
-			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[480px] justify-center sm:justify-start"
+			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[420px] justify-center sm:justify-start"
 		>
 			{#each war.local_guilds as local_guild}
 				<button
@@ -200,7 +200,7 @@
 		<div class="w-full min-w-0">
 			<Table
 				id="war-players-{war.id}"
-				height={480}
+				height={420}
 				{header}
 				{rows}
 				searchable
