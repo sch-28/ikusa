@@ -13,7 +13,6 @@ const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> =
 		store.set(ManagerClass.from_json(storedValueStr));
 	}
 
-
 	get(store).save_callback = () => {
 		if (store) {
 			store.set(get(store));

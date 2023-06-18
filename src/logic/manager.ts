@@ -181,12 +181,6 @@ export class ManagerClass {
 	}
 
 	get_json() {
-		/* const json_wars = [];
-		for (const war of this.wars) {
-			json_wars.push(war.to_json());
-		}
-
-		return JSON.stringify({ wars: json_wars, user: this.user }); */
 		return LZString.compress(stringify(this));
 	}
 

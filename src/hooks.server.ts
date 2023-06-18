@@ -78,7 +78,7 @@ export const handle: Handle = async (request) => {
 
 			// returns a discord user if JWT was valid
 			const response = await discord_request.json();
-			('hi');
+			
 			if (response.id) {
 				request.event.locals.user = await set_session(request, response);
 			}
