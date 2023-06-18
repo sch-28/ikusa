@@ -78,7 +78,7 @@ export const handle: Handle = async (request) => {
 
 			// returns a discord user if JWT was valid
 			const response = await discord_request.json();
-			
+
 			if (response.id) {
 				request.event.locals.user = await set_session(request, response);
 			}
@@ -100,6 +100,7 @@ export const handle: Handle = async (request) => {
 		response.headers.set('Set-Cookie', new_cookies);
 		response.headers.set('etag', '');
 	}
+	console.error('TEST', request.event);
 
 	// Apply CORS header for API routes
 	if (request.event.url.pathname.startsWith('/api/create')) {
