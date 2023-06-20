@@ -7,6 +7,16 @@
 
 	const changes = [
 		{
+			version: '0.3.0',
+			date: '20.06.2023',
+			title: 'Migration',
+			changes: [
+				'Added a banner to https://nodewar.oracle-tools.site/ to inform users that the development of the site has been discontinued',
+				'Added migration endpoint to ikusa, allowing easy migration from the old site to ikusa',
+			],
+			author: oracle
+		},
+		{
 			version: '0.2.7',
 			date: '18.06.2023',
 			title: 'Exports & Responsiveness',
