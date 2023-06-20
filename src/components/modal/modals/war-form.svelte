@@ -15,6 +15,7 @@
 	import { Manager } from '../../../logic/stores';
 	import WarList from '../../war-list.svelte';
 	import { Log, type WarJSON, type WarType } from '../../../logic/data';
+	import type { MigratedWar } from '../../../routes/api/migrate/+server';
 
 	let war_name: string = '';
 	let war_date: string = '';
@@ -29,6 +30,7 @@
 	let state: (typeof states)[number] = 'edit';
 	export let war: WarType | undefined = undefined;
 	export let logs: Log[] = [];
+	export let migrated_wars: MigratedWar[] = [];
 
 	$: {
 		war;
@@ -46,10 +48,24 @@
 			war_date = new Date().toISOString().split('T')[0];
 			state = 'edit';
 		}
+		if (migrated_wars.length > 0) {
+			wars = migrated_wars.map((war) => {
+				return {
+					guild_name: war.guild,
+					name: war.name,
+					date: war.date,
+					won: true,
+					logs: war.logs,
+					unique_id: ''
+				};
+			});
+			state = 'multi';
+			setted_wars_guild_name = true;
+		}
 	});
 
 	function set_wars_guild_name() {
-		if (wars_guild_name) {
+		if (wars_guild_name && migrated_wars.length === 0) {
 			wars.map((w) => (w.guild_name = wars_guild_name));
 		}
 	}

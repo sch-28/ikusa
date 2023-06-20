@@ -16,6 +16,7 @@
 	import { onMount } from 'svelte';
 	import type { Log } from '../../logic/data';
 	import { parse } from 'flatted';
+	import type { MigratedWar } from '../api/migrate/+server';
 
 	const header: HeaderColumn[] = [
 		{
@@ -81,10 +82,17 @@
 	onMount(async () => {
 		const params = new URLSearchParams(window.location.search);
 		const id = params.get('id');
-		if (id) {
+		const is_migration = params.has('migrate');
+		if (id && !is_migration) {
 			const stored_logs: Log[] = parse((await (await fetch(`/api/create?id=${id}`)).json()).logs);
 			if (stored_logs.length > 0) {
 				ModalManager.open(WarForm, { war: undefined, logs: stored_logs });
+			}
+		} else if (id && is_migration) {
+			let migrated_wars: MigratedWar[] = await (await fetch(`/api/migrate?id=${id}`)).json();
+			migrated_wars.map((w) => (w.logs = parse(w.logs as unknown as string) as Log[]));
+			if (migrated_wars.length > 0) {
+				ModalManager.open(WarForm, { war: undefined, migrated_wars });
 			}
 		}
 	});

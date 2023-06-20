@@ -102,7 +102,10 @@ export const handle: Handle = async (request) => {
 	}
 
 	// Apply CORS header for API routes
-	if (request.event.url.pathname.startsWith('/api/create')) {
+	if (
+		request.event.url.pathname.startsWith('/api/create') ||
+		request.event.url.pathname.startsWith('/api/migrate')
+	) {
 		// Required for CORS to work
 		if (request.event.request.method === 'OPTIONS') {
 			return new Response(null, {

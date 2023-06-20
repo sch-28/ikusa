@@ -37,3 +37,13 @@ model UploadStorage {
   logs String
   time DateTime
 }
+
+model MigrateStorage {
+  id         String   @id @unique
+  request_id String
+  logs       String
+  guild      String
+  name       String
+  date       String
+  time       DateTime
+}
