@@ -17,7 +17,7 @@ export const POST: RequestHandler = async (event) => {
 		return new Response('Invalid body', { status: 500 });
 	}
 	try {
-		const prisma_user = await prisma.user.update({
+		await prisma.user.update({
 			where: {
 				id: new_user.discord_data.id
 			},

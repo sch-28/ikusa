@@ -25,7 +25,6 @@
 	onMount(async () => {
 		const worker = await import('../logic/manager-worker?worker');
 		$Manager.worker = new worker.default();
-		/* load_store(Manager, 'manager'); */
 		is_mounted = true;
 	});
 	const origin = $page.url.origin;

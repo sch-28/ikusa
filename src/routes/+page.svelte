@@ -7,7 +7,6 @@
 	import Logger from '../components/landing/logger.svelte';
 	import Logs from '../components/landing/logs.svelte';
 	import { User } from '../logic/user';
-	import { get_remaining_height } from '../logic/util';
 
 	let hero_divider: HTMLElement;
 </script>
