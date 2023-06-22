@@ -30,7 +30,6 @@
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
 		"prisma": "^4.15.0",
-		"puppeteer": "^10.4.0",
 		"svelte": "^3.59.1",
 		"svelte-check": "^3.0.1",
 		"svelte-simple-modal": "^1.5.2",
