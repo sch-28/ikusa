@@ -34,16 +34,21 @@ export const POST: RequestHandler = async (event) => {
 			}
 		});
 
-		try {
-			fetch(`${IKUSA_API}/api/thumbnail`, {
-				method: 'POST',
-				body: JSON.stringify({
-					id: id
-				})
-			});
-		} catch (e) {
-			console.error('Unable to create thumbnail', e);
-		}
+		setTimeout(async () => {
+			try {
+				await fetch(`${IKUSA_API}/api/thumbnail`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						id: id
+					})
+				});
+			} catch (e) {
+				console.error('Unable to create thumbnail', e);
+			}
+		});
 
 		return new Response(id, { status: 200 });
 	} catch (e) {

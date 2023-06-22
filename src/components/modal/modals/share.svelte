@@ -51,7 +51,6 @@
 			id: war.unique_id,
 			won: war.won
 		};
-		loading = true;
 		const result = await fetch('/api/share', {
 			method: 'POST',
 			body: JSON.stringify(prisma_war)
