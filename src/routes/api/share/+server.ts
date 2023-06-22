@@ -2,6 +2,8 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { prisma } from '../../../logic/prisma';
 import type { War } from '@prisma/client';
 import { generate_id } from '../../../logic/util';
+import { IKUSA_API } from '$env/static/private';
+
 export const POST: RequestHandler = async (event) => {
 	const user = event.locals.user;
 	const war = (await event.request.json()) as Omit<War, 'userId'>;
@@ -32,14 +34,16 @@ export const POST: RequestHandler = async (event) => {
 			}
 		});
 
-		const origin = event.url.origin;
-		await fetch(`${origin}/api/thumbnail`, {
-			method: 'POST',
-			body: JSON.stringify({
-				url: `${origin}/wars/${id}`,
-				id: id
-			})
-		});
+		try {
+			fetch(`${IKUSA_API}/api/thumbnail`, {
+				method: 'POST',
+				body: JSON.stringify({
+					id: id
+				})
+			});
+		} catch (e) {
+			console.error('Unable to create thumbnail', e);
+		}
 
 		return new Response(id, { status: 200 });
 	} catch (e) {
