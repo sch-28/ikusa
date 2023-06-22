@@ -10,9 +10,10 @@ import {
 	Event,
 	type WarType
 } from './data';
-import type { ManagerUpdated, UpdateManager, UpdateProgress } from './manager-worker';
+import type { ManagerUpdated, UpdateManager, UpdateProgress } from './worker/manager-worker';
 import LZString from 'lz-string';
 import type { User } from './user';
+import type { ManagerCompressed } from './worker/compress-worker';
 
 function get_default_war() {
 	return new War('Default', 'Default', 'Default', false, []);
@@ -41,7 +42,8 @@ export class ManagerClass {
 	guilds: Guild[];
 	user: User;
 	save_callback: (() => void) | undefined;
-	worker: Worker | undefined;
+	manager_worker: Worker | undefined;
+	compress_worker: Worker | undefined;
 
 	constructor() {
 		this.wars = [];
@@ -180,8 +182,20 @@ export class ManagerClass {
 		return manager;
 	}
 
-	get_json() {
-		return LZString.compress(stringify(this));
+	async get_json() {
+		if (!this.compress_worker) return '';
+
+		let resolve!: (compressed_string: string) => void;
+		const promise = new Promise<string>((res) => (resolve = res));
+
+		this.compress_worker.onmessage = ({ data }: MessageEvent<ManagerCompressed>) => {
+			if (data.msg === 'manager_compressed') {
+				resolve(data.data);
+			}
+		};
+
+		this.compress_worker.postMessage({ msg: 'compress_manager', data: stringify(this) });
+		return promise;
 	}
 
 	add_war({
@@ -356,7 +370,7 @@ export class ManagerClass {
 	}
 
 	async update_data(wars: WarType[]) {
-		if (!this.worker) return;
+		if (!this.manager_worker) return;
 		this.reset();
 
 		LoaderManager.set_status('Updating data...', 0);
@@ -371,7 +385,7 @@ export class ManagerClass {
 		let resolve!: (manager: ManagerClass | undefined) => void;
 		const promise = new Promise<ManagerClass | undefined>((res) => (resolve = res));
 
-		this.worker.onmessage = ({ data }: MessageEvent<ManagerUpdated | UpdateProgress>) => {
+		this.manager_worker.onmessage = ({ data }: MessageEvent<ManagerUpdated | UpdateProgress>) => {
 			if (data.msg === 'manager_updated') {
 				resolve(parse(data.data?.manager));
 			} else if (data.msg === 'update_progress') {
@@ -379,7 +393,7 @@ export class ManagerClass {
 			}
 		};
 
-		this.worker.postMessage(message);
+		this.manager_worker.postMessage(message);
 		const new_manager = await promise;
 
 		if (!new_manager) return;

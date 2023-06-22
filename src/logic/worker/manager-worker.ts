@@ -1,6 +1,6 @@
 import { stringify } from 'flatted';
-import type { WarType } from './data';
-import { ManagerClass } from './manager';
+import type { WarType } from '../data';
+import { ManagerClass } from '../manager';
 
 export interface UpdateManager extends PostMessage<{ wars: WarType[] }> {
 	data: { wars: WarType[] };

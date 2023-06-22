@@ -13,11 +13,12 @@ const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> =
 		store.set(ManagerClass.from_json(storedValueStr));
 	}
 
-	get(store).save_callback = () => {
+	get(store).save_callback = async () => {
 		if (store) {
 			store.set(get(store));
 			try {
-				localStorage.setItem(key, get(store).get_json());
+				const data = await get(store).get_json();
+				localStorage.setItem(key, data);
 			} catch (e) {
 				console.error(e);
 				show_toast('Not enough storage', 'error');

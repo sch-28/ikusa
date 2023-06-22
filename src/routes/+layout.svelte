@@ -23,8 +23,10 @@
 	}
 
 	onMount(async () => {
-		const worker = await import('../logic/manager-worker?worker');
-		$Manager.worker = new worker.default();
+		const manager_worker = await import('../logic/worker/manager-worker?worker');
+		const compress_worker = await import('../logic/worker/compress-worker?worker');
+		$Manager.manager_worker = new manager_worker.default();
+		$Manager.compress_worker = new compress_worker.default();
 		is_mounted = true;
 	});
 	const origin = $page.url.origin;
