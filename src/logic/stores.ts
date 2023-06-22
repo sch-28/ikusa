@@ -16,13 +16,15 @@ const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> =
 	get(store).save_callback = async () => {
 		if (store) {
 			store.set(get(store));
-			try {
-				const data = await get(store).get_json();
-				localStorage.setItem(key, data);
-			} catch (e) {
-				console.error(e);
-				show_toast('Not enough storage', 'error');
-			}
+			get(store)
+				.get_json()
+				.then((data) => {
+					localStorage.setItem(key, data);
+				})
+				.catch((e) => {
+					console.error(e);
+					show_toast('Not enough storage', 'error');
+				});
 		}
 	};
 
