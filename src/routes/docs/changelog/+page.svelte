@@ -7,12 +7,23 @@
 
 	const changes = [
 		{
+			version: '0.3.1',
+			date: '22.06.2023',
+			title: '0.3.1 - New, additional backend',
+			changes: [
+				'image preview service is now being handled seperatly to improve performance',
+				'prepared backend for class api endpoint',
+				'moved compression system to a web worker, this should drastically improve performance for sharing'
+			],
+			author: oracle
+		},
+		{
 			version: '0.3.0',
 			date: '20.06.2023',
 			title: 'Migration',
 			changes: [
 				'Added a banner to https://nodewar.oracle-tools.site/ to inform users that the development of the site has been discontinued',
-				'Added migration endpoint to ikusa, allowing easy migration from the old site to ikusa',
+				'Added migration endpoint to ikusa, allowing easy migration from the old site to ikusa'
 			],
 			author: oracle
 		},
