@@ -35,7 +35,7 @@ export const POST: RequestHandler = async (event) => {
 		});
 
 		try {
-			fetch(`${IKUSA_API}/api/thumbnail`, {
+			await fetch(`${IKUSA_API}/api/thumbnail`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
