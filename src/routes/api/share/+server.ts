@@ -35,7 +35,10 @@ export const POST: RequestHandler = async (event) => {
 		});
 
 		try {
-			await fetch(`${IKUSA_API}/api/thumbnail`, {
+			const thumbnail_timeout = new Promise((resolve, reject) => {
+				setTimeout(() => resolve('Fetch request timed out'), 100);
+			});
+			const fetch_promise = fetch(`${IKUSA_API}/api/thumbnail`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -44,6 +47,8 @@ export const POST: RequestHandler = async (event) => {
 					id: id
 				})
 			});
+
+			await Promise.race([thumbnail_timeout, fetch_promise]);
 		} catch (e) {
 			console.error('Unable to create thumbnail', e);
 		}
