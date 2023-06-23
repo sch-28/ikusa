@@ -96,6 +96,15 @@
 		<Toaster />
 		<Loader />
 	</div>
+{:else}
+	<div
+		class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-2"
+	>
+		<div class="w-12 h-12 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted">
+			<LoadingCircle />
+		</div>
+		<div class="text-xl font-bold text-light">Loading data...</div>
+	</div>
 {/if}
 
 <style>

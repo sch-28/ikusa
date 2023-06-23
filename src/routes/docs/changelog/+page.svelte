@@ -11,9 +11,10 @@
 			date: '22.06.2023',
 			title: '0.3.1 - New, additional backend',
 			changes: [
-				'image preview service is now being handled seperatly to improve performance',
-				'prepared backend for class api endpoint',
-				'moved compression system to a web worker, this should drastically improve performance for sharing'
+				'Image preview service is now being handled seperatly to improve performance',
+				'Prepared backend for class api endpoint',
+				'Moved compression system to a web worker, this should drastically improve performance for sharing',
+				'Added mounting loading indicator'
 			],
 			author: oracle
 		},
