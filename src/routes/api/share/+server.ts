@@ -2,7 +2,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { prisma } from '../../../logic/prisma';
 import type { War } from '@prisma/client';
 import { generate_id } from '../../../logic/util';
-import { IKUSA_API } from '$env/static/private';
+import { PUBLIC_IKUSA_API } from '$env/static/public';
 
 export const POST: RequestHandler = async (event) => {
 	const user = event.locals.user;
@@ -38,7 +38,7 @@ export const POST: RequestHandler = async (event) => {
 			const thumbnail_timeout = new Promise((resolve, reject) => {
 				setTimeout(() => resolve('Fetch request timed out'), 100);
 			});
-			const fetch_promise = fetch(`${IKUSA_API}/api/thumbnail`, {
+			const fetch_promise = fetch(`${PUBLIC_IKUSA_API}/api/thumbnail`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
