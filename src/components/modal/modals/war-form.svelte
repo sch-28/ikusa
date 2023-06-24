@@ -16,6 +16,7 @@
 	import WarList from '../../war-list.svelte';
 	import { Log, type WarJSON, type WarType } from '../../../logic/data';
 	import type { MigratedWar } from '../../../routes/api/migrate/+server';
+	import { User } from '../../../logic/user';
 
 	let war_name: string = '';
 	let war_date: string = '';
@@ -31,6 +32,12 @@
 	export let war: WarType | undefined = undefined;
 	export let logs: Log[] = [];
 	export let migrated_wars: MigratedWar[] = [];
+
+	$: {
+		if (war_guild_name.length > 0 && !$User.guild && war_guild_name !== $User.guild) {
+			$User.guild = wars_guild_name;
+		}
+	}
 
 	$: {
 		war;
@@ -93,7 +100,7 @@
 
 	$: files && check_files();
 
-	let war_guild_name: string = $Manager.user.guild ?? '';
+	let war_guild_name: string = $User.guild ?? '';
 	let war_guild_name_suggestions: string[] = [];
 	$: war_guild_name_suggestions = $Manager.guilds
 		.map((guild) => {
@@ -115,7 +122,8 @@
 				state = 'multi';
 
 				wars = results.map((logs, index) => {
-					const name = files?.[index].name.split('.')[0] ?? '';
+					const file_name = files?.[index].name;
+					const name = file_name?.split('.').slice(0, -1).join('.') ?? '';
 					let date = new Date().toISOString().split('T')[0];
 					const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -135,7 +143,8 @@
 			} else if (results && results.length === 1) {
 				state = 'edit';
 				war_logs = results[0];
-				war_name = files[0].name.split('.')[0];
+				const file_name = files?.[0].name;
+				war_name = file_name?.split('.').slice(0, -1).join('.') ?? '';
 				war_date = new Date().toISOString().split('T')[0];
 			}
 		}
@@ -156,9 +165,7 @@
 			let reader = new FileReader();
 			reader.onload = function (e: ProgressEvent<FileReader>) {
 				const content = this.result as string;
-				const results = [
-					...content.matchAll(/\[.*\] (\w*) (died to|has killed) (\w*) from (\w*)/g)
-				];
+				const results = [...content.matchAll(Log.regex_glob)];
 				if (results.length > 0) {
 					const logs = results.map((log) => Log.parse_log(log[0]));
 					resolve(logs);
