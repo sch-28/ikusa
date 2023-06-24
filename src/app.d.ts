@@ -1,8 +1,9 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 
-import { User } from "./logic/user";
+import { User } from './logic/user';
 declare global {
+	declare module 'svelte-icons/*' {}
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
