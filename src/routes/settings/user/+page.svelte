@@ -22,32 +22,27 @@
 	}
 
 	function validate() {
+		if (family_name === $User.name && guild_name === $User.guild) {
+			return;
+		}
+
 		if (family_name.length === 0) {
 			form_error = 'Family name is required';
-			return false;
 		}
 		if (guild_name.length === 0) {
 			form_error = 'Guild name is required';
-			return false;
 		}
 
 		if (!$Manager.players.find((p) => p.name === family_name)) {
 			form_error = 'Family name is not valid, it could not be found in your uploaded logs';
-			return false;
 		}
 
 		if (!$Manager.guilds.find((g) => g.name === guild_name)) {
 			form_error = 'Guild name is not valid, it could not be found in your uploaded logs';
-			return false;
 		}
 
 		$User.name = family_name;
 		$User.guild = guild_name;
-		fetch('/api/user', {
-			method: 'POST',
-			body: JSON.stringify($User)
-		});
-		form_error = '';
 	}
 </script>
 
