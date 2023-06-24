@@ -1,9 +1,17 @@
 import { browser } from '$app/environment';
 import type { Writable } from 'svelte/store';
 import { writable, get } from 'svelte/store';
-import type { War, WarJSON, WarType } from './data';
+import type { WarType } from './data';
+import { debounce } from './util';
 
-const storage = <T extends { [key: string]: any }>(key: string, initValue: T): Writable<T> => {
+const debounce_update = debounce((value) => {
+	fetch('/api/user', {
+		method: 'POST',
+		body: JSON.stringify(value)
+	});
+}, 500);
+
+const storage = (key: string, initValue: User): Writable<User> => {
 	const store = writable(initValue);
 	if (!browser) return store;
 	const local_store_str = localStorage.getItem(key);
@@ -12,7 +20,7 @@ const storage = <T extends { [key: string]: any }>(key: string, initValue: T): W
 		let value = JSON.parse(local_store_str);
 		Object.keys(initValue).forEach((key) => {
 			if (value[key] === undefined || value[key] === null) {
-				value = { ...value, [key]: initValue[key] };
+				value = { ...value, [key]: initValue[key as keyof User] };
 			}
 		});
 		store.set(value);
@@ -23,6 +31,13 @@ const storage = <T extends { [key: string]: any }>(key: string, initValue: T): W
 			localStorage.removeItem(key);
 		} else {
 			localStorage.setItem(key, JSON.stringify(val));
+			const current_user = get(store);
+			if (
+				current_user &&
+				((val.guild && val.guild !== current_user.guild) ||
+					(val.name && val.name !== current_user.name))
+			)
+				val.discord_data && debounce_update(val);
 		}
 	});
 
@@ -31,12 +46,12 @@ const storage = <T extends { [key: string]: any }>(key: string, initValue: T): W
 
 		if (local_store_str == null) return;
 
-		let value: T = JSON.parse(local_store_str);
+		let value: User = JSON.parse(local_store_str);
 
 		if (value !== get(store)) {
 			Object.keys(initValue).forEach((key) => {
-				if (value[key] === undefined || value[key] === null) {
-					value = { ...value, [key]: initValue[key] };
+				if (value[key as keyof User] === undefined || value[key as keyof User] === null) {
+					value = { ...value, [key]: initValue[key as keyof User] };
 				}
 			});
 			store.set(value);
@@ -45,8 +60,6 @@ const storage = <T extends { [key: string]: any }>(key: string, initValue: T): W
 
 	return store;
 };
-
-export default storage;
 
 export interface User {
 	discord_data?: {
@@ -59,4 +72,4 @@ export interface User {
 	wars?: WarType[];
 }
 
-export const User = storage<User>('settings', {});
+export const User = storage('settings', {});
