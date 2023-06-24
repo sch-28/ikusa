@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { Checkbox } from 'flowbite-svelte';
 	interface $$Props {
 		class?: string;
 		id?: string;
 		name?: string;
+		checked: boolean;
 	}
+	export let checked: boolean;
 </script>
 
 <input
+	bind:checked
 	type="checkbox"
 	name={$$props.name}
 	id={$$props.id}
