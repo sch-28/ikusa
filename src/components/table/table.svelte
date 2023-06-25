@@ -10,7 +10,6 @@
 		type RowElement,
 		type TableData
 	} from './table';
-	import FaSort from 'svelte-icons/fa/FaSort.svelte';
 	import FaSortUp from 'svelte-icons/fa/FaSortUp.svelte';
 	import FaSortDown from 'svelte-icons/fa/FaSortDown.svelte';
 	import Icon from '../elements/icon.svelte';
@@ -18,6 +17,7 @@
 	import { draggable } from '@neodrag/svelte';
 	import MdZoomOutMap from 'svelte-icons/md/MdZoomOutMap.svelte';
 	import IoMdCode from 'svelte-icons/io/IoMdCode.svelte';
+	import Component from './component.svelte';
 
 	export let header: HeaderColumn[] = [];
 	export let rows: Row[] = [];
@@ -37,8 +37,13 @@
 	let v_list_container: VirtualList;
 
 	$: {
-		height;
 		rows;
+		handle_sort(0, false);
+	}
+
+	$: {
+		height;
+		header;
 		search_string;
 		handle_sort();
 	}
@@ -195,9 +200,9 @@
 		b: RowElement,
 		...alt: [RowElement, RowElement, 'asc' | 'des'][]
 	): -1 | 0 | 1 {
-		if (a < b) {
+		if (a !== undefined && b !== undefined && a < b) {
 			return -1;
-		} else if (a > b) {
+		} else if (a !== undefined && b !== undefined && a > b) {
 			return 1;
 		} else {
 			if (alt.length > 0) {
@@ -208,7 +213,7 @@
 		}
 	}
 
-	function handle_sort(scroll_y = 0) {
+	function handle_sort(scroll_y = 0, scroll = true) {
 		sorted_rows = [...rows];
 		if (current_sorts.length > 0 && current_sorts.some((colum) => colum.sort_dir !== undefined)) {
 			const col_index = header.indexOf(current_sorts[0]);
@@ -236,7 +241,6 @@
 					const col_index = header.indexOf(column);
 					alt.push([a.columns[col_index], b.columns[col_index], column.sort_dir]);
 				}
-
 				const sort = current_sorts[0].sort;
 
 				if (current_sorts[0].sort_dir === 'asc') {
@@ -248,7 +252,6 @@
 				}
 			});
 		}
-
 		sorted_rows = sorted_rows.filter((row) => {
 			if (!search_string) return true;
 
@@ -262,8 +265,10 @@
 				}
 			});
 		});
-		header = header;
-		scroll_top(scroll_y);
+		if (scroll) {
+			header = header;
+		}
+		scroll && scroll_top(scroll_y);
 	}
 
 	function scroll_top(y: number) {
@@ -288,8 +293,8 @@
 			(selectedHeader.width ?? selectedHeader.min_width ?? 50) + remaining_width;
 		header = header;
 	}
-	let start = 0;
-	let end = 0;
+	export let start = 0;
+	export let end = 0;
 </script>
 
 <div class="h-full flex flex-col min-w-0 relative" style="height: {height}px;" bind:this={instance}>
@@ -302,7 +307,9 @@
 				size="sm"
 			/>
 		{/if}
-		<div class="text-xl font-bold sm:absolute sm:left-1/2 sm:-translate-x-1/2 static shrink-0">{title}</div>
+		<div class="text-xl font-bold sm:absolute sm:left-1/2 sm:-translate-x-1/2 static shrink-0">
+			{title}
+		</div>
 	</div>
 	<div class="overflow-x-auto h-full flex flex-col">
 		<div
@@ -322,7 +329,9 @@
 				"
 						on:click={(e) => handle_sort_change(head, e.shiftKey)}
 					>
-						<span class="truncate" title={head.title ?? head.label}>{head.label}</span>
+						<span class="truncate h-[17.5px]" title={head.title ?? head.label}
+							>{!head.width || head.width > 50 ? head.label : ''}</span
+						>
 						{#if head.sortable && head.width}
 							{#if head.sort_dir === 'asc'}
 								<Icon class="hidden sm:block" icon={FaSortUp} />
@@ -377,17 +386,19 @@
 						{#each row.columns as column, index}
 							<div
 								class="flex items-center"
-								style="color: {column.color}; width: {Math.max(
+								style="color: {column?.color}; width: {Math.max(
 									header[index].width ?? 50,
 									header[index].min_width ?? 50
 								)}px;"
 							>
 								{#if typeof column === 'string' || typeof column === 'number'}
 									<span class="truncate" title={column.toString()}>{column}</span>
-								{:else if typeof column === 'object' && (typeof column.data === 'string' || typeof column.data === 'number')}
+								{:else if typeof column === 'object' && (typeof column.value === 'string' || typeof column.value === 'number')}
 									<span class="truncate" title={column.label.toString()}>{column.label}</span>
-								{:else}
+								{:else if column && column.isIcon}
 									<Icon icon={column.label} />
+								{:else if column}
+									<Component element={column} width={header[index].width ?? 50} />
 								{/if}
 							</div>
 						{/each}
