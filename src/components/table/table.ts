@@ -6,7 +6,7 @@ export type RowObject = {
 	label: number | string | Component;
 	color?: string;
 	value?: number | string;
-	isIcon?: boolean;
+	type?: 'component' | 'icon' | 'literal';
 };
 
 export type RowElement = number | string | Component | RowObject | undefined;

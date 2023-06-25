@@ -393,12 +393,12 @@
 							>
 								{#if typeof column === 'string' || typeof column === 'number'}
 									<span class="truncate" title={column.toString()}>{column}</span>
-								{:else if typeof column === 'object' && (typeof column.value === 'string' || typeof column.value === 'number')}
+								{:else if typeof column === 'object' && (!column.type || column.type === 'literal')}
 									<span class="truncate" title={column.label.toString()}>{column.label}</span>
-								{:else if column && column.isIcon}
+								{:else if column && column.type === 'icon'}
 									<Icon icon={column.label} />
-								{:else if column}
-									<Component element={column} width={header[index].width ?? 50} />
+								{:else if column && column.type === 'component'}
+									<Component element={column.label} width={header[index].width ?? 50} />
 								{/if}
 							</div>
 						{/each}
