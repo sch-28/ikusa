@@ -19,9 +19,20 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.0',
+		date: '25.06.2023',
+		title: 'BDO Sync',
+		changes: [
+			'The logger now also saves the character names (can be disabled)',
+			'Added BDO Sync for wars: using the character names, ikusa is able to fetch the official BDO Camping Grounds Website to fetch class information for all players. I am planning to add further class specific data tools, e.g. visualizing class distribution',
+			'Fixed several issues'
+		],
+		author: oracle
+	},
+	{
 		version: '0.3.1',
 		date: '22.06.2023',
-		title: '0.3.1 - New, additional backend',
+		title: 'New, additional backend',
 		changes: [
 			'Image preview service is now being handled seperatly to improve performance',
 			'Prepared backend for class api endpoint',
