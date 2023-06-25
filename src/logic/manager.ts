@@ -119,7 +119,14 @@ export class ManagerClass {
 		for (const [index, war] of wars.entries()) {
 			war.logs = war.logs.map(
 				(l) =>
-					new Log(l.player_one as string, l.player_two as string, l.kill, l.guild, l.time as string)
+					new Log(
+						l.player_one as string,
+						l.player_two as string,
+						l.kill,
+						l.guild,
+						l.time as string,
+						l.character_names
+					)
 			);
 			manager.add_war({
 				guild_name: war.guild_name,
@@ -223,7 +230,7 @@ export class ManagerClass {
 
 		const events: Event[] = [];
 		const guilds = new Set<Guild>();
-		const players: { player: Player; guild: Guild }[] = []
+		const players: { player: Player; guild: Guild }[] = [];
 
 		for (const log of logs) {
 			const guild_one = this.find_or_create_guild(guild_name);
@@ -234,14 +241,14 @@ export class ManagerClass {
 			const player_one = this.find_or_create_player(log.player_one, guild_one);
 			const player_two = this.find_or_create_player(log.player_two, guild_two);
 
-			if(!players.find(p => p.player == player_one && p.guild == guild_one)) {
+			if (!players.find((p) => p.player == player_one && p.guild == guild_one)) {
 				players.push({ player: player_one, guild: guild_one });
 			}
-			if(!players.find(p => p.player == player_two && p.guild == guild_two)) {
+			if (!players.find((p) => p.player == player_two && p.guild == guild_two)) {
 				players.push({ player: player_two, guild: guild_two });
 			}
 
-			const event = new Event(player_one, player_two, log.kill, log.time);
+			const event = new Event(player_one, player_two, log.kill, log.time, log.character_names);
 			player_one.events.push(event);
 			player_two.events.push(event);
 

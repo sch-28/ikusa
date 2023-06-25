@@ -175,7 +175,8 @@ export class War implements IWar {
 						e.player_two.name,
 						e.kill,
 						e.local_player_two.local_guild.guild.name,
-						e.time_string
+						e.time_string,
+						e.character_names
 					)
 			)
 		};
@@ -368,6 +369,8 @@ export class Local_Guild {
 
 export class Local_Guild_Player {
 	player: Player;
+	character_name?: string;
+	character_class?: string;
 	local_guild: Local_Guild;
 	local_events: Event[] = [];
 
@@ -453,13 +456,23 @@ export class Event {
 	guild: string;
 	message: string;
 
-	constructor(p1: Player, p2: Player, kill: boolean, time_string: string) {
+	character_names?: [string, string];
+
+	constructor(
+		p1: Player,
+		p2: Player,
+		kill: boolean,
+		time_string: string,
+		character_names?: [string, string]
+	) {
 		this.player_one = p1;
 		this.player_two = p2;
 		this.kill = kill;
 		this.time_string = time_string;
 		this.time = dayjs(time_string, 'HH:mm:ss');
 		this.guild = '';
+		this.character_names = character_names;
+
 		this.message = this.get_message();
 	}
 
@@ -471,9 +484,13 @@ export class Event {
 	}
 
 	get_message() {
+		const characters =
+			this.character_names && this.character_names.length === 2
+				? ` (${this.character_names.join(',')})`
+				: '';
 		return `[${this.time_string}] ${this.player_one.name} ${this.kill ? 'has killed' : 'died to'} ${
 			this.player_two.name
-		} from ${this.guild}`;
+		} from ${this.guild}${characters}`;
 	}
 }
 
@@ -484,7 +501,19 @@ export class Log {
 	guild: string;
 	time: string;
 
-	constructor(p1: string, p2: string, kill: boolean, guild: string, time: string) {
+	character_names?: [string, string];
+
+	static regex = /\[(.*)\] (\w*) (died to|has killed) (\w*) from (\w*)(?: \((\w*),(\w*)\))?/;
+	static regex_glob = /\[(.*)\] (\w*) (died to|has killed) (\w*) from (\w*)(?: \((\w*),(\w*)\))?/g;
+
+	constructor(
+		p1: string,
+		p2: string,
+		kill: boolean,
+		guild: string,
+		time: string,
+		character_names?: [string, string]
+	) {
 		this.player_one = p1;
 		this.player_two = p2;
 		this.kill = kill;
@@ -493,14 +522,21 @@ export class Log {
 			this.guild = 'No Guild';
 		}
 		this.time = time;
+		this.character_names = character_names;
 	}
 
 	static parse_log(log: string) {
-		const regex = /\[(.*)\] (\w*) (died to|has killed) (\w*) from (\w*)/;
-		const results = log.match(regex);
-		if (results && results.length == 6) {
+		const results = log.match(Log.regex);
+		if (results && (results.length == 6 || results.length == 8)) {
 			const kill = results[3] == 'has killed';
-			return new Log(results[2], results[4], kill, results[5], results[1]);
+			return new Log(
+				results[2],
+				results[4],
+				kill,
+				results[5],
+				results[1],
+				results.length === 8 ? [results[6], results[7]] : undefined
+			);
 		}
 
 		throw new Error(`Invalid Log: ${log}`);
@@ -514,14 +550,19 @@ export class Log {
 					l.player_two.name,
 					l.kill,
 					l.local_player_two.local_guild.guild.name,
-					l.time_string
+					l.time_string,
+					l.character_names
 				)
 		);
 	}
 
 	get message() {
+		const characters =
+			this.character_names && this.character_names.length === 2
+				? ` (${this.character_names.join(',')})`
+				: '';
 		return `${this.player_one} ${this.kill ? 'has killed' : 'died to'} ${this.player_two} from ${
 			this.guild
-		}`;
+		}${characters}`;
 	}
 }

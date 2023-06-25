@@ -8,12 +8,7 @@ export const POST: RequestHandler = async (event) => {
 	if (!new_user?.discord_data || !user?.discord_data) {
 		return new Response('Not logged in', { status: 500 });
 	}
-	if (
-		!new_user ||
-		!new_user.guild ||
-		!new_user.name ||
-		user.discord_data.id !== new_user.discord_data.id
-	) {
+	if (!new_user || !new_user.name || user.discord_data.id !== new_user.discord_data.id) {
 		return new Response('Invalid body', { status: 500 });
 	}
 	try {

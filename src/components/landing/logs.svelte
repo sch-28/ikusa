@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import Table from '../table/table.svelte';
 	import type { HeaderColumn, Row } from '../table/table';
+	import { Log } from '../../logic/data';
 
 	interface Log {
 		player_one: string;
@@ -175,7 +175,7 @@
 		'[08:23:09] Meatballer died to PoloHolo from Athanasy',
 		'[08:23:11] LordAizen died to Luxifor from Athanasy'
 	];
-	const regex = /\[(.*)\] (\w*) (died to|has killed) (\w*) from (\w*)/;
+	const regex = Log.regex;
 	let logs: Log[] = [];
 
 	let last_log = 20;

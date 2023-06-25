@@ -60,7 +60,7 @@ model PlayerCharacters {
   class     String
   level     Int?
   name      String
-  main      Boolean
+  main      Boolean?
   player    Player  @relation(fields: [player_id], references: [id], onDelete: Cascade)
   player_id String
   id        String  @id @unique @default(uuid())

@@ -7,7 +7,7 @@ import { stringify } from 'flatted';
 export const POST: RequestHandler = async (event) => {
 	const logs_string = await event.request.text();
 
-	const results = [...logs_string.matchAll(/\[.*\] (\w*) (died to|has killed) (\w*) from (\w*)/g)];
+	const results = [...logs_string.matchAll(Log.regex_glob)];
 	if (results.length > 0) {
 		const logs = results.map((log) => Log.parse_log(log[0]));
 		const uniqueIdentifier = generate_id();

@@ -4,11 +4,12 @@ import { browser } from '$app/environment';
 
 export type RowObject = {
 	label: number | string | Component;
-	color: string;
+	color?: string;
 	value?: number | string;
+	type?: 'component' | 'icon' | 'literal';
 };
 
-export type RowElement = number | string | Component | RowObject;
+export type RowElement = number | string | Component | RowObject | undefined;
 
 export type Row = {
 	columns: RowElement[];
