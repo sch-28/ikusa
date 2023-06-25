@@ -17,6 +17,7 @@
 	import { Log, type WarJSON, type WarType } from '../../../logic/data';
 	import type { MigratedWar } from '../../../routes/api/migrate/+server';
 	import { User } from '../../../logic/user';
+	import { goto } from '$app/navigation';
 
 	let war_name: string = '';
 	let war_date: string = '';
@@ -233,6 +234,7 @@
 					won: war_won,
 					logs: war_logs
 				});
+				result && goto(`/wars/${encodeURIComponent(result.id)}`);
 			} else if (!war.id) {
 				wars = wars.map((w) => {
 					if (w === war) {
