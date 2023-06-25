@@ -93,7 +93,6 @@
 		if (war) {
 			rows.splice(0, rows.length);
 			for (const local_player of selected_guild?.local_players ?? war.local_players) {
-				console.log(local_player)
 				rows.push({
 					columns: [
 						...(has_classes
