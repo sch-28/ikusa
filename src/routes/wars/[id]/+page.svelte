@@ -48,6 +48,7 @@
 				war = $Manager.get_war(war_raw);
 			} else {
 				war = parse(war_raw);
+				console.log(war)
 			}
 		}
 
@@ -92,6 +93,7 @@
 		if (war) {
 			rows.splice(0, rows.length);
 			for (const local_player of selected_guild?.local_players ?? war.local_players) {
+				console.log(local_player)
 				rows.push({
 					columns: [
 						...(has_classes
@@ -158,7 +160,6 @@
 			LoaderManager.set_status('Fetching characters', 0);
 			LoaderManager.open();
 			const all_characters = war.logs.map((l) => l.character_names).flat();
-			console.log(all_characters);
 			let character_names = [...new Set(all_characters)];
 
 			fetch(`${PUBLIC_IKUSA_API}/api/characters`, {

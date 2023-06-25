@@ -31,7 +31,7 @@ export const load: PageServerLoad = async (event) => {
 		let war: War | undefined = undefined;
 		let is_legacy = false;
 
-		const legacy_data = [...war_string.matchAll(Log.regex_glob)];
+		/* 	console.log(legacy_data);
 		if (legacy_data.length > 0) {
 			is_legacy = true;
 			const logs = legacy_data.map((log) => Log.parse_log(log[0]));
@@ -46,6 +46,28 @@ export const load: PageServerLoad = async (event) => {
 			});
 		} else {
 			war = parse(war_string) as War;
+		} */
+
+		try {
+			war = parse(war_string) as War;
+		} catch {
+			const legacy_data = [...war_string.matchAll(Log.regex_glob)];
+			if (legacy_data.length > 0) {
+				is_legacy = true;
+				const logs = legacy_data.map((log) => Log.parse_log(log[0]));
+				const manager = new ManagerClass();
+				war = manager.add_war({
+					guild_name: prisma_war.guild_name,
+					date: prisma_war.date,
+					logs: logs,
+					name: prisma_war.name,
+					unique_id: prisma_war.id,
+					won: prisma_war.won
+				});
+			} else {
+				console.error('Could not parse war');
+				return;
+			}
 		}
 
 		if (!war) return;
