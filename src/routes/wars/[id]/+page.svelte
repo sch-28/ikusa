@@ -3,10 +3,10 @@
 	import Icon from '../../../components/elements/icon.svelte';
 	import { ModalManager } from '../../../components/modal/modal-store';
 	import WarForm from '../../../components/modal/modals/war-form.svelte';
-	import type { HeaderColumn, Row } from '../../../components/table/table';
+	import type { HeaderColumn, Row, RowElement } from '../../../components/table/table';
 	import Table from '../../../components/table/table.svelte';
 	import { Manager } from '../../../logic/stores';
-	import { format, redirect_and_toast, show_toast } from '../../../logic/util';
+	import { debounce, format, redirect_and_toast, show_toast } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
@@ -16,11 +16,17 @@
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import LoadingCircle from '../../../components/elements/loading-circle.svelte';
-	import { Log, type Local_Guild, type War } from '../../../logic/data';
+	import { Log, type Local_Guild, type War, Player } from '../../../logic/data';
 	import { parse } from 'flatted';
 	import Share from '../../../components/modal/modals/share.svelte';
 	import MdFileDownload from 'svelte-icons/md/MdFileDownload.svelte';
 	import { saveAs } from 'file-saver';
+	import { PUBLIC_IKUSA_API } from '$env/static/public';
+	import Class from '../../players/class.svelte';
+	import { bind } from 'svelte-simple-modal';
+	import { LoaderManager } from '../../../components/loader/loader-store';
+	import { get } from 'svelte/store';
+	import { onMount } from 'svelte';
 
 	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
@@ -29,7 +35,14 @@
 
 	$: ({ war: war_raw, is_public, is_own } = data);
 	let war: War | undefined;
-	$: {
+	let has_characters = false;
+	let has_classes = false;
+	let loading = false;
+
+	let header: HeaderColumn[] = [];
+	let rows: Row[] = [];
+
+	onMount(() => {
 		if (war_raw) {
 			if (!is_public) {
 				war = $Manager.get_war(war_raw);
@@ -41,34 +54,37 @@
 		if (!war) {
 			redirect_and_toast('/wars', 'War not found');
 		} else {
-			update_rows();
-		}
-	}
+			has_characters = war.logs.some(
+				(l) => l.character_names && l.character_names.length > 0 && l.character_names[0]
+			);
+			has_classes = war.local_players.some((p) => p.character_class);
+			header = [
+				{ label: 'Name', sortable: true },
+				{ label: 'Kills', sortable: true, sort_dir: 'des' },
+				{ label: 'Deaths', sortable: true },
+				{
+					label: 'Performance',
+					title: 'Average Performance (Kills Compared to Guild Average Kills)',
+					sortable: true
+				},
+				{ label: 'Join Duration', title: 'Percentage of war joined', sortable: true }
+			];
 
-	let loading = false;
-
-	const header: HeaderColumn[] = [
-		{ label: 'Name', width: 3, sortable: true },
-		{ label: 'Kills', width: 1, sortable: true, sort_dir: 'des' },
-		{ label: 'Deaths', width: 1, sortable: true },
-		{
-			label: 'Performance',
-			title: 'Average Performance (Kills Compared to Guild Average Kills)',
-			width: 1,
-			sortable: true
-		},
-		{ label: 'Join Duration', title: 'Percentage of war joined', width: 1, sortable: true }
-	];
-	let rows: Row[] = [];
-
-	Manager.subscribe((manager) => {
-		if (war && !manager.get_war(war.id) && !is_public) {
-			goto('/wars');
+			if (has_classes) add_class_column();
+			else update_rows();
 		}
 	});
 
 	$: {
 		selected_guild;
+		update_rows();
+	}
+
+	function add_class_column() {
+		header = [
+			{ label: 'Class', title: 'Class', min_width: 25, width: 25, sortable: true },
+			...header
+		];
 		update_rows();
 	}
 
@@ -78,15 +94,30 @@
 			for (const local_player of selected_guild?.local_players ?? war.local_players) {
 				rows.push({
 					columns: [
+						...(has_classes
+							? local_player.character_class
+								? [
+										{
+											label: bind(Class, { bdo_class: local_player.character_class }),
+											value: local_player.character_class,
+											type: 'component'
+										} as RowElement
+								  ]
+								: [undefined]
+							: []),
 						local_player.player.name,
 						local_player.kills,
 						local_player.deaths,
 						format(local_player.performance),
-						format(local_player.duration_percentage * 100, 0) + '%'
+						{
+							value: local_player.duration_percentage * 100,
+							label: format(local_player.duration_percentage * 100, 0) + '%'
+						}
 					]
 				});
 			}
 			rows = rows;
+			header = header;
 		}
 	}
 
@@ -121,6 +152,108 @@
 		});
 		saveAs(blob, `${war?.name}.log`);
 	}
+
+	async function sync_war() {
+		if (war) {
+			LoaderManager.set_status('Fetching characters', 0);
+			LoaderManager.open();
+			const all_characters = war.logs.map((l) => l.character_names).flat();
+			console.log(all_characters);
+			let character_names = [...new Set(all_characters)];
+
+			fetch(`${PUBLIC_IKUSA_API}/api/characters`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ names: character_names, region: 'EU' })
+			})
+				.then((res) => {
+					if (res.status === 200) {
+						return res.body?.getReader();
+					} else {
+						LoaderManager.close();
+						show_toast('Could not fetch characters', 'error');
+					}
+				})
+
+				.then(async (reader) => {
+					const players: {
+						char_name: string;
+						name?: string;
+						class?: string;
+						progress: number;
+						total: number;
+					}[] = [];
+
+					await (async (reader) => {
+						if (!reader) return;
+						let done, value;
+						while (!done) {
+							({ value, done } = await reader.read());
+							if (done) {
+								return true;
+							}
+							try {
+								const JSONStrings = new TextDecoder('utf-8')
+									.decode(value)
+									.split('{')
+									.map((js) => '{' + js)
+									.splice(1);
+								JSONStrings.forEach((str) => {
+									const result: {
+										char_name: string;
+										name?: string;
+										class?: string;
+										progress: number;
+										total: number;
+									} = JSON.parse(str);
+									players.push(result);
+									if (result.progress != null)
+										if (
+											result.progress > Math.floor((get(LoaderManager.store).progress ?? 0) / 100)
+										)
+											LoaderManager.set_status(
+												`${result.progress}/${result.total} fetched`,
+												(result.progress / result.total) * 100
+											);
+								});
+							} catch (e) {
+								console.log(new TextDecoder('utf-8').decode(value));
+								console.log(e);
+								LoaderManager.close();
+								show_toast('Could not fetch characters', 'error');
+							}
+						}
+					})(reader);
+					LoaderManager.close();
+
+					for (let player of players) {
+						const local_player = (selected_guild?.local_players ?? war?.local_players ?? []).find(
+							(p) => p.player.name === player.name
+						);
+						if (local_player) {
+							local_player.character_class = player.class ?? undefined;
+							local_player.character_name = player.char_name ?? undefined;
+							const player_index = rows.findIndex((r) => r.columns[1] === player.name);
+							if (player_index !== -1) {
+								rows[player_index].columns[0] = bind(Class, {
+									bdo_class: player.class ?? ''
+								});
+							}
+						}
+					}
+					has_classes = true;
+					add_class_column();
+					$Manager.save_callback?.();
+				})
+				.catch((e) => {
+					console.error(e);
+					LoaderManager.close();
+					show_toast('Could not fetch characters', 'error');
+				});
+		}
+	}
 </script>
 
 {#if war && !loading}
@@ -135,16 +268,27 @@
 			<div class="text-base text-gold-muted">{war.date}</div>
 		</div>
 		<div class="flex gap-2 ml-auto justify-center my-auto">
-			{#if !is_puppeteer}
-				<button on:click={download_logs}>
-					<Icon icon={MdFileDownload} />
-				</button>
-			{/if}
 			{#if !is_public}
+				{#if has_characters}
+					<button
+						on:click={sync_war}
+						title="BDO Sync"
+						class="h-10 w-10 flex items-center justify-center border-2 border-dashed border-gold rounded-full font-extrabold
+					hover:bg-gold hover:text-black transition
+					"
+					>
+						<span class="mt-[1px]">BDO</span>
+					</button>
+				{/if}
 				{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
 					<Button on:click={() => open_share()}>Shared</Button>
 				{:else}
 					<button on:click={() => open_share()} title="Share"><Icon icon={IoIosShareAlt} /></button>
+				{/if}
+				{#if !is_puppeteer}
+					<button on:click={download_logs}>
+						<Icon icon={MdFileDownload} />
+					</button>
 				{/if}
 				<button on:click={() => ModalManager.open(WarForm, { war: war })} title="Edit"
 					><Icon icon={MdSettings} /></button

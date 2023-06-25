@@ -58,8 +58,8 @@
 				war.local_players.length,
 				war.local_guilds.length,
 				war.won
-					? { label: GiCrownedSkull, color: '#1c9177', value: true }
-					: { label: GiSkullCrack, color: '#f05252', value: false },
+					? { label: GiCrownedSkull, color: '#1c9177', value: true, type: 'icon' }
+					: { label: GiSkullCrack, color: '#f05252', value: false, type: 'icon' },
 				war.guild_name
 
 				/* {
