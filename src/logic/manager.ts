@@ -223,7 +223,7 @@ export class ManagerClass {
 
 		const events: Event[] = [];
 		const guilds = new Set<Guild>();
-		const players = new Set<Player>();
+		const players: { player: Player; guild: Guild }[] = []
 
 		for (const log of logs) {
 			const guild_one = this.find_or_create_guild(guild_name);
@@ -234,8 +234,13 @@ export class ManagerClass {
 			const player_one = this.find_or_create_player(log.player_one, guild_one);
 			const player_two = this.find_or_create_player(log.player_two, guild_two);
 
-			// players.push(player_one, player_two);
-			players.add(player_one).add(player_two);
+			if(!players.find(p => p.player == player_one && p.guild == guild_one)) {
+				players.push({ player: player_one, guild: guild_one });
+			}
+			if(!players.find(p => p.player == player_two && p.guild == guild_two)) {
+				players.push({ player: player_two, guild: guild_two });
+			}
+
 			const event = new Event(player_one, player_two, log.kill, log.time);
 			player_one.events.push(event);
 			player_two.events.push(event);
@@ -253,8 +258,9 @@ export class ManagerClass {
 			war.local_guilds.push(local_guild);
 
 			// get all joined players and add them to the local guild
-			for (const player of players) {
-				if (player.guilds.includes(guild)) {
+			for (const player_set of players) {
+				const { player, guild: player_guild } = player_set;
+				if (player_guild.name === guild.name) {
 					// create new local player
 					const local_player = new Local_Guild_Player(local_guild, player);
 
