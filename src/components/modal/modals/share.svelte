@@ -12,6 +12,7 @@
 	import LZString from 'lz-string';
 	import MdDelete from 'svelte-icons/md/MdDelete.svelte';
 	import MdContentCopy from 'svelte-icons/md/MdContentCopy.svelte';
+	import { stringify } from 'flatted';
 
 	export let war: War;
 
@@ -38,7 +39,7 @@
 			return;
 		}
 		loading = true;
-		const data = LZString.compressToEncodedURIComponent(war.logs.map((l) => l.message).join('\n'));
+		const data = LZString.compressToEncodedURIComponent(stringify(war));
 		const prisma_war: Omit<PrismaWar, 'userId'> = {
 			date: war.date,
 			guild_name: war.guild_name,
