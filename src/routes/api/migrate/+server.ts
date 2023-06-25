@@ -30,9 +30,7 @@ export const POST: RequestHandler = async (event) => {
 		const request_id = generate_id();
 		for (const war of data) {
 			const logs_string = war.logs.join('\n');
-			const results = [
-				...logs_string.matchAll(/\[.*\] (\w*) (died to|has killed) (\w*) from (\w*)/g)
-			];
+			const results = [...logs_string.matchAll(Log.regex_glob)];
 
 			if (results.length > 0) {
 				const logs = results.map((log) => Log.parse_log(log[0]));
