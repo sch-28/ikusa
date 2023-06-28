@@ -19,6 +19,13 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.1',
+		date: '28.06.2023',
+		title: 'Chart Improvements & War Class Overview',
+		changes: ['Improved issues & performance of charts', 'Added war class chart & table'],
+		author: oracle
+	},
+	{
 		version: '0.4.0',
 		date: '25.06.2023',
 		title: 'BDO Sync',
