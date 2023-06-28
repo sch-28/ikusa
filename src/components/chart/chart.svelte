@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import LoadingIndicator from '../elements/loading-indicator.svelte';
 	import dayjs from 'dayjs';
 	import { Toggle } from 'flowbite-svelte';
@@ -14,6 +14,8 @@
 	export let annotations: { height: number; label: string }[] = [];
 	export let data_labels: boolean = false;
 	export let dates: boolean = false;
+	export let height: string = 'auto';
+	export let legend_width: string = 'auto';
 
 	let render = false;
 	let formatted_labels: string[] | number[] = [];
@@ -31,7 +33,27 @@
 			stroke: {
 				curve: 'smooth'
 			},
+			legend: {
+				width: legend_width,
+				offsetY: 0
+			},
+			plotOptions: {
+				pie: {
+					donut: {
+						labels: {
+							show: true,
+							total: {
+								show: true,
+								/* label: '', */
+								/* formatter: () => 'hi' */
+							}
+						}
+					}
+				}
+			},
 			chart: {
+				width: '100%',
+				height: height,
 				id: 'chart',
 				type: type,
 				animations: {
@@ -39,6 +61,7 @@
 					easing: 'easeout',
 					speed: 500
 				},
+
 				fontFamily: 'inherit',
 				foreColor: '#f5cd40'
 			},
@@ -153,6 +176,10 @@
 		(window as any).ApexCharts = ApexCharts;
 		loaded = true;
 		setTimeout(() => (options = options));
+	});
+
+	onDestroy(() => {
+		current_chart?.destroy();
 	});
 </script>
 
