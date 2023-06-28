@@ -184,6 +184,7 @@
 				data={chart_data}
 				labels={chart_labels}
 				annotations={chart_annotation}
+				dates
 				max={Math.max(3, (player?.average_performance ?? 2) + 1)}
 			/>
 		</div>

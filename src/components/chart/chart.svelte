@@ -160,9 +160,11 @@
 	{#key loaded || data || labels || options || dates}
 		<div class="flex-grow relative">
 			<div class="flex-grow" bind:this={chart_container} />
-			<div class="absolute z-10 top-0 right-40 [&_label]:leading-none">
-				<Toggle bind:checked={dates}>Format Dates</Toggle>
-			</div>
+			{#if dates}
+				<div class="absolute z-10 top-0 right-40 [&_label]:leading-none">
+					<Toggle bind:checked={dates}>Format Dates</Toggle>
+				</div>
+			{/if}
 		</div>
 	{/key}
 {:else}
