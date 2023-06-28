@@ -27,6 +27,8 @@
 	import { LoaderManager } from '../../../components/loader/loader-store';
 	import { get } from 'svelte/store';
 	import { onMount } from 'svelte';
+	import Chart from '../../../components/chart/chart.svelte';
+	import Field from '../../../components/dashboard/field.svelte';
 
 	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
@@ -48,7 +50,7 @@
 				war = $Manager.get_war(war_raw);
 			} else {
 				war = parse(war_raw);
-				console.log(war)
+				console.log(war);
 			}
 		}
 
@@ -122,8 +124,54 @@
 		}
 	}
 
-	$: chart_data = war?.local_guilds.map((local_guild) => local_guild.local_players.length) ?? [];
-	$: chart_labels = war?.local_guilds.map((local_guild) => local_guild.guild.name) ?? [];
+	$: member_chart_data =
+		war?.local_guilds.map((local_guild) => local_guild.local_players.length) ?? [];
+	$: member_chart_labels = war?.local_guilds.map((local_guild) => local_guild.guild.name) ?? [];
+
+	$: class_data = has_classes
+		? (selected_guild?.local_players ?? war?.local_players ?? [])
+				.filter((l) => l.character_class)
+				.reduce((acc, curr) => {
+					const index = acc.findIndex((a) => a.name === curr.character_class);
+					if (index !== -1) {
+						acc[index].data++;
+					} else if (curr.character_class) {
+						acc.push({ name: curr.character_class, data: 1 });
+					}
+					return acc;
+				}, [] as { name: string; data: number }[])
+		: [];
+
+	$: class_chart_data = class_data?.map((c) => c.data) ?? [];
+	$: class_chart_labels = class_data?.map((c) => c.name) ?? [];
+
+	$: class_table_rows = (class_data?.map((c) => ({
+		columns: [
+			{
+				label: bind(Class, { bdo_class: c.name }),
+				value: c.name,
+				type: 'component'
+			},
+			{
+				label: `${c.data} (${(
+					(c.data / (selected_guild?.local_players.length ?? war?.local_players.length ?? 0)) *
+					100
+				).toFixed(0)}%)`,
+				value: c.data
+			},
+			format(
+				(selected_guild?.local_players ?? war?.local_players ?? [])
+					.filter((l) => l.character_class === c.name)
+					.reduce((acc, curr) => acc + curr.performance, 0) / c.data
+			)
+		]
+	})) ?? []) as Row[];
+
+	$: class_table_header = [
+		{ label: 'Class', sortable: true },
+		{ label: 'Amount', sortable: true },
+		{ label: 'Performance', sortable: true }
+	];
 
 	async function add_war() {
 		if (war) {
@@ -351,9 +399,31 @@
 			/>
 		</div>
 	</div>
-	<!-- <div class="w-[450px] mt-4">
-		<Chart data={chart_data} labels={chart_labels} type="donut" />
-	</div> -->
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+		<Field title="Guild member distribution">
+			<Chart data={member_chart_data} labels={member_chart_labels} type="donut" />
+		</Field>
+		{#if has_classes}
+			<Field title="Class distribution{selected_guild ? ` of ${selected_guild.guild.name}` : ''}">
+				<Chart
+					data={class_chart_data}
+					labels={class_chart_labels}
+					type="donut"
+					legend_width="125"
+				/>
+			</Field>
+			<Field title="Class statistics">
+				<Table
+					id="war-classes-{war.id}"
+					height={275}
+					header={class_table_header}
+					rows={class_table_rows}
+					searchable
+					title={(selected_guild?.guild.name ?? 'All') + ' Players'}
+				/>
+			</Field>
+		{/if}
+	</div>
 {:else}
 	<div
 		class="w-12 h-12 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
