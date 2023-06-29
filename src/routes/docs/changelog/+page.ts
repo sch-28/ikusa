@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.2',
+		date: '29.06.2023',
+		title: 'Stability & Fixes',
+		changes: [
+			'Logger adjustments to improve stability',
+			'Resolved a memory leak of the logger',
+			'Fixed an issue with the parsing of logs that caused invalid guild names'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.1',
 		date: '28.06.2023',
 		title: 'Chart Improvements & War Class Overview',
