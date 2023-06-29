@@ -1,6 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { show_toast } from './util';
 dayjs.extend(customParseFormat);
 
 export class Guild {
@@ -544,7 +543,6 @@ export class Log {
 				results.length === 8 ? [results[6], results[7]] : undefined
 			);
 		}
-		show_toast(`Invalid Log: ${log}`, 'error');
 		throw new Error(`Invalid Log: ${log}`);
 	}
 

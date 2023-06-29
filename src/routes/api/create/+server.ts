@@ -9,7 +9,17 @@ export const POST: RequestHandler = async (event) => {
 
 	const results = [...logs_string.matchAll(Log.regex_glob)];
 	if (results.length > 0) {
-		const logs = results.map((log) => Log.parse_log(log[0]));
+		let logs = [];
+		try {
+			logs = results.map((log) => Log.parse_log(log[0]));
+		} catch (e) {
+			return new Response(
+				JSON.stringify({
+					error: 'Invalid logs' + (e as Error).message ? ': ' + (e as Error).message : ''
+				})
+			);
+		}
+
 		const uniqueIdentifier = generate_id();
 		await prisma.uploadStorage.create({
 			data: {

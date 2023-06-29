@@ -165,13 +165,19 @@
 		return new Promise<Log[]>((resolve, reject) => {
 			let reader = new FileReader();
 			reader.onload = function (e: ProgressEvent<FileReader>) {
-				const content = this.result as string;
-				const results = [...content.matchAll(Log.regex_glob)];
-				if (results.length > 0) {
-					const logs = results.map((log) => Log.parse_log(log[0]));
-					resolve(logs);
-				} else {
-					return reject(new Error('Invalid File'));
+				try {
+					const content = this.result as string;
+					const results = [...content.matchAll(Log.regex_glob)];
+					if (results.length > 0) {
+						const logs = results.map((log) => Log.parse_log(log[0]));
+						resolve(logs);
+					} else {
+						return reject(new Error('Invalid File'));
+					}
+				} catch (e) {
+					return reject(
+						new Error('Invalid File' + (e as Error).message ? ': ' + (e as Error).message : '')
+					);
 				}
 			};
 			reader.onerror = reject;

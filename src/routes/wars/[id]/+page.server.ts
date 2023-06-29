@@ -9,7 +9,6 @@ import { parse, stringify } from 'flatted';
 
 export const load: PageServerLoad = async (event) => {
 	const war_id = decodeURIComponent(event.params.id);
-
 	//check if id includes any symbols
 	if (war_id.match(/[^a-zA-Z0-9]/g)) {
 		return {
@@ -53,17 +52,22 @@ export const load: PageServerLoad = async (event) => {
 		} catch {
 			const legacy_data = [...war_string.matchAll(Log.regex_glob)];
 			if (legacy_data.length > 0) {
-				is_legacy = true;
-				const logs = legacy_data.map((log) => Log.parse_log(log[0]));
-				const manager = new ManagerClass();
-				war = manager.add_war({
-					guild_name: prisma_war.guild_name,
-					date: prisma_war.date,
-					logs: logs,
-					name: prisma_war.name,
-					unique_id: prisma_war.id,
-					won: prisma_war.won
-				});
+				try {
+					is_legacy = true;
+					const logs = legacy_data.map((log) => Log.parse_log(log[0]));
+					const manager = new ManagerClass();
+					war = manager.add_war({
+						guild_name: prisma_war.guild_name,
+						date: prisma_war.date,
+						logs: logs,
+						name: prisma_war.name,
+						unique_id: prisma_war.id,
+						won: prisma_war.won
+					});
+				} catch {
+					console.error('Could not parse war');
+					return;
+				}
 			} else {
 				console.error('Could not parse war');
 				return;

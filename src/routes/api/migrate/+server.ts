@@ -33,17 +33,25 @@ export const POST: RequestHandler = async (event) => {
 			const results = [...logs_string.matchAll(Log.regex_glob)];
 
 			if (results.length > 0) {
-				const logs = results.map((log) => Log.parse_log(log[0]));
-				const uniqueIdentifier = generate_id();
-				wars.push({
-					id: uniqueIdentifier,
-					request_id,
-					logs: stringify(logs),
-					time: new Date(),
-					name: war.name,
-					date: war.date,
-					guild: war.guild
-				});
+				try {
+					const logs = results.map((log) => Log.parse_log(log[0]));
+					const uniqueIdentifier = generate_id();
+					wars.push({
+						id: uniqueIdentifier,
+						request_id,
+						logs: stringify(logs),
+						time: new Date(),
+						name: war.name,
+						date: war.date,
+						guild: war.guild
+					});
+				} catch (e) {
+					return new Response(
+						JSON.stringify({
+							error: 'Invalid logs found' + (e as Error).message ? ': ' + (e as Error).message : ''
+						})
+					);
+				}
 			} else {
 				return new Response(JSON.stringify({ error: 'Invalid logs found' }));
 			}
