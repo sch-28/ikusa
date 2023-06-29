@@ -518,7 +518,7 @@ export class Log {
 		this.player_two = p2;
 		this.kill = kill;
 		this.guild = guild;
-		if (this.guild == '-1') {
+		if (this.guild === '-1' || !this.guild) {
 			this.guild = 'No Guild';
 		}
 		this.time = time;
