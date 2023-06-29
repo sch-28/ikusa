@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { show_toast } from './util';
 dayjs.extend(customParseFormat);
 
 export class Guild {
@@ -503,8 +504,9 @@ export class Log {
 
 	character_names?: [string, string];
 
-	static regex = /\[(.*)\] (\w*) (died to|has killed) (\w*) from (\w*)(?: \((\w*),(\w*)\))?/;
-	static regex_glob = /\[(.*)\] (\w*) (died to|has killed) (\w*) from (\w*)(?: \((\w*),(\w*)\))?/g;
+	static regex = /\[(.+)\] (\w+) (died to|has killed) (\w+) from (\w+|-1)(?: \((\w+),(\w+)\))?/;
+	static regex_glob =
+		/\[(.+)\] (\w+) (died to|has killed) (\w+) from (\w+|-1)(?: \((\w+),(\w+)\))?/g;
 
 	constructor(
 		p1: string,
@@ -518,7 +520,7 @@ export class Log {
 		this.player_two = p2;
 		this.kill = kill;
 		this.guild = guild;
-		if (this.guild === '-1' || !this.guild) {
+		if (this.guild === '-1') {
 			this.guild = 'No Guild';
 		}
 		this.time = time;
@@ -527,7 +529,11 @@ export class Log {
 
 	static parse_log(log: string) {
 		const results = log.match(Log.regex);
-		if (results && (results.length == 6 || results.length == 8)) {
+		if (
+			results &&
+			(results.length == 6 || results.length == 8) &&
+			results.slice(0, 6).every((r) => r)
+		) {
 			const kill = results[3] == 'has killed';
 			return new Log(
 				results[2],
@@ -538,7 +544,7 @@ export class Log {
 				results.length === 8 ? [results[6], results[7]] : undefined
 			);
 		}
-
+		show_toast(`Invalid Log: ${log}`, 'error');
 		throw new Error(`Invalid Log: ${log}`);
 	}
 
