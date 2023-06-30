@@ -10,6 +10,7 @@
 	import Chart from '../../../components/chart/chart.svelte';
 	import type { Guild } from '../../../logic/data';
 	import { onMount } from 'svelte';
+	import Field from '../../../components/dashboard/field.svelte';
 
 	const chart_annotation = [{ height: 1, label: 'Average' }];
 
@@ -177,7 +178,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="lg:w-1/3 w-full mx-auto p-2 shrink-0 lg:mt-14">
+	</div>
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+		<Field title="Performance overview">
 			<Chart
 				type="area"
 				title="Performance"
@@ -187,6 +190,6 @@
 				dates
 				max={Math.max(3, (player?.average_performance ?? 2) + 1)}
 			/>
-		</div>
+		</Field>
 	</div>
 {/if}
