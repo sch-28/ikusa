@@ -172,8 +172,8 @@
 	$: class_table_header = [
 		{ label: 'Class', sortable: true },
 		{ label: 'Amount', sortable: true },
-		{ label: 'Performance', sortable: true }
-	];
+		{ label: 'Performance', sortable: true, sort_dir: 'des' }
+	] as HeaderColumn[];
 
 	async function add_war() {
 		if (war) {
