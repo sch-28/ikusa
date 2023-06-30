@@ -295,9 +295,16 @@
 	}
 	export let start = 0;
 	export let end = 0;
+
+	let table_width = 0;
 </script>
 
-<div class="h-full flex flex-col min-w-0 relative" style="height: {height}px;" bind:this={instance}>
+<div
+	class="h-full flex flex-col min-w-0 relative"
+	style="height: {height}px;"
+	bind:this={instance}
+	bind:clientWidth={table_width}
+>
 	<div class="flex w-full gap-2 flex-wrap mb-2">
 		{#if searchable}
 			<Input
@@ -307,7 +314,11 @@
 				size="sm"
 			/>
 		{/if}
-		<div class="text-xl font-bold sm:absolute sm:left-1/2 sm:-translate-x-1/2 static shrink-0">
+		<div
+			class="text-xl font-bold static shrink-0 {table_width > 400
+				? 'sm:absolute sm:left-1/2 sm:-translate-x-1/2 '
+				: ''}"
+		>
 			{title}
 		</div>
 	</div>
