@@ -29,6 +29,7 @@
 	import { onMount } from 'svelte';
 	import Chart from '../../../components/chart/chart.svelte';
 	import Field from '../../../components/dashboard/field.svelte';
+	import { get_class_color } from '../../../logic/bdo-api/classes';
 
 	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
@@ -144,6 +145,7 @@
 
 	$: class_chart_data = class_data?.map((c) => c.data) ?? [];
 	$: class_chart_labels = class_data?.map((c) => c.name) ?? [];
+	$: class_colors = class_data?.map((c) => get_class_color[c.name]) ?? [];
 
 	$: class_table_rows = (class_data?.map((c) => ({
 		columns: [
@@ -406,6 +408,7 @@
 		{#if has_classes}
 			<Field title="Class distribution{selected_guild ? ` of ${selected_guild.guild.name}` : ''}">
 				<Chart
+					colors={class_colors}
 					data={class_chart_data}
 					labels={class_chart_labels}
 					type="donut"

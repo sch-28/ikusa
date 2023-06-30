@@ -16,6 +16,7 @@
 	export let dates: boolean = false;
 	export let height: string = 'auto';
 	export let legend_width: string = 'auto';
+	export let colors: string[] = [];
 
 	let render = false;
 	let formatted_labels: string[] | number[] = [];
@@ -43,7 +44,7 @@
 						labels: {
 							show: true,
 							total: {
-								show: true,
+								show: true
 								/* label: '', */
 								/* formatter: () => 'hi' */
 							}
@@ -106,7 +107,7 @@
 			fill: {
 				colors: type === 'area' ? ['#bd8e28'] : undefined
 			},
-			colors: type === 'area' ? ['#f5cd40'] : undefined,
+			colors: type === 'area' ? ['#f5cd40'] : colors,
 			tooltip: {
 				enabled: true,
 				theme: 'dark',

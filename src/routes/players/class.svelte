@@ -1,32 +1,5 @@
 <script lang="ts">
-	const classes = [
-		'Warrior',
-		'Ranger',
-		'Sorceress',
-		'Berserker',
-		'Tamer',
-		'Ninja',
-		'Kunoichi',
-		'Witch',
-		'Wizard',
-		'Maehwa',
-		'Valkyrie',
-		'Musa',
-		'Dark Knight',
-		'Striker',
-		'Mystic',
-		'Lahn',
-		'Archer',
-		'Shai',
-		'Guardian',
-		'Hashashin',
-		'Nova',
-		'Sage',
-		'Corsair',
-		'Drakania',
-		'Woosa',
-		'Maegu'
-	];
+	import { classes } from '../../logic/bdo-api/classes';
 
 	export let bdo_class: (typeof classes)[number] | undefined;
 	export let width: number;
