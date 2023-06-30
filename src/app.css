@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-	font-family: monospace;;
+	font-family: monospace;
 	@apply text-foreground-secondary bg-background text-sm;
 	color-scheme: dark;
 }
@@ -13,14 +13,14 @@ html {
 }
 
 ::-webkit-scrollbar {
-	width: 4px;
-	height: 4px;
+	width: 4px !important;
+	height: 4px !important;
 }
 
 ::-webkit-scrollbar-track {
-	background-color: transparent;
+	background-color: transparent !important;
 }
 
 ::-webkit-scrollbar-thumb {
-	@apply bg-foreground-secondary rounded-lg;
+	@apply !bg-foreground-secondary !rounded-lg;
 }
