@@ -371,7 +371,7 @@
 			<button on:click={() => ModalManager.open(WarForm, { war: war })} title="Edit"
 				><Icon icon={MdSettings} /></button
 			>
-		{:else if $Manager.get_war_by_id(war?.unique_id ?? '')}
+		{:else if war?.unique_id && $Manager.get_war_by_id(war?.unique_id)}
 			<Button on:click={() => goto(`/wars/${war?.id}`)}>View in Dashboard</Button>
 		{:else if !is_puppeteer}
 			<Button on:click={add_war}>Add to Dashboard</Button>
