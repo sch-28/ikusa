@@ -22,7 +22,7 @@
 			<slot name="actions" />
 		</div>
 	</div>
-	<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary">
+	<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary overflow-x-auto whitespace-nowrap pb-1">
 		{#each stats as stat}
 			<div class="pl-2 first:pl-0">{stat}</div>
 		{/each}
