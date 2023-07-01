@@ -68,6 +68,13 @@
 				? 'text-foreground'
 				: 'text-foreground-secondary hover:text-foreground'}>Guilds</a
 		>
+		<a
+			on:click={() => (show_sidebar = !show_sidebar)}
+			href="/classes"
+			class={is_selected('classes')
+				? 'text-foreground'
+				: 'text-foreground-secondary hover:text-foreground'}>Classes</a
+		>
 	</div>
 	<div class="flex gap-3 items-center h-[2.25rem]">
 		<a
