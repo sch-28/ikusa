@@ -66,6 +66,13 @@ export function format(number: number, places = 2) {
 	return +number?.toFixed(places);
 }
 
+export function table_format(number: number, places = 2) {
+	return {
+		label: isNaN(number) ? '-' : format(number, places),
+		value: isNaN(number) ? -0.01 : number
+	};
+}
+
 export function get_remaining_height(el: HTMLElement, margin = 0) {
 	if (!el) return 0;
 	const { top } = el.getBoundingClientRect();

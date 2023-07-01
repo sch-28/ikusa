@@ -6,7 +6,7 @@
 	import type { HeaderColumn, Row, RowElement } from '../../../components/table/table';
 	import Table from '../../../components/table/table.svelte';
 	import { Manager } from '../../../logic/stores';
-	import { format, redirect_and_toast, show_toast } from '../../../logic/util';
+	import { format, redirect_and_toast, show_toast, table_format } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
@@ -21,7 +21,7 @@
 	import MdFileDownload from 'svelte-icons/md/MdFileDownload.svelte';
 	import { saveAs } from 'file-saver';
 	import { PUBLIC_IKUSA_API } from '$env/static/public';
-	import Class from '../../players/class.svelte';
+	import Class from '../../classes/class.svelte';
 	import { bind } from 'svelte-simple-modal';
 	import { LoaderManager } from '../../../components/loader/loader-store';
 	import { get } from 'svelte/store';
@@ -114,7 +114,7 @@
 						local_player.player.name,
 						local_player.kills,
 						local_player.deaths,
-						format(local_player.performance),
+						table_format(local_player.performance),
 						{
 							value: local_player.duration_percentage * 100,
 							label: format(local_player.duration_percentage * 100, 0) + '%'
@@ -163,7 +163,7 @@
 				).toFixed(0)}%)`,
 				value: c.data
 			},
-			format(
+			table_format(
 				(selected_guild?.local_players ?? war?.local_players ?? [])
 					.filter((l) => l.character_class === c.name)
 					.reduce((acc, curr) => acc + curr.performance, 0) / c.data
@@ -314,7 +314,7 @@
 			`${g.local_players.length} Members`,
 			`${g.kills} Kills`,
 			`${g.deaths} Deaths`,
-			`${format(g.duration)} min`
+			`${table_format(g.duration)} min`
 		]
 	})) as Option[];
 

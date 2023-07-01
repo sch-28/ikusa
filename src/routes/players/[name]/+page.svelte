@@ -5,7 +5,7 @@
 	import MdPerson from 'svelte-icons/md/MdPerson.svelte';
 	import Table from '../../../components/table/table.svelte';
 	import type { HeaderColumn, Row } from '../../../components/table/table';
-	import { format, redirect_and_toast } from '../../../logic/util';
+	import { format, redirect_and_toast, table_format } from '../../../logic/util';
 	import { goto } from '$app/navigation';
 	import Chart from '../../../components/chart/chart.svelte';
 	import type { Guild } from '../../../logic/data';
@@ -72,7 +72,7 @@
 					local.local_guild.war.date,
 					local.kills,
 					local.deaths,
-					format(local.performance),
+					table_format(local.performance),
 					local.duration,
 					local.local_guild.guild.name
 				],
