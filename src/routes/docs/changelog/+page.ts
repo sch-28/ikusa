@@ -19,6 +19,18 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.3',
+		date: '01.07.2023',
+		title: 'Classes & Layout Improvements',
+		changes: [
+			'Added class overview',
+			'Refactored the layout',
+			'Added class specific colors to the charts',
+			'Fixed some mobile layout issues'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.2',
 		date: '29.06.2023',
 		title: 'Stability & Fixes',
