@@ -314,7 +314,7 @@
 			`${g.local_players.length} Members`,
 			`${g.kills} Kills`,
 			`${g.deaths} Deaths`,
-			`${table_format(g.duration)} min`
+			`${format(g.duration)} min`
 		]
 	})) as Option[];
 
