@@ -1,4 +1,3 @@
-import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { prisma } from '../../../logic/prisma';
 import { supabase } from '../../../logic/supabase';

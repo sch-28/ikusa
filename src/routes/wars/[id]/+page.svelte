@@ -6,7 +6,7 @@
 	import type { HeaderColumn, Row, RowElement } from '../../../components/table/table';
 	import Table from '../../../components/table/table.svelte';
 	import { Manager } from '../../../logic/stores';
-	import { debounce, format, redirect_and_toast, show_toast } from '../../../logic/util';
+	import { format, redirect_and_toast, show_toast } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
@@ -15,8 +15,7 @@
 	import { User } from '../../../logic/user';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
-	import LoadingCircle from '../../../components/elements/loading-circle.svelte';
-	import { Log, type Local_Guild, type War, Player } from '../../../logic/data';
+	import { Log, type Local_Guild, type War } from '../../../logic/data';
 	import { parse } from 'flatted';
 	import Share from '../../../components/modal/modals/share.svelte';
 	import MdFileDownload from 'svelte-icons/md/MdFileDownload.svelte';
@@ -28,8 +27,11 @@
 	import { get } from 'svelte/store';
 	import { onMount } from 'svelte';
 	import Chart from '../../../components/chart/chart.svelte';
-	import Field from '../../../components/dashboard/field.svelte';
+	import Field from '../../../components/dashboard/dashboard-field.svelte';
 	import { get_class_color } from '../../../logic/bdo-api/classes';
+	import DashboardLayout, {
+		type Option
+	} from '../../../components/dashboard/dashboard-layout.svelte';
 
 	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
@@ -304,104 +306,89 @@
 				});
 		}
 	}
+
+	let selected_option: Option | undefined;
+	$: options = war?.local_guilds.map((g) => ({
+		title: g.guild.name,
+		values: [
+			`${g.local_players.length} Members`,
+			`${g.kills} Kills`,
+			`${g.deaths} Deaths`,
+			`${format(g.duration)} min`
+		]
+	})) as Option[];
+
+	$: selected_guild = selected_option
+		? war?.local_guilds.find((g) => g.guild.name === selected_option?.title)
+		: undefined;
 </script>
 
-{#if war && !loading}
-	<div class="flex items-start mb-4">
+<DashboardLayout
+	loading={!war}
+	bind:selected={selected_option}
+	{options}
+	stats={[
+		`${war?.local_guilds.length} Guilds`,
+		`${war?.local_players.length} Players`,
+		`${war?.duration} minutes`
+	]}
+>
+	<div slot="title" class="flex">
 		<Icon
 			size="lg"
-			icon={war.won ? GiCrownedSkull : GiSkullCrack}
-			class="{war.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center"
+			icon={war?.won ? GiCrownedSkull : GiSkullCrack}
+			class="{war?.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center"
 		/>
 		<div class="flex flex-col gap-1">
-			<div class="text-xl font-medium text-foreground">{war.name}</div>
-			<div class="text-base text-gold-muted">{war.date}</div>
+			<div class="text-xl font-medium text-foreground">{war?.name}</div>
+			<div class="text-base text-gold-muted">{war?.date}</div>
 		</div>
-		<div class="flex gap-2 ml-auto justify-center my-auto">
-			{#if !is_public}
-				{#if has_characters}
-					<button
-						on:click={sync_war}
-						title="BDO Sync"
-						class="h-10 w-10 flex items-center justify-center border-2 border-dashed border-gold rounded-full font-extrabold
+	</div>
+
+	<svelte:fragment slot="actions">
+		{#if !is_public}
+			{#if has_characters}
+				<button
+					on:click={sync_war}
+					title="BDO Sync"
+					class="h-10 w-10 flex items-center justify-center border-2 border-dashed border-gold rounded-full font-extrabold
 					hover:bg-gold hover:text-black transition
 					"
-					>
-						<span class="mt-[1px]">BDO</span>
-					</button>
-				{/if}
-				{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
-					<Button on:click={() => open_share()}>Shared</Button>
-				{:else}
-					<button on:click={() => open_share()} title="Share"><Icon icon={IoIosShareAlt} /></button>
-				{/if}
-				{#if !is_puppeteer}
-					<button on:click={download_logs}>
-						<Icon icon={MdFileDownload} />
-					</button>
-				{/if}
-				<button on:click={() => ModalManager.open(WarForm, { war: war })} title="Edit"
-					><Icon icon={MdSettings} /></button
 				>
-			{:else if $Manager.get_war_by_id(war.unique_id)}
-				<Button on:click={() => goto(`/wars/${war?.id}`)}>View in Dashboard</Button>
-			{:else if !is_puppeteer}
-				<Button on:click={add_war}>Add to Dashboard</Button>
-			{/if}
-		</div>
-	</div>
-	<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary">
-		<div>{war.local_guilds.length} Guilds</div>
-		<div class="pl-2">{war.local_players.length} Players</div>
-		<div class="pl-2">{war.duration} minutes</div>
-	</div>
-	<div
-		class="flex gap-4 sm:flex-row flex-col border border-foreground border-dashed p-2 rounded-lg"
-	>
-		<div
-			class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[420px] justify-center sm:justify-start"
-		>
-			{#each war.local_guilds as local_guild}
-				<button
-					class="flex flex-col p-2 border border-foreground rounded-lg min-w-0 h-[126px] aspect-square {selected_guild ===
-					local_guild
-						? 'bg-foreground text-black'
-						: ''}"
-					on:click={() =>
-						(selected_guild = selected_guild === local_guild ? undefined : local_guild)}
-				>
-					<div class="text-lg truncate font-bold w-full text-left">{local_guild.guild.name}</div>
-					<div class="flex gap-1 text-sm font-light">
-						<div class="">{local_guild.local_players.length}</div>
-						<div class="">Members</div>
-					</div>
-					<div class="flex gap-1 text-sm font-light">
-						<div class="">{local_guild.kills}</div>
-						<div class="">Kills</div>
-					</div>
-					<div class="flex gap-1 text-sm font-light">
-						<div class="">{local_guild.deaths}</div>
-						<div class="">Deaths</div>
-					</div>
-					<div class="flex gap-1 text-sm font-light">
-						<div class="">{format(local_guild.duration)}</div>
-						<div class="">min</div>
-					</div>
+					<span class="mt-[1px]">BDO</span>
 				</button>
-			{/each}
-		</div>
-		<div class="w-full min-w-0">
-			<Table
-				id="war-players-{war.id}"
-				height={420}
-				{header}
-				{rows}
-				searchable
-				title={(selected_guild?.guild.name ?? 'All') + ' Players'}
-			/>
-		</div>
-	</div>
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+			{/if}
+			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
+				<Button on:click={() => open_share()}>Shared</Button>
+			{:else}
+				<button on:click={() => open_share()} title="Share"><Icon icon={IoIosShareAlt} /></button>
+			{/if}
+			{#if !is_puppeteer}
+				<button on:click={download_logs}>
+					<Icon icon={MdFileDownload} />
+				</button>
+			{/if}
+			<button on:click={() => ModalManager.open(WarForm, { war: war })} title="Edit"
+				><Icon icon={MdSettings} /></button
+			>
+		{:else if $Manager.get_war_by_id(war?.unique_id ?? '')}
+			<Button on:click={() => goto(`/wars/${war?.id}`)}>View in Dashboard</Button>
+		{:else if !is_puppeteer}
+			<Button on:click={add_war}>Add to Dashboard</Button>
+		{/if}
+	</svelte:fragment>
+	<svelte:fragment slot="content">
+		<Table
+			id="war-players-{war?.id}"
+			height={420}
+			{header}
+			{rows}
+			searchable
+			title={(selected_guild?.guild.name ?? 'All') + ' Players'}
+		/>
+	</svelte:fragment>
+
+	<svelte:fragment slot="fields">
 		<Field title="Guild member distribution">
 			<Chart data={member_chart_data} labels={member_chart_labels} type="donut" />
 		</Field>
@@ -417,7 +404,7 @@
 			</Field>
 			<Field title="Class statistics">
 				<Table
-					id="war-classes-{war.id}"
+					id="war-classes-{war?.id}"
 					height={275}
 					header={class_table_header}
 					rows={class_table_rows}
@@ -426,11 +413,5 @@
 				/>
 			</Field>
 		{/if}
-	</div>
-{:else}
-	<div
-		class="w-12 h-12 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-	>
-		<LoadingCircle />
-	</div>
-{/if}
+	</svelte:fragment>
+</DashboardLayout>

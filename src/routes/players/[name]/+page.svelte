@@ -10,7 +10,10 @@
 	import Chart from '../../../components/chart/chart.svelte';
 	import type { Guild } from '../../../logic/data';
 	import { onMount } from 'svelte';
-	import Field from '../../../components/dashboard/field.svelte';
+	import Field from '../../../components/dashboard/dashboard-field.svelte';
+	import DashboardLayout, {
+		type Option
+	} from '../../../components/dashboard/dashboard-layout.svelte';
 
 	const chart_annotation = [{ height: 1, label: 'Average' }];
 
@@ -78,108 +81,66 @@
 				}
 			} as Row;
 		}) ?? [];
+
+	$: options = player?.guilds.map((g) => ({
+		title: g.name,
+		values: [
+			`${get_locals_for_guild(g).reduce((sum, local) => local.kills + sum, 0)} Joined`,
+			`${get_locals_for_guild(g).reduce((sum, local) => local.deaths + sum, 0)} Deaths`,
+			`${format(
+				get_locals_for_guild(g).reduce((sum, local) => local.performance + sum, 0) /
+					get_locals_for_guild(g).length
+			)} Performance`,
+			`${format(
+				get_locals_for_guild(g).reduce((sum, local) => local.duration + sum, 0) /
+					get_locals_for_guild(g).length
+			)} Duration`
+		]
+	})) as Option[];
+
+	let selected_option: Option | undefined = undefined;
+
+	$: selected_guild = selected_option
+		? player?.guilds.find((g) => g.name === selected_option?.title)
+		: undefined;
 </script>
 
-{#if player}
-	<div class="lg:flex">
-		<div class="w-full">
-			<div class="flex items-start mb-4">
-				<Icon size="lg" icon={MdPerson} class="mr-2 self-center" />
-				<div class="flex flex-col gap-1">
-					<div class="text-xl font-medium text-foreground">{player.name}</div>
-					<div class="text-base text-gold-muted">
-						{player.guilds[player.guilds.length - 1].name}
-					</div>
-				</div>
-				<!-- <button on:click={() => ModalManager.open(WarForm, { war: war })} class="ml-auto"
-			><Icon icon={MdSettings} class="self-center " /></button
-		> -->
-			</div>
-			<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary">
-				<div>{format(player.average_kills)} avg kills</div>
-				<div class="pl-2">{format(player.average_deaths)} avg deaths</div>
-				<div class="pl-2">{format(player.average_performance)} avg performance</div>
-				<div class="pl-2">
-					{format(player.average_duration_percentage * 100, 0)} % avg join duration
-				</div>
-				<div class="pl-2">
-					{format(player.participation_percentage * 100, 0)} % avg attendance
-				</div>
-				<div class="pl-2">{player.locals.length} joined wars</div>
-			</div>
-			<div
-				class="flex gap-4 sm:flex-row flex-col border border-foreground border-dashed p-2 rounded-lg"
-			>
-				<div
-					class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[420px] justify-center sm:justify-start"
-				>
-					{#each player.guilds as guild}
-						<button
-							class="flex flex-col p-2 border border-foreground rounded-lg min-w-0 h-[146px] aspect-square {selected_guild ===
-							guild
-								? 'bg-foreground text-black'
-								: ''}"
-							on:click={() => (selected_guild = selected_guild === guild ? undefined : guild)}
-						>
-							<div class="text-lg truncate font-bold w-full text-left">{guild.name}</div>
-							<div class="flex gap-1 text-sm font-light">
-								<div class="">
-									{get_locals_for_guild(guild).reduce((sum, local) => local.kills + sum, 0)}
-								</div>
-								<div class="">Kills</div>
-							</div>
-							<div class="flex gap-1 text-sm font-light">
-								<div class="">
-									{get_locals_for_guild(guild).reduce((sum, local) => local.deaths + sum, 0)}
-								</div>
-								<div class="">Deaths</div>
-							</div>
-							<div class="flex gap-1 text-sm font-light">
-								<div class="">
-									{format(
-										get_locals_for_guild(guild).reduce((sum, local) => local.performance + sum, 0) /
-											get_locals_for_guild(guild).length
-									)}
-								</div>
-								<div class="">Performance</div>
-							</div>
-							<div class="flex gap-1 text-sm font-light">
-								<div class="">
-									{format(
-										get_locals_for_guild(guild).reduce((sum, local) => local.duration + sum, 0) /
-											get_locals_for_guild(guild).length
-									)}
-								</div>
-								<div class="">Duration</div>
-							</div>
-							<div class="flex gap-1 text-sm font-light">
-								<div class="">
-									{get_locals_for_guild(guild).length}
-								</div>
-								<div class="">Joined</div>
-							</div>
-
-							<!-- <div class="flex gap-1 text-sm font-light">
-						<div class="">{format(guild.duration * 100)}</div>
-						<div class="">Joined</div>
-					</div> -->
-						</button>
-					{/each}
-				</div>
-				<div class="w-full h-[30rem]">
-					<Table
-						id="player-table-{player.name}"
-						{header}
-						{rows}
-						searchable
-						title={(selected_guild?.name ?? 'All') + ' Stats'}
-						height={420}
-					/>
-				</div>
+<DashboardLayout
+	loading={!player}
+	bind:selected={selected_option}
+	{options}
+	stats={[
+		`${format(player?.average_kills ?? 0)} avg kills`,
+		`${format(player?.average_deaths ?? 0)} avg deaths`,
+		`${format(player?.average_performance ?? 0)} avg performance`,
+		`${format((player?.average_duration_percentage ?? 0) * 100, 0)} % avg join duration`,
+		`${format((player?.participation_percentage ?? 0) * 100, 0)} % avg attendance`,
+		`${player?.locals.length ?? 0} joined wars`
+	]}
+>
+	<div slot="title" class="flex">
+		<Icon size="lg" icon={MdPerson} class="mr-2 self-center" />
+		<div class="flex flex-col gap-1">
+			<div class="text-xl font-medium text-foreground">{player?.name}</div>
+			<div class="text-base text-gold-muted">
+				{player?.guilds[player.guilds.length - 1].name}
 			</div>
 		</div>
 	</div>
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+
+	<svelte:fragment slot="actions"><!-- fetch class --></svelte:fragment>
+	<svelte:fragment slot="content">
+		<Table
+			id="player-table-{player?.name}"
+			{header}
+			{rows}
+			searchable
+			title={(selected_guild?.name ?? 'All') + ' Stats'}
+			height={420}
+		/>
+	</svelte:fragment>
+
+	<svelte:fragment slot="fields">
 		<Field title="Performance overview">
 			<Chart
 				type="area"
@@ -191,5 +152,5 @@
 				max={Math.max(3, (player?.average_performance ?? 2) + 1)}
 			/>
 		</Field>
-	</div>
-{/if}
+	</svelte:fragment>
+</DashboardLayout>
