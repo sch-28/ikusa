@@ -238,6 +238,8 @@
 						total: number;
 					}[] = [];
 
+					let remaining_string = '';
+
 					await (async (reader) => {
 						if (!reader) return;
 						let done, value;
@@ -247,12 +249,17 @@
 								return true;
 							}
 							try {
-								const JSONStrings = new TextDecoder('utf-8')
-									.decode(value)
-									.split('{')
-									.map((js) => '{' + js)
-									.splice(1);
-								JSONStrings.forEach((str) => {
+								const full_string = remaining_string + new TextDecoder('utf-8').decode(value);
+								const progress = full_string.split('{').map((js) => '{' + js).splice(1)
+
+								const last_entry = progress[progress.length - 1];
+								if (last_entry.includes('}')) {
+									remaining_string = '';
+								} else {
+									remaining_string = last_entry;
+									progress.pop();
+								}
+								progress.forEach((str) => {
 									const result: {
 										char_name: string;
 										name?: string;
@@ -272,7 +279,7 @@
 								});
 							} catch (e) {
 								console.log(new TextDecoder('utf-8').decode(value));
-								console.log(e);
+								console.error(e);
 								LoaderManager.close();
 								show_toast('Could not fetch characters', 'error');
 							}
