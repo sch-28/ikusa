@@ -2,7 +2,9 @@
 	import { classes } from '../../logic/bdo-api/classes';
 
 	export let bdo_class: (typeof classes)[number] | undefined;
-	export let width: number;
+	export let width: number = 50;
+	export let show_text = true;
+	export let size: 'small' | 'medium' | 'large' = 'small';
 
 	$: icon_offset = [
 		-1.98 + 'rem',
@@ -16,10 +18,16 @@
 	<div
 		bind:this={container}
 		title={bdo_class}
-		class="character-name flex w-full items-center {width <= 50 && 'justify-center'} h-[17.5px]"
+		class="character-name flex w-full items-center {width <= 50 && 'justify-center'}
+		{size === 'small' && 'scale-100 h-[17.5px]'}
+		{size === 'medium' && 'scale-125 h-fit'}
+		{size === 'large' && 'scale-150 h-fit p-1'}
+		"
 		style="--offset: {icon_offset};"
 	>
-		<span class="min-w-0 truncate {width <= 50 && 'hidden'}">{bdo_class}</span>
+		{#if show_text}
+			<span class="min-w-0 truncate {width <= 50 && 'hidden'}">{bdo_class}</span>
+		{/if}
 	</div>
 {/if}
 

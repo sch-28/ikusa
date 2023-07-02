@@ -11,7 +11,7 @@
 	type ClassData = {
 		name: string;
 		performance: number;
-		players: number;
+		locals: number;
 		kills: number;
 		deaths: number;
 	};
@@ -28,7 +28,7 @@
 			acc[cur] = {
 				name: cur,
 				performance: 0,
-				players: 0,
+				locals: 0,
 				kills: 0,
 				deaths: 0
 			} as ClassData;
@@ -41,15 +41,19 @@
 		$Manager.players.forEach((player) => {
 			player.locals.forEach((local) => {
 				if (local.character_class) {
-					class_data[local.character_class].players++;
+					class_data[local.character_class].locals++;
 					class_data[local.character_class].kills += local.kills;
 					class_data[local.character_class].deaths += local.deaths;
 					class_data[local.character_class].performance += local.performance;
 				}
 			});
+
+			Object;
 		});
 		Object.values(class_data).forEach((class_data) => {
-			class_data.performance /= class_data.players;
+			class_data.performance /= class_data.locals;
+			class_data.kills /= class_data.locals;
+			class_data.deaths /= class_data.locals;
 		});
 	}
 
@@ -61,11 +65,14 @@
 					value: class_data.name,
 					type: 'component'
 				} as RowElement,
-				table_format(class_data.kills / class_data.players),
-				table_format(class_data.deaths / class_data.players),
+				table_format(class_data.kills),
+				table_format(class_data.deaths),
 				table_format(class_data.performance),
-				table_format(class_data.players)
-			]
+				table_format(class_data.locals)
+			],
+			onclick: () => {
+				goto(`/classes/${class_data.name}`);
+			}
 		} as Row;
 	});
 
