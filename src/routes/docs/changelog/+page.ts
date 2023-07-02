@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.4',
+		date: '02.07.2023',
+		title: 'Class view & Logger performance',
+		changes: [
+			'Added individual class view',
+			'Improved logger performance',
+			'Fixed a BDO-Sync issue'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.3',
 		date: '01.07.2023',
 		title: 'Classes & Layout Improvements',
