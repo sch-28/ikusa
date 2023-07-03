@@ -32,12 +32,7 @@ const storage = (key: string, initValue: User): Writable<User> => {
 		} else {
 			localStorage.setItem(key, JSON.stringify(val));
 			const current_user = get(store);
-			if (
-				current_user &&
-				((val.guild && val.guild !== current_user.guild) ||
-					(val.name && val.name !== current_user.name))
-			)
-				val.discord_data && debounce_update(val);
+			if (current_user) val.discord_data && debounce_update(val);
 		}
 	});
 
@@ -70,6 +65,7 @@ export interface User {
 	name?: string;
 	guild?: string;
 	wars?: WarType[];
+	bdo_sync: boolean;
 }
 
-export const User = storage('settings', {});
+export const User = storage('settings', { bdo_sync: true });

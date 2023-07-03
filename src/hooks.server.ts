@@ -38,6 +38,7 @@ async function set_session(
 			id: prisma_user.id,
 			username: prisma_user.username
 		},
+		bdo_sync: prisma_user.bdo_sync,
 		name: prisma_user.name,
 		guild: prisma_user.guild,
 		wars: prisma_user.wars.map((war) => {

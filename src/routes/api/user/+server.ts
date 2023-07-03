@@ -18,7 +18,8 @@ export const POST: RequestHandler = async (event) => {
 			},
 			data: {
 				name: new_user.name,
-				guild: new_user.guild
+				guild: new_user.guild,
+				bdo_sync: new_user.bdo_sync
 			}
 		});
 

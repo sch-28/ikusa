@@ -12,12 +12,13 @@ datasource db {
 }
 
 model User {
-  id            String @id @unique
+  id            String  @id @unique
   username      String
   name          String
   guild         String
   discriminator String
   wars          War[]
+  bdo_sync      Boolean @default(true)
 }
 
 model War {
@@ -49,11 +50,11 @@ model MigrateStorage {
 }
 
 model Player {
-  id               String             @id @unique
-  family_name      String
-  guild            String?
-  region           String
-  characters PlayerCharacters[]
+  id          String             @id @unique
+  family_name String
+  guild       String?
+  region      String
+  characters  PlayerCharacters[]
 }
 
 model PlayerCharacters {
@@ -61,7 +62,7 @@ model PlayerCharacters {
   level     Int?
   name      String
   main      Boolean?
-  player    Player  @relation(fields: [player_id], references: [id], onDelete: Cascade)
+  player    Player   @relation(fields: [player_id], references: [id], onDelete: Cascade)
   player_id String
-  id        String  @id @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
 }

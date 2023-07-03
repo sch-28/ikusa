@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Label } from 'flowbite-svelte';
+	import { Label, Toggle } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import AutoComplete from '../../../components/elements/auto-complete.svelte';
 	import { Manager } from '../../../logic/stores';
@@ -46,30 +46,39 @@
 	}
 </script>
 
-<div>
-	<p class="capitalize font-semibold text-lg text-gold">User Settings</p>
-	<div class="text-foreground-secondary mb-2">
-		Setting your family name and guild here will allow you to get a overview of your current
-		performance in the <a href="/dashboard" class="underline">Dashboard</a>.
-	</div>
-	<div class="flex gap-2 mb-2">
-		<div>
-			<Label for="fam-name">Family Name</Label>
-			<AutoComplete
-				id="fam-name"
-				items={$Manager.players.map((p) => p.name)}
-				bind:value={family_name}
-			/>
+<div class="flex flex-col gap-2">
+	<div>
+		<p class="capitalize font-semibold text-lg text-gold">General</p>
+		<div class="flex gap-2 items-center">
+			<Toggle bind:checked={$User.bdo_sync} id="bdo-sync" />
+			<Label for="bdo-sync">BDO Sync</Label>
 		</div>
+	</div>
+	<div>
+		<p class="capitalize font-semibold text-lg text-gold">User Settings</p>
+		<div class="text-foreground-secondary mb-2">
+			Setting your family name and guild here will allow you to get a overview of your current
+			performance in the <a href="/dashboard" class="underline">Dashboard</a>.
+		</div>
+		<div class="flex gap-2 mb-2">
+			<div>
+				<Label for="fam-name">Family Name</Label>
+				<AutoComplete
+					id="fam-name"
+					items={$Manager.players.map((p) => p.name)}
+					bind:value={family_name}
+				/>
+			</div>
 
-		<div>
-			<Label for="fam-name">Guild</Label>
-			<AutoComplete
-				id="fam-name"
-				items={$Manager.guilds.map((g) => g.name)}
-				bind:value={guild_name}
-			/>
+			<div>
+				<Label for="fam-name">Guild</Label>
+				<AutoComplete
+					id="fam-name"
+					items={$Manager.guilds.map((g) => g.name)}
+					bind:value={guild_name}
+				/>
+			</div>
 		</div>
+		<p class="text-red-500">{form_error}</p>
 	</div>
-	<p class="text-red-500">{form_error}</p>
 </div>

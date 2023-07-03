@@ -78,6 +78,8 @@
 
 			if (has_classes) add_class_column();
 			else update_rows();
+
+			if (has_characters && !has_classes && $User.bdo_sync) sync_war();
 		}
 	});
 
@@ -250,7 +252,10 @@
 							}
 							try {
 								const full_string = remaining_string + new TextDecoder('utf-8').decode(value);
-								const progress = full_string.split('{').map((js) => '{' + js).splice(1)
+								const progress = full_string
+									.split('{')
+									.map((js) => '{' + js)
+									.splice(1);
 
 								const last_entry = progress[progress.length - 1];
 								if (last_entry.includes('}')) {
@@ -354,7 +359,7 @@
 
 	<svelte:fragment slot="actions">
 		{#if !is_public}
-			{#if has_characters}
+			<!-- {#if has_characters}
 				<button
 					on:click={sync_war}
 					title="BDO Sync"
@@ -364,7 +369,7 @@
 				>
 					<span class="mt-[1px]">BDO</span>
 				</button>
-			{/if}
+			{/if} -->
 			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
 				<Button on:click={() => open_share()}>Shared</Button>
 			{:else}
