@@ -25,7 +25,7 @@
 	let war_won: boolean = false;
 
 	let wars: WarJSON[] = [];
-	let wars_guild_name: string = $Manager.user.guild ?? '';
+	let wars_guild_name: string = $User.guild ?? '';
 	let setted_wars_guild_name: boolean = false;
 
 	let states = ['upload', 'edit', 'logs', 'multi'] as const;
@@ -48,8 +48,8 @@
 	$: setted_wars_guild_name && set_wars_guild_name();
 
 	onMount(() => {
-		wars_guild_name = $Manager.user.guild ?? '';
-		if (war_guild_name.length == 0) war_guild_name = $Manager.user.guild ?? '';
+		wars_guild_name = $User.guild ?? '';
+		if (war_guild_name.length == 0) war_guild_name = $User.guild ?? '';
 
 		if (logs.length > 0) {
 			war_logs = logs;

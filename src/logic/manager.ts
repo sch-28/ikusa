@@ -40,7 +40,6 @@ export class ManagerClass {
 	wars: War[];
 	players: Player[];
 	guilds: Guild[];
-	user: User;
 	save_callback: (() => void) | undefined;
 	manager_worker: Worker | undefined;
 	compress_worker: Worker | undefined;
@@ -49,7 +48,6 @@ export class ManagerClass {
 		this.wars = [];
 		this.players = [];
 		this.guilds = [];
-		this.user = {};
 	}
 
 	get sorted_players() {
@@ -166,7 +164,6 @@ export class ManagerClass {
 		/* const manager = Object.assign(new ManagerClass(), manager_data); */
 
 		const manager = new ManagerClass();
-		manager.user = manager_data.user;
 
 		manager.wars = manager_data.wars.map((war) => {
 			const new_war = Object.assign(get_default_war(), war);
@@ -225,8 +222,6 @@ export class ManagerClass {
 		if (this.wars.find((war) => war.id == date + name)) {
 			return undefined;
 		}
-
-		this.user.guild = guild_name;
 
 		const events: Event[] = [];
 		const guilds = new Set<Guild>();
