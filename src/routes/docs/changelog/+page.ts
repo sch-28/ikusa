@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.5',
+		date: '03.07.2023',
+		title: 'Automatic BDO-Sync & Logger issue message',
+		changes: [
+			'Automatically syncs BDO data if the user has not disabled it',
+			'Added a message to the logger indicating the current halting issue',
+			'Fixed an issue that caused the class data to dissapear after an update'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.4',
 		date: '02.07.2023',
 		title: 'Class view & Logger performance',
