@@ -32,6 +32,7 @@
 	import DashboardLayout, {
 		type Option
 	} from '../../../components/dashboard/dashboard-layout.svelte';
+	import LZString from 'lz-string';
 
 	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
@@ -52,8 +53,7 @@
 			if (!is_public) {
 				war = $Manager.get_war(war_raw);
 			} else {
-				war = parse(war_raw);
-				console.log(war);
+				war = parse(LZString.decompressFromEncodedURIComponent(war_raw));
 			}
 		}
 
