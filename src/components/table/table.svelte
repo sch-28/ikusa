@@ -262,7 +262,8 @@
 					return column.toString().includes(search_string);
 				} else {
 					const col = column as RowObject;
-					if (col.value) {
+					if(!col) return false;
+					if ( col.value) {
 						return col.value.toString().toLowerCase().includes(search_string.toLowerCase());
 					} else {
 						return col.label.toString().toLowerCase().includes(search_string.toLowerCase());
