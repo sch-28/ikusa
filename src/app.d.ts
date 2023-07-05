@@ -1,9 +1,12 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 
+import type Component from './components/table/component.svelte';
 import { User } from './logic/user';
 declare global {
-	declare module 'svelte-icons/*' {}
+	declare module 'svelte-icons/*' {
+		Component;
+	}
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
