@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.6',
+		date: '06.07.2023',
+		title: 'Performance & Fixes',
+		changes: [
+			'Fixed invalidation of logged-in user data',
+			'Fixed share loading indicator lag',
+			'Resolved an issue with the logger that caused recording issues',
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.5',
 		date: '03.07.2023',
 		title: 'Automatic BDO-Sync & Logger issue message',
