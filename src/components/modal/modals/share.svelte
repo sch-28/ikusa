@@ -3,7 +3,7 @@
 	import type { War } from '../../../logic/data';
 	import { Manager } from '../../../logic/stores';
 	import { User } from '../../../logic/user';
-	import { show_toast, redirect_and_toast, copy_to_clipboard } from '../../../logic/util';
+	import { show_toast, copy_to_clipboard, sleep } from '../../../logic/util';
 	import Icon from '../../elements/icon.svelte';
 	import Input from '../../elements/input.svelte';
 	import LoadingCircle from '../../elements/loading-circle.svelte';
@@ -39,6 +39,7 @@
 			return;
 		}
 		loading = true;
+		await sleep();
 		const data = LZString.compressToEncodedURIComponent(stringify(war));
 		const prisma_war: Omit<PrismaWar, 'userId'> = {
 			date: war.date,
