@@ -17,9 +17,10 @@
 	let is_mounted = false;
 
 	export let data: User | undefined;
-
 	if (data && Object.keys(data).length > 0) {
 		User.set(data);
+	}else{
+		User.set({...$User, discord_data: undefined})
 	}
 
 	onMount(async () => {

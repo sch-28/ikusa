@@ -60,12 +60,19 @@ export const handle: Handle = async (request) => {
 	const access_token = cookies.get('access_token');
 
 	let new_cookies = '';
-
 	if (refresh_token && !access_token) {
 		//const refresh_request =await fetch(`${HOST_ADDRESS}/discord/refresh?code=${refresh_token}`);
 		const refresh_request = await refresh_discord_token(refresh_token);
 		if ('error' in refresh_request) {
 			const response = await request.resolve(request.event);
+			response.headers.set(
+				'set-cookie',
+				`access_token=deleted; Path=/; Max-Age=-1,refresh_token=deleted; Path=/; Max-Age=-1`
+			);
+			response.headers.set(
+				'Cache-Control',
+				'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+			);
 			return response;
 		}
 
@@ -93,6 +100,8 @@ export const handle: Handle = async (request) => {
 		if (response.id) {
 			request.event.locals.user = await set_session(request, response);
 		}
+	}else{
+		request.event.locals.user = undefined;
 	}
 
 	const response = await request.resolve(request.event);
