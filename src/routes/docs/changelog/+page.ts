@@ -25,6 +25,7 @@ const changes: Change[] = [
 		changes: [
 			'Fixed invalidation of logged-in user data',
 			'Fixed share loading indicator lag',
+			'Fixed the search functionality in the class tables',
 			'Resolved an issue with the logger that caused recording issues',
 		],
 		author: oracle
