@@ -1,15 +1,8 @@
 <script lang="ts">
 	import VirtualList from '@sveltejs/svelte-virtual-list';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { debounce, scrollbar_width } from '../../logic/util';
-	import {
-		TableSort,
-		type HeaderColumn,
-		type Row,
-		type RowObject,
-		type RowElement,
-		type TableData
-	} from './table';
+	import { TableSort, type HeaderColumn, type Row, type RowObject, type RowElement } from './table';
 	import FaSortUp from 'svelte-icons/fa/FaSortUp.svelte';
 	import FaSortDown from 'svelte-icons/fa/FaSortDown.svelte';
 	import Icon from '../elements/icon.svelte';
@@ -262,8 +255,8 @@
 					return column.toString().includes(search_string);
 				} else {
 					const col = column as RowObject;
-					if(!col) return false;
-					if ( col.value) {
+					if (!col) return false;
+					if (col.value) {
 						return col.value.toString().toLowerCase().includes(search_string.toLowerCase());
 					} else {
 						return col.label.toString().toLowerCase().includes(search_string.toLowerCase());

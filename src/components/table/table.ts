@@ -1,4 +1,4 @@
-import { get, writable, type Writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import type { Component } from '../modal/modal-store';
 import { browser } from '$app/environment';
 

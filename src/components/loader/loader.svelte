@@ -5,11 +5,6 @@
 	let loader: Loader;
 	LoaderManager.store.subscribe((new_loader) => {
 		loader = new_loader;
-		/* loader.loading = true;
-		if (loader.loading) {
-			loader.state = 'relations';
-			loader.progress = 50;
-		} */
 	});
 </script>
 

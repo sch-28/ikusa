@@ -2,7 +2,7 @@ import { PUBLIC_IKUSA_API } from '$env/static/public';
 
 export class PlayerQueue {
 	private static queue: string[] = [];
-	private static interval: NodeJS.Timeout | null = null;
+	private static interval: number | null = null;
 
 	public static fetch_player(name: string) {
 		!this.queue.includes(name) && this.queue.push(name);

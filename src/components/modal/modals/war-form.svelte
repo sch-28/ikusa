@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Dropzone, Label, Toggle } from 'flowbite-svelte';
-	import { generate_id, show_toast } from '../../../logic/util';
+	import { show_toast } from '../../../logic/util';
 	import Button from '../../elements/button.svelte';
 	import Input from '../../elements/input.svelte';
 	import Icon from '../../elements/icon.svelte';

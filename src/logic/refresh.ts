@@ -3,7 +3,6 @@ import {
 	DISCORD_CLIENT_SECRET,
 	DISCORD_REDIRECT_URI
 } from '$env/static/private';
-import type { RequestHandler } from '@sveltejs/kit';
 
 export const refresh_discord_token = async (refresh_token: string) => {
 	const dataObject = {
