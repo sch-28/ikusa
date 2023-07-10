@@ -57,6 +57,7 @@
 		"flowbite-svelte": "^0.30.4",
 		"generate-unique-id": "^2.0.1",
 		"lz-string": "^1.4.4",
+		"posthog-js": "^1.70.1",
 		"svelte-apexcharts": "^1.0.2",
 		"svelte-french-toast": "^1.0.3",
 		"svelte-icons": "^2.1.0"
