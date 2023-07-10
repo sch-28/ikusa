@@ -24,5 +24,11 @@
 				}
 			]
 		}
+	],
+	"rewrites": [
+		{
+			"source": "/event/:match*",
+			"destination": "https://eu.posthog.com/:match*"
+		}
 	]
 }
