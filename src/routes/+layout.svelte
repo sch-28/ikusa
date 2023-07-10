@@ -11,6 +11,7 @@
 	import { inject } from '@vercel/analytics';
 	import { navigating, page } from '$app/stores';
 	import LoadingCircle from '../components/elements/loading-circle.svelte';
+	import posthog from 'posthog-js'
 
 	inject({ mode: dev ? 'development' : 'production' });
 

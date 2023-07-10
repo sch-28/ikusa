@@ -12,8 +12,9 @@ import {
 } from './data';
 import type { ManagerUpdated, UpdateManager, UpdateProgress } from './worker/manager-worker';
 import LZString from 'lz-string';
-import type { User } from './user';
+import posthog from 'posthog-js';
 import type { ManagerCompressed } from './worker/compress-worker';
+import { PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_URL } from '$env/static/public';
 
 function get_default_war() {
 	return new War('Default', 'Default', 'Default', false, []);
@@ -298,6 +299,20 @@ export class ManagerClass {
 
 	async add_wars(new_wars: WarType[]) {
 		const wars = this.wars.map((w) => w.to_json());
+		const events = new_wars.map((w) => ({
+			event: 'war-added',
+			properties: { logs: w.logs.length, distinct_id: posthog.get_distinct_id() }
+		}));
+		const body = {
+			api_key: PUBLIC_POSTHOG_KEY,
+			batch: events
+		};
+		fetch(`${PUBLIC_POSTHOG_URL}/batch`, {
+			method: 'POST',
+			body: JSON.stringify(body)
+		})
+			.then((r) => null)
+			.catch((err) => console.error(err));
 
 		return await this.update_data([...wars, ...new_wars]);
 	}
