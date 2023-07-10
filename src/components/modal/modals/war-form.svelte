@@ -18,6 +18,8 @@
 	import type { MigratedWar } from '../../../routes/api/migrate/+server';
 	import { User } from '../../../logic/user';
 	import { goto } from '$app/navigation';
+	import { PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_URL } from '$env/static/public';
+	import posthog from 'posthog-js';
 
 	let war_name: string = '';
 	let war_date: string = '';
@@ -224,8 +226,26 @@
 	async function save_wars() {
 		if (wars.length > 0) {
 			close();
+			send_event(wars);
 			await $Manager.add_wars(wars);
 		}
+	}
+
+	function send_event(new_wars: WarType[]) {
+		const events = new_wars.map((w) => ({
+			event: 'war-added',
+			properties: { logs: w.logs.length, distinct_id: posthog.get_distinct_id() }
+		}));
+		const body = {
+			api_key: PUBLIC_POSTHOG_KEY,
+			batch: events
+		};
+		fetch(`${PUBLIC_POSTHOG_URL}/batch`, {
+			method: 'POST',
+			body: JSON.stringify(body)
+		})
+			.then((r) => null)
+			.catch((err) => console.error(err));
 	}
 
 	async function save_war() {
@@ -272,6 +292,7 @@
 					unique_id: ''
 				}
 			]);
+			new_wars && send_event(new_wars);
 			result = new_wars?.[0];
 			result && show_toast('War added successfully', 'success');
 		}
