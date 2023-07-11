@@ -282,17 +282,16 @@
 			if (result) show_toast('War updated successfully', 'success');
 		} else {
 			close();
-			const new_wars = await $Manager.add_wars([
-				{
-					guild_name: war_guild_name,
-					name: war_name,
-					date: war_date,
-					won: war_won,
-					logs: war_logs,
-					unique_id: ''
-				}
-			]);
-			new_wars && send_event(new_wars);
+			const war_data: WarType = {
+				guild_name: war_guild_name,
+				name: war_name,
+				date: war_date,
+				won: war_won,
+				logs: war_logs,
+				unique_id: ''
+			};
+			const new_wars = await $Manager.add_wars([war_data]);
+			new_wars && send_event([war_data]);
 			result = new_wars?.[0];
 			result && show_toast('War added successfully', 'success');
 		}
