@@ -19,6 +19,13 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.7',
+		date: '11.07.2023',
+		title: 'Mobile Layout',
+		changes: ['Improved mobile layout of all views'],
+		author: oracle
+	},
+	{
 		version: '0.4.6',
 		date: '06.07.2023',
 		title: 'Performance & Fixes',
@@ -26,7 +33,7 @@ const changes: Change[] = [
 			'Fixed invalidation of logged-in user data',
 			'Fixed share loading indicator lag',
 			'Fixed the search functionality in the class tables',
-			'Resolved an issue with the logger that caused recording issues',
+			'Resolved an issue with the logger that caused recording issues'
 		],
 		author: oracle
 	},
