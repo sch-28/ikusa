@@ -12,7 +12,6 @@
 	export let stats: string[] = [];
 	export let options: Option[] | undefined = undefined;
 	export let selected: Option | undefined = undefined;
-
 </script>
 
 {#if !loading}
@@ -22,7 +21,9 @@
 			<slot name="actions" />
 		</div>
 	</div>
-	<div class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary overflow-x-auto whitespace-nowrap pb-1">
+	<div
+		class="mb-4 divide-x-2 space-x-2 flex divide-foreground-secondary overflow-x-auto whitespace-nowrap pb-1"
+	>
 		{#each stats as stat}
 			<div class="pl-2 first:pl-0">{stat}</div>
 		{/each}
@@ -32,17 +33,19 @@
 	>
 		{#if options}
 			<div
-				class="flex sm:flex-col gap-2 w-fit mx-auto sm:mx-0 shrink-0 overflow-y-auto pr-2 flex-wrap sm:flex-nowrap sm:h-[420px] justify-center sm:justify-start"
+				class="flex flex-col w-full sm:w-fit gap-2 mx-auto sm:mx-0 shrink-0 overflow-y-auto sm:pr-2 flex-wrap sm:flex-nowrap sm:h-[420px] justify-center sm:justify-start"
 			>
 				{#each options as option}
 					<button
-						class="flex flex-col p-2 border border-foreground rounded-lg min-w-0 h-[126px] aspect-square {selected ===
+						class="flex items-center sm:items-start flex-col p-2 border border-foreground rounded-lg min-w-0 sm:h-[126px] sm:aspect-square {selected ===
 						option
 							? 'bg-foreground text-black'
 							: ''}"
 						on:click={() => (selected = selected === option ? undefined : option)}
 					>
-						<div class="text-lg truncate font-bold w-full text-left">{option.title}</div>
+						<div class="text-lg truncate font-bold w-full sm:text-left text-center">
+							{option.title}
+						</div>
 						{#each option.values as value}
 							<div class="flex gap-1 text-sm font-light">
 								{value}
