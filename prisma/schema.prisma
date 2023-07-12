@@ -12,13 +12,14 @@ datasource db {
 }
 
 model User {
-  id            String  @id @unique
+  id            String       @id @unique
   username      String
   name          String
   guild         String
   discriminator String
   wars          War[]
-  bdo_sync      Boolean @default(true)
+  bdo_sync      Boolean      @default(true)
+  Suggestion    Suggestion[]
 }
 
 model War {
@@ -65,4 +66,14 @@ model PlayerCharacters {
   player    Player   @relation(fields: [player_id], references: [id], onDelete: Cascade)
   player_id String
   id        String   @id @unique @default(uuid())
+}
+
+model Suggestion {
+  id      String   @id @unique
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  message String
+  title   String
+  time    DateTime
+  likes   Int      @default(0)
 }
