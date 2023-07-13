@@ -23,7 +23,8 @@ const changes: Change[] = [
 		date: '13.07.2023',
 		title: 'Class issue',
 		changes: [
-			'Updating your local data (e.g. uploading a war) caused all class data to be deleted. This issue has been resolved.'
+			'Updating your local data (e.g. uploading a war) caused all class data to be deleted. This issue has been resolved.',
+			'The redirect after deleting a war now works correctly'
 		],
 		author: oracle
 	},

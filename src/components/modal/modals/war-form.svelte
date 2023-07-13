@@ -313,8 +313,11 @@
 	function delete_war() {
 		if (war) {
 			if (war.id) {
-				$Manager.delete_war(war);
+				$Manager.delete_war(war).then(() => {
+					show_toast('War deleted successfully', 'success');
+				});
 				close();
+				goto('/wars', { replaceState: true });
 			} else {
 				wars = wars.filter((w) => w !== war);
 				if (wars.length === 0) return reset();
