@@ -296,8 +296,7 @@ export class ManagerClass {
 	}
 
 	async add_wars(new_wars: WarType[]) {
-		const wars = this.wars.map((w) => w.to_json());
-		return await this.update_data([...wars, ...new_wars]);
+		return await this.update_data([...this.wars, ...new_wars]);
 	}
 
 	reset() {
@@ -323,10 +322,9 @@ export class ManagerClass {
 		}
 
 		const wars = this.wars.filter((w) => w != war);
-		const wars_json = wars.map((w) => w.to_json());
 
 		await this.update_data([
-			...wars_json,
+			...wars,
 			{ guild_name, name, date, won, logs, unique_id: war.unique_id }
 		]);
 
@@ -357,8 +355,7 @@ export class ManagerClass {
 
 	async delete_war(war: War) {
 		const wars = this.wars.filter((w) => w != war);
-		const wars_json = wars.map((w) => w.to_json());
-		await this.update_data(wars_json);
+		await this.update_data(wars);
 		await this.delete_public_war(war);
 	}
 
@@ -379,13 +376,38 @@ export class ManagerClass {
 		if (!this.manager_worker) return;
 		this.reset();
 
+		const war_class_mapping: {
+			war_id: string;
+			locals: { name: string; char_name?: string; class_name?: string }[];
+		}[] = [];
+		const wars_json = wars.map((w) => {
+			if (typeof (w as War).to_json === 'function') {
+				const war_object = w as War;
+				const locals: { name: string; char_name?: string; class_name?: string }[] = [];
+
+				war_object.local_players.forEach((local_player) => {
+					locals.push({
+						name: local_player.player.name,
+						char_name: local_player.character_name,
+						class_name: local_player.character_class
+					});
+				});
+
+				war_class_mapping.push({ war_id: war_object.id, locals: locals });
+
+				return war_object.to_json();
+			} else {
+				return w;
+			}
+		});
+
 		LoaderManager.set_status('Updating data...', 0);
 		LoaderManager.open();
 
 		const message: UpdateManager = {
 			msg: 'update_manager',
 			data: {
-				wars: wars
+				wars: wars_json
 			}
 		};
 		let resolve!: (manager: ManagerClass | undefined) => void;
@@ -409,6 +431,18 @@ export class ManagerClass {
 			Object.assign(new Player('', new Guild('')), player)
 		);
 		this.guilds = new_manager.guilds.map((guild) => Object.assign(new Guild(''), guild));
+		this.wars.forEach((war) => {
+			const war_class_mapping_object = war_class_mapping.find((w) => w.war_id == war.id);
+			if (war_class_mapping_object) {
+				war_class_mapping_object.locals.forEach((local) => {
+					const local_player = war.local_players.find((p) => p.player.name == local.name);
+					if (local_player) {
+						local_player.character_name = local.char_name;
+						local_player.character_class = local.class_name;
+					}
+				});
+			}
+		});
 		this.save_callback?.();
 		LoaderManager.close();
 		return this.wars;
