@@ -189,7 +189,7 @@
 				unique_id: '',
 				won: war.won
 			});
-			goto(`/wars/${war.id}`, { invalidateAll: true });
+			goto(`/wars/${encodeURIComponent(war.id)}`, { invalidateAll: true });
 		}
 	}
 
