@@ -4,7 +4,7 @@ import { PUBLIC_ORIGINAL_POSTHOG_URL, PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_URL } f
 import { dev } from '$app/environment';
 
 export const load = async () => {
-	if (browser && !dev) {
+	if (browser) {
 		posthog.init(PUBLIC_POSTHOG_KEY, {
 			api_host: PUBLIC_POSTHOG_URL,
 			ui_host: PUBLIC_ORIGINAL_POSTHOG_URL,
