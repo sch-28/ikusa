@@ -19,6 +19,15 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.8',
+		date: '13.07.2023',
+		title: 'Class issue',
+		changes: [
+			'Updating your local data (e.g. uploading a war) caused all class data to be deleted. This issue has been resolved.'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.7',
 		date: '11.07.2023',
 		title: 'Mobile Layout',
