@@ -21,10 +21,11 @@ const changes: Change[] = [
 	{
 		version: '0.4.8',
 		date: '13.07.2023',
-		title: 'Class issue',
+		title: 'Class issue & Fixes',
 		changes: [
 			'Updating your local data (e.g. uploading a war) caused all class data to be deleted. This issue has been resolved.',
-			'The redirect after deleting a war now works correctly'
+			'The redirect after deleting a war now works correctly',
+			'Fixed an issue with the "Add to Dashboard" redirect'
 		],
 		author: oracle
 	},
