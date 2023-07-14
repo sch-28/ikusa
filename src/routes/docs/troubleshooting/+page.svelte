@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { discord_invite } from '../../../components/landing/discord-invite';
 </script>
 
 <div>
 	<p class="text-xl font-bold text-gold">Troubleshooting</p>
 	<p>
 		If you have any issues with the logger or have any suggestions, feel free to join the <a
-			href="https://discord.gg/5Yz4GK9"
+			href={discord_invite}
 			class="underline">Ikusa Discord</a
 		> and contact me.
 	</p>

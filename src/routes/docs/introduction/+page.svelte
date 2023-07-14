@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { discord_invite } from '../../../components/landing/discord-invite';
 </script>
 
 <div>
@@ -11,7 +12,7 @@
 	</p>
 	<p>
 		Ikusa is still under development. If you encounter any issues, please report them in the <a
-			href="https://discord.gg/nXSYGnxXJ5"
+			href={discord_invite}
 			class="underline">Discord</a
 		>.
 	</p>
