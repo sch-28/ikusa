@@ -6,8 +6,8 @@
 </script>
 
 <div class="w-full flex justify-between mt-auto mb-4">
-	<p>Made by <b>ORACLE#7672</b></p>
-
+	<p class="hidden sm:block">Made by <b>ORACLE#7672</b></p>
+	<a href="/privacy" class="absolute left-1/2 -translate-x-1/2">Privacy Policy</a>
 	<div class="flex gap-2">
 		<a href={discord_invite} title="Join the Discord!"><Icon icon={FaDiscord} /></a>
 		<a href="https://github.com/sch-28/ikusa" title="GitHub Repository for the website"
