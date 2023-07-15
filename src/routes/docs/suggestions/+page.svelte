@@ -49,6 +49,9 @@
 	}
 
 	function like_suggestion(id: string) {
+		if (!$User.discord_data || !$User.discord_data.id)
+			return show_toast('You must be logged in to like suggestions', 'error');
+
 		const suggestion = suggestions.find((s) => s.id === id);
 		if (!suggestion) return;
 
@@ -58,6 +61,7 @@
 			body: JSON.stringify({ liked: is_liked, id })
 		}).then((res) => {
 			if (res.status !== 200) {
+				console.error(res);
 				show_toast('Something went wrong, please try again later', 'error');
 			}
 			debounced_invalidate();
