@@ -67,6 +67,11 @@
 			link: '/docs/faq'
 		},
 		{
+			title: 'Suggestions',
+			description: 'Suggestion & Feedback board',
+			link: '/docs/suggestions'
+		},
+		{
 			title: 'Changelog',
 			description: 'Learn about the latest changes',
 			link: '/docs/changelog'
@@ -125,7 +130,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="text-foreground-secondary">
+		<div class="text-foreground-secondary w-full">
 			<slot />
 		</div>
 	</div>

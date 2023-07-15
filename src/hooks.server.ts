@@ -28,7 +28,8 @@ async function set_session(
 			guild: ''
 		},
 		include: {
-			wars: {}
+			wars: {},
+			liked_suggestions: { select: { id: true } }
 		}
 	});
 
@@ -41,6 +42,7 @@ async function set_session(
 		bdo_sync: prisma_user.bdo_sync,
 		name: prisma_user.name,
 		guild: prisma_user.guild,
+		liked_suggestions: prisma_user.liked_suggestions.map((suggestion) => suggestion.id),
 		wars: prisma_user.wars.map((war) => {
 			return {
 				won: war.won,
@@ -100,7 +102,7 @@ export const handle: Handle = async (request) => {
 		if (response.id) {
 			request.event.locals.user = await set_session(request, response);
 		}
-	}else{
+	} else {
 		request.event.locals.user = undefined;
 	}
 

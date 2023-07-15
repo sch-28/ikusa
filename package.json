@@ -47,6 +47,7 @@
 		"@supabase/supabase-js": "^2.25.0",
 		"@sveltejs/adapter-node": "^1.2.4",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
+		"@tailwindcss/line-clamp": "^0.4.4",
 		"@vercel/analytics": "^1.0.1",
 		"apexcharts": "^3.41.0",
 		"classnames": "^2.3.2",

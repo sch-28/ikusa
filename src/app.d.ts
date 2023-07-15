@@ -5,7 +5,7 @@ import type Component from './components/table/component.svelte';
 import { User } from './logic/user';
 declare global {
 	declare module 'svelte-icons/*' {
-		Component;
+		export default {} as Component;
 	}
 	namespace App {
 		// interface Error {}

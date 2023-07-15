@@ -12,14 +12,15 @@ datasource db {
 }
 
 model User {
-  id            String       @id @unique
-  username      String
-  name          String
-  guild         String
-  discriminator String
-  wars          War[]
-  bdo_sync      Boolean      @default(true)
-  Suggestion    Suggestion[]
+  id                  String       @id @unique
+  username            String
+  name                String
+  guild               String
+  discriminator       String
+  wars                War[]
+  bdo_sync            Boolean      @default(true)
+  created_suggestions Suggestion[] @relation("suggestion_creator")
+  liked_suggestions   Suggestion[] @relation("suggestion_likes")
 }
 
 model War {
@@ -69,11 +70,12 @@ model PlayerCharacters {
 }
 
 model Suggestion {
-  id      String   @id @unique
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-  message String
-  title   String
-  time    DateTime
-  likes   Int      @default(0)
+  id       String   @id @unique @default(uuid())
+  user     User     @relation("suggestion_creator", fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  content  String
+  title    String
+  time     DateTime @default(now())
+  status  String   @default("review")
+  liked_by User[]   @relation("suggestion_likes")
 }

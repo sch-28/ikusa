@@ -66,6 +66,7 @@ export interface User {
 	guild?: string;
 	wars?: WarType[];
 	bdo_sync: boolean;
+	liked_suggestions?: string[];
 }
 
 export const User = storage('settings', { bdo_sync: true });

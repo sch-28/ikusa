@@ -85,7 +85,7 @@ export function generate_id() {
 }
 
 export function debounce<T>(func: (...args: T[]) => void, timeout = 300) {
-	let timer: number;
+	let timer: NodeJS.Timeout;
 	return (...args: T[]) => {
 		clearTimeout(timer);
 		timer = setTimeout(() => {
