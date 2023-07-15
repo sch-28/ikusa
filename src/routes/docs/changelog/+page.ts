@@ -19,6 +19,19 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.10',
+		date: '15.07.2023',
+		title: 'Refactoring & Fixes',
+		changes: [
+			'Improved FAQ',
+			'Fixed Suggestion overflow',
+			'Added Privacy Policy',
+			'Removed Vercel analytics',
+			'Fixed dashboard-layout title overflow'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.9',
 		date: '14.07.2023',
 		title: 'Suggestions & Refactoring',
