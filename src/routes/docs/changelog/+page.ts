@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.9',
+		date: '14.07.2023',
+		title: 'Suggestions & Refactoring',
+		changes: [
+			'Added suggestions page',
+			'Fixed GitHub & Discord links',
+			'Refactored the form styling slightly'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.8',
 		date: '13.07.2023',
 		title: 'Class issue & Fixes',
