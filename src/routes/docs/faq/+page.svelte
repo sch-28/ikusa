@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Button from '../../../components/elements/button.svelte';
+	import GiBeerBottle from 'svelte-icons/gi/GiBeerBottle.svelte';
+	import Icon from '../../../components/elements/icon.svelte';
 	type Question = {
 		title: string;
 		description: string;
@@ -18,7 +21,7 @@
 		{
 			title: 'How can I contribute?',
 			description:
-				'This project is open source and is a hobby project of mine. If you want to contribute, feel free to create a ticket, join the discord to discuss & leave feedback or message me directly.'
+				'This project is a hobby project of mine & available on GitHub. If you want to contribute, feel free to create a ticket, join the discord to discuss & leave feedback or message me directly.'
 		}
 	];
 </script>
@@ -33,6 +36,11 @@
 			</li>
 		{/each}
 	</ul>
+
+	<Button href="https://ko-fi.com/O5O6N90L4" target="_blank" class="w-fit mt-2"
+		><Icon icon={GiBeerBottle} class="w-6 h-6 mr-1" />
+		Buy Me a Fun Drink</Button
+	>
 
 	<div class="mt-8">
 		Next: <a href="/docs/changelog" class="underline">Changelog</a>
