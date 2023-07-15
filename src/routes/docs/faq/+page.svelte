@@ -19,6 +19,11 @@
 				'The application does not send any network data to others. It does not contain any viruses or malware. You can check the entire source code on GitHub.'
 		},
 		{
+			title: 'Will BDO ban me for using the Ikusa Logger?',
+			description:
+				'The Ikusa Logger does not interact with the game client or server in any way. It only reads the game network. This is should not be a bannable offense. However, I cannot guarantee that you will not be banned. Use at your own risk. The BDO ToS states that only Data Extraction Acts that extract information that have not already been disclosed by the company are not allowed. The Ikusa Logger only extracts information that is already visible to the player in the game chat and combat log.'
+		},
+		{
 			title: 'How can I contribute?',
 			description:
 				'This project is a hobby project of mine & available on GitHub. If you want to contribute, feel free to create a ticket, join the discord to discuss & leave feedback or message me directly.'
