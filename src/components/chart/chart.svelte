@@ -14,6 +14,7 @@
 	export let annotations: { height: number; label: string }[] = [];
 	export let data_labels: boolean = false;
 	export let dates: boolean = false;
+	export let date_switch: boolean = false;
 	export let height: string = 'auto';
 	export let legend_width: string = 'auto';
 	export let colors: string[] = [];
@@ -27,7 +28,9 @@
 	$: {
 		formatted_labels = dates
 			? labels
-					.map((label) => dayjs(label, 'YYYY-MM-DD').toDate().getTime() ?? [])
+					.map((label) =>
+						typeof label === 'string' ? dayjs(label, 'YYYY-MM-DD').toDate().getTime() : label
+					)
 					.sort((a, b) => a - b)
 			: labels;
 		options = {
@@ -188,7 +191,7 @@
 	{#key loaded || data || labels || options || dates}
 		<div class="flex-grow relative">
 			<div class="flex-grow" bind:this={chart_container} />
-			{#if dates}
+			{#if date_switch}
 				<div class="absolute z-10 top-0 right-40 [&_label]:leading-none">
 					<Toggle bind:checked={dates}>Format Dates</Toggle>
 				</div>

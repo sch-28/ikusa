@@ -30,7 +30,7 @@
 	</p>
 </div>
 <div class="sm:flex gap-2 items-center">
-	<Chart type="area" {data} {labels} title="Performance" dates/>
+	<Chart type="area" {data} {labels} title="Performance" dates date_switch />
 	<div class="grid grid-cols-2 gap-2 mx-auto h-fit w-fit">
 		<div
 			class="border border-foreground p-2 rounded-lg hover:scale-[1.025] transition-all w-40 h-40"

@@ -149,6 +149,7 @@
 				labels={chart_labels}
 				annotations={chart_annotation}
 				dates
+				date_switch
 				max={Math.max(3, (player?.average_performance ?? 2) + 1)}
 			/>
 		</Field>
