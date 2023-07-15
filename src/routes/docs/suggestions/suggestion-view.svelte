@@ -18,6 +18,6 @@
 		
 	</div>
 	<div>
-		<p class="text-sm">{suggestion.content}</p>
+		<p class="text-sm whitespace-break-spaces">{suggestion.content}</p>
 	</div>
 </div>

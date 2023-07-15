@@ -126,7 +126,7 @@
 					>{suggestion.title}
 					<span class="text-gold">{suggestion.status}</span>
 				</span>
-				<span class="line-clamp-2 whitespace-pre">{suggestion.content}</span>
+				<span class="line-clamp-2 whitespace-break-spaces">{suggestion.content}</span>
 			</div>
 			{#if suggestion.userId === $User.discord_data?.id}
 				<button
