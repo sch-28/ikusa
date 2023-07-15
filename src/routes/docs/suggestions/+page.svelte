@@ -37,10 +37,16 @@
 	const debounced_invalidate = debounce(() => invalidate('suggestions'), 1000);
 
 	function add_suggestion() {
+		if (!$User.discord_data || !$User.discord_data.id)
+			return show_toast('You must be logged in to add a suggestion', 'error');
+
 		ModalManager.open(SuggestionForm);
 	}
 
 	function edit_suggestion(suggestion: Suggestion) {
+		if (!$User.discord_data || !$User.discord_data.id)
+			return show_toast('You must be logged in to edit a suggestion', 'error');
+
 		ModalManager.open(SuggestionForm, {
 			id: suggestion.id,
 			title: suggestion.title,
