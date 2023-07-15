@@ -51,7 +51,7 @@
 		<p class="capitalize font-semibold text-lg text-gold">General</p>
 		<div class="flex gap-2 items-center">
 			<Toggle bind:checked={$User.bdo_sync} id="bdo-sync" />
-			<Label for="bdo-sync">BDO Sync</Label>
+			<Label class="!text-gray-400" for="bdo-sync">BDO Sync</Label>
 		</div>
 	</div>
 	<div>
@@ -62,7 +62,7 @@
 		</div>
 		<div class="flex gap-2 mb-2">
 			<div>
-				<Label for="fam-name">Family Name</Label>
+				<Label class="mb-2 !text-gray-400" for="fam-name">Family Name</Label>
 				<AutoComplete
 					id="fam-name"
 					items={$Manager.players.map((p) => p.name)}
@@ -71,7 +71,7 @@
 			</div>
 
 			<div>
-				<Label for="fam-name">Guild</Label>
+				<Label class="mb-2 !text-gray-400" for="fam-name">Guild</Label>
 				<AutoComplete
 					id="fam-name"
 					items={$Manager.guilds.map((g) => g.name)}

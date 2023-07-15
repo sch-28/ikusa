@@ -32,5 +32,5 @@
 		: $$props.size === 'lg'
 		? 'py-3 px-4'
 		: 'p-2.5'}
-	outline-none block disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-foreground focus:!ring-foreborder-foreground bg-background text-white placeholder-gray-400 border-foreground text-sm rounded-lg {$$props.class}"
+	outline-none block disabled:cursor-not-allowed disabled:opacity-50 border focus:!border-foreground-secondary focus:!ring-foreborder-foreground-secondary bg-background text-white placeholder-gray-400 border-foreground-secondary text-sm rounded-lg {$$props.class}"
 />

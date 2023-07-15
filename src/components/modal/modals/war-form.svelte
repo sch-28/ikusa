@@ -403,7 +403,7 @@
 		<form class="h-[264px] w-full" action="" bind:this={form}>
 			<div class="grid grid-cols-2 gap-2">
 				<div>
-					<Label class="mb-2" for="name">Name</Label>
+					<Label class="mb-2 !text-gray-400" for="name">Name</Label>
 					<Input
 						class="w-full"
 						type="text"
@@ -414,11 +414,11 @@
 					/>
 				</div>
 				<div>
-					<Label class="mb-2" for="date">Date</Label>
+					<Label class="mb-2 !text-gray-400" for="date">Date</Label>
 					<Input class="w-full" type="date" id="date" required bind:value={war_date} />
 				</div>
 				<div>
-					<Label class="mb-2" for="guild">Guild</Label>
+					<Label class="mb-2 !text-gray-400" for="guild">Guild</Label>
 					<Autocomplete
 						id="guild"
 						input_class="w-full"
@@ -428,11 +428,11 @@
 					/>
 				</div>
 				<div>
-					<Label class="mb-2" for="logs">Logs</Label>
+					<Label class="mb-2 !text-gray-400" for="logs">Logs</Label>
 					<Button class="w-full" id="logs" on:click={() => (state = 'logs')}>View Logs</Button>
 				</div>
 				<div class="flex flex-col">
-					<Label class="mb-2" for="won">Won</Label>
+					<Label class="mb-2 !text-gray-400" for="won">Won</Label>
 					<div class="my-auto block">
 						<Toggle id="won" bind:checked={war_won} />
 					</div>
@@ -467,7 +467,7 @@
 		{:else}
 			<div class="h-[264px] w-full flex flex-col justify-center items-center gap-2 pb-11">
 				<div>
-					<Label class="mb-2" for="guild">Guild Name</Label>
+					<Label class="mb-2 !text-gray-400" for="guild">Guild Name</Label>
 					<Autocomplete
 						id="guild"
 						input_class="w-full"
