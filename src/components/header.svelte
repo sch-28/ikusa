@@ -8,6 +8,7 @@
 	import Button from './elements/button.svelte';
 	import IoIosMenu from 'svelte-icons/io/IoIosMenu.svelte';
 	import { click_outside } from '../logic/util';
+	import GithubStar from './landing/github-star.svelte';
 	$: is_selected = (url: string) => {
 		return $page.route.id?.includes(url);
 	};
@@ -80,10 +81,11 @@
 		<a
 			href="/docs"
 			class="{is_selected('docs')
-				? 'text-foreground'
-				: 'text-foreground-secondary hover:text-foreground'} self-center"
-			><Icon icon={IoMdHelp} /></a
+				? 'text-black bg-foreground'
+				: 'text-foreground-secondary hover:text-black'} self-center flex items-center justify-center border border-foreground-secondary rounded-lg px-2 py-1 text-xs font-medium h-8 hover:bg-foreground hover:text-black"
+			><Icon icon={IoMdHelp} class="w-5 h-5 sm:mr-1" /><span class="sm:block hidden">Docs</span></a
 		>
+		<GithubStar />
 		{#if $User.discord_data}
 			<Button size="sm">{$User.discord_data.username}</Button>
 			<Dropdown frameClass="!bg-background border rounded-lg">
