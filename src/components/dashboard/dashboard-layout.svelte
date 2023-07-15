@@ -15,7 +15,7 @@
 </script>
 
 {#if !loading}
-	<div class="flex items-start mb-4">
+	<div class="flex gap-2 items-start mb-4">
 		<slot name="title" />
 		<div class="flex gap-2 ml-auto justify-center my-auto">
 			<slot name="actions" />

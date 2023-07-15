@@ -345,14 +345,14 @@
 		`${war?.duration} minutes`
 	]}
 >
-	<div slot="title" class="flex">
+	<div slot="title" class="flex min-w-0">
 		<Icon
 			size="lg"
 			icon={war?.won ? GiCrownedSkull : GiSkullCrack}
-			class="{war?.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center"
+			class="{war?.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center shrink-0"
 		/>
-		<div class="flex flex-col gap-1">
-			<div class="text-xl font-medium text-foreground">{war?.name}</div>
+		<div class="flex flex-col gap-1 min-w-0">
+			<div class="text-xl font-medium text-foreground truncate">{war?.name}</div>
 			<div class="text-base text-gold-muted">{war?.date}</div>
 		</div>
 	</div>
