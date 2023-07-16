@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.12',
+		date: '16.07.2023',
+		title: 'Chart & Performance Improvements',
+		changes: [
+			'Fix chart label time format',
+			'Improved navigation speed',
+			'Player-Sync work in progress'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.11',
 		date: '16.07.2023',
 		title: 'Timeline & Chart Improvements',
