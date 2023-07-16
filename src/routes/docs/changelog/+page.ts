@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.11',
+		date: '16.07.2023',
+		title: 'Timeline & Chart Improvements',
+		changes: [
+			'Added timeline to the war view',
+			'Fixed an issue with the chart and date formats',
+			'Added a padding to the shared war preview'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.10',
 		date: '15.07.2023',
 		title: 'Refactoring & Fixes',
