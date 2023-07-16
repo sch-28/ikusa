@@ -27,7 +27,7 @@ export const load: PageServerLoad = async (event) => {
 			war: prisma_war.data,
 			subtitle: prisma_war.date,
 			title: prisma_war.name,
-			/* description: `A war between ${prisma_war.guild_name} and ${prisma_war.guilds} on ${prisma_war.date}.`, */
+			description: ``,
 			/* \n
 				Top guild: ${top_guild?.guild.name ?? 'None'}
 				Top player: ${top_player?.player.name ?? 'None'}
