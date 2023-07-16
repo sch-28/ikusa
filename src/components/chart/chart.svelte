@@ -15,6 +15,7 @@
 	export let data_labels: boolean = false;
 	export let dates: boolean = false;
 	export let date_switch: boolean = false;
+	export let tooltip_minutes: boolean = false;
 	export let height: string = 'auto';
 	export let legend_width: string = 'auto';
 	export let colors: string[] = [];
@@ -39,7 +40,8 @@
 			},
 			legend: {
 				width: legend_width,
-				offsetY: 0
+				offsetY: 0,
+				horizontalAlign: 'left',
 			},
 			plotOptions: {
 				pie: {
@@ -107,16 +109,13 @@
 				})
 			},
 			labels: formatted_labels as string[],
-			fill: {
-				colors: type === 'area' ? ['#bd8e28'] : undefined
-			},
-			colors: type === 'area' ? ['#f5cd40'] : colors,
+			colors: type === 'area' && colors.length === 0 ? ['#f5cd40'] : colors,
 			tooltip: {
 				enabled: true,
 				theme: 'dark',
 				x: {
 					show: true,
-					format: 'yyyy'
+					format: tooltip_minutes ? 'HH:mm:ss' : 'yyyy-MM-dd'
 				}
 			},
 
