@@ -61,6 +61,11 @@ export const handle: Handle = async (request) => {
 	const refresh_token = cookies.get('refresh_token');
 	const access_token = cookies.get('access_token');
 
+	if (request.event.isDataRequest) {
+		const response = await request.resolve(request.event);
+		return response;
+	}
+
 	let new_cookies = '';
 	if (refresh_token && !access_token) {
 		//const refresh_request =await fetch(`${HOST_ADDRESS}/discord/refresh?code=${refresh_token}`);
