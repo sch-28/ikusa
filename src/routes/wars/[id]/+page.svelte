@@ -115,7 +115,7 @@
 											type: 'component'
 										} as RowElement
 								  ]
-								: [undefined]
+								: ['-']
 							: []),
 						local_player.player.name,
 						local_player.kills,

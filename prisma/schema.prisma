@@ -57,6 +57,7 @@ model Player {
   guild       String?
   region      String
   characters  PlayerCharacters[]
+  is_fetched  Boolean            @default(false)
 }
 
 model PlayerCharacters {
@@ -76,6 +77,6 @@ model Suggestion {
   content  String
   title    String
   time     DateTime @default(now())
-  status  String   @default("review")
+  status   String   @default("review")
   liked_by User[]   @relation("suggestion_likes")
 }

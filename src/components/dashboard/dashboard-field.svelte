@@ -5,7 +5,9 @@
 	}
 </script>
 
-<div class="border border-dashed border-foreground rounded-lg p-2 flex flex-col {$$props.class}">
+<div
+	class="border border-dashed border-foreground rounded-lg p-2 flex flex-col h-[315px] {$$props.class}"
+>
 	<h2 class="font-bold text-lg">{$$props.title}</h2>
 
 	<slot />

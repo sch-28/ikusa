@@ -100,7 +100,7 @@
 		<div class="w-12 h-12 [&_svg]:!fill-gold [&_svg]:!text-gold-800 [&_svg]:dark:!text-dark-muted">
 			<LoadingCircle />
 		</div>
-		<div class="text-xl font-bold text-light">Loading data...</div>
+		<div class="text-xl font-bold text-light">Loading Data...</div>
 	</div>
 {/if}
 
