@@ -286,6 +286,8 @@ export class ManagerClass {
 					}
 				}
 			}
+
+			local_guild.local_events.sort((a, b) => (a.time <= b.time ? -1 : 1));
 		}
 
 		// Prevents empty guilds (happens if guild name changes mid fight)
