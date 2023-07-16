@@ -33,6 +33,7 @@
 		type Option
 	} from '../../../components/dashboard/dashboard-layout.svelte';
 	import LZString from 'lz-string';
+	import dayjs from 'dayjs';
 
 	$: is_puppeteer = $page.url.searchParams.has('puppeteer');
 
@@ -128,6 +129,28 @@
 			header = header;
 		}
 	}
+	let kill_chart_labels: number[] = [];
+	$: {
+		kill_chart_labels = [];
+		const first_time = dayjs(war?.kill_events[0].time).valueOf();
+		const last_time = dayjs(war?.kill_events[war.kill_events.length - 1].time).valueOf();
+		for (let i = first_time; i < last_time; i += 60000) {
+			kill_chart_labels.push(i);
+		}
+	}
+	$: kills_chart_data = kill_chart_labels.map((l) => {
+		const events = (selected_guild?.kill_events ?? war?.kill_events ?? []).filter((k) => {
+			return k.time.valueOf() >= l && k.time.valueOf() < l + 60000;
+		});
+		return events ? events.length : 0;
+	});
+
+	$: deaths_chart_data = kill_chart_labels.map((l) => {
+		const events = (selected_guild?.death_events ?? war?.death_events ?? []).filter((k) => {
+			return k.time.valueOf() >= l && k.time.valueOf() < l + 60000;
+		});
+		return events ? events.length : 0;
+	});
 
 	$: member_chart_data =
 		war?.local_guilds.map((local_guild) => local_guild.local_players.length) ?? [];
@@ -359,17 +382,6 @@
 
 	<svelte:fragment slot="actions">
 		{#if !is_public}
-			<!-- {#if has_characters}
-				<button
-					on:click={sync_war}
-					title="BDO Sync"
-					class="h-10 w-10 flex items-center justify-center border-2 border-dashed border-gold rounded-full font-extrabold
-					hover:bg-gold hover:text-black transition
-					"
-				>
-					<span class="mt-[1px]">BDO</span>
-				</button>
-			{/if} -->
 			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
 				<Button on:click={() => open_share()}>Shared</Button>
 			{:else}
@@ -424,6 +436,32 @@
 					title={(selected_guild?.guild.name ?? 'All') + ' Players'}
 				/>
 			</Field>
+		{:else}
+			<Field title="Class statistics" class="sm:col-span-2">
+				<div class="text-center text-foreground-secondary flex items-center justify-center h-full">
+					No class data available
+				</div>
+			</Field>
 		{/if}
+		<Field
+			title="Kill/Death Overview of {selected_guild
+				? ` of ${selected_guild.guild.name}`
+				: 'All Players'}"
+			class="sm:col-span-3 h-[315px]"
+		>
+			<Chart
+				colors={['#1c9177', '#f05252']}
+				tooltip_minutes
+				height={'100%'}
+				data={[
+					{ name: 'Kills', data: kills_chart_data },
+					{ name: 'Deaths', data: deaths_chart_data }
+				]}
+				labels={kill_chart_labels}
+				dates
+				type="area"
+				legend_width="125"
+			/>
+		</Field>
 	</svelte:fragment>
 </DashboardLayout>
