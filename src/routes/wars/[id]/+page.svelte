@@ -55,6 +55,9 @@
 				war = $Manager.get_war(war_raw);
 			} else {
 				war = parse(LZString.decompressFromEncodedURIComponent(war_raw));
+				war?.local_guilds.forEach((local) =>
+					local.local_events.forEach((e) => (e.time = dayjs(e.time)))
+				);
 			}
 		}
 
