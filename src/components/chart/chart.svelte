@@ -41,7 +41,7 @@
 			legend: {
 				width: legend_width,
 				offsetY: 0,
-				horizontalAlign: 'left',
+				horizontalAlign: 'left'
 			},
 			plotOptions: {
 				pie: {
@@ -74,7 +74,10 @@
 			series: data,
 			xaxis: {
 				categories: formatted_labels as string[],
-				type: dates ? 'datetime' : 'category'
+				type: dates ? 'datetime' : 'category',
+				labels: {
+					datetimeUTC: false
+				}
 			},
 			yaxis: {
 				min:
