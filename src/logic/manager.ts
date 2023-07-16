@@ -13,6 +13,7 @@ import {
 import type { ManagerUpdated, UpdateManager, UpdateProgress } from './worker/manager-worker';
 import LZString from 'lz-string';
 import type { ManagerCompressed } from './worker/compress-worker';
+import dayjs from 'dayjs';
 
 function get_default_war() {
 	return new War('Default', 'Default', 'Default', false, []);
@@ -180,6 +181,20 @@ export class ManagerClass {
 			guild.locals.map((local) => Object.assign(get_default_local_guild(), local));
 
 			return new_guild;
+		});
+
+		manager.wars.forEach((war) =>
+			war.logs.forEach((log) => {
+				log.time = dayjs(log.time);
+			})
+		);
+
+		manager.guilds.forEach((guild) => {
+			guild.locals.forEach((local) => {
+				local.local_events.forEach((event) => {
+					event.time = dayjs(event.time);
+				});
+			});
 		});
 
 		return manager;
