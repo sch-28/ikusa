@@ -20,6 +20,7 @@
 	import { goto } from '$app/navigation';
 	import { PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_URL } from '$env/static/public';
 	import posthog from 'posthog-js';
+	import { dev } from '$app/environment';
 
 	let war_name: string = '';
 	let war_date: string = '';
@@ -232,6 +233,7 @@
 	}
 
 	function send_event(new_wars: WarType[]) {
+		if (dev) return;
 		const events = new_wars.map((w) => ({
 			event: 'war-added',
 			properties: { logs: w.logs.length, distinct_id: posthog.get_distinct_id() }

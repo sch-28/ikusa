@@ -14,6 +14,7 @@
 	import MdContentCopy from 'svelte-icons/md/MdContentCopy.svelte';
 	import { stringify } from 'flatted';
 	import { posthog } from 'posthog-js';
+	import { dev } from '$app/environment';
 
 	export let war: War;
 
@@ -64,7 +65,7 @@
 			$User.wars?.push(war.to_json());
 			$Manager.update_war_info(war.id, { unique_id: id });
 			loading = false;
-			posthog.capture('war-shared');
+			!dev && posthog.capture('war-shared');
 		} else {
 			show_toast('Something went wrong while sharing the war', 'error');
 			close();
