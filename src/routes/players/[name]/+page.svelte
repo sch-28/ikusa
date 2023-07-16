@@ -170,7 +170,7 @@
 		{ label: 'Class', sortable: true },
 		{ label: 'Name', sortable: true },
 		{ label: 'Level', sortable: true },
-		{ label: 'Performance', sortable: true },
+		{ label: 'Performance', sortable: true, sort_dir: 'des' },
 		{ label: 'War Count', sortable: true }
 	] as HeaderColumn[];
 
