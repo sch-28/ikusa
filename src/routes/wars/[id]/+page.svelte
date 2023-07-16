@@ -358,110 +358,114 @@
 		: undefined;
 </script>
 
-<DashboardLayout
-	loading={!war}
-	bind:selected={selected_option}
-	{options}
-	stats={[
-		`${war?.local_guilds.length} Guilds`,
-		`${war?.local_players.length} Players`,
-		`${war?.duration} minutes`
-	]}
->
-	<div slot="title" class="flex min-w-0">
-		<Icon
-			size="lg"
-			icon={war?.won ? GiCrownedSkull : GiSkullCrack}
-			class="{war?.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center shrink-0"
-		/>
-		<div class="flex flex-col gap-1 min-w-0">
-			<div class="text-xl font-medium text-foreground truncate">{war?.name}</div>
-			<div class="text-base text-gold-muted">{war?.date}</div>
+<div class={is_puppeteer ? 'p-4' : ''}>
+	<DashboardLayout
+		loading={!war}
+		bind:selected={selected_option}
+		{options}
+		stats={[
+			`${war?.local_guilds.length} Guilds`,
+			`${war?.local_players.length} Players`,
+			`${war?.duration} minutes`
+		]}
+	>
+		<div slot="title" class="flex min-w-0">
+			<Icon
+				size="lg"
+				icon={war?.won ? GiCrownedSkull : GiSkullCrack}
+				class="{war?.won ? 'text-submarine-500' : 'text-red-500'} mr-2 self-center shrink-0"
+			/>
+			<div class="flex flex-col gap-1 min-w-0">
+				<div class="text-xl font-medium text-foreground truncate">{war?.name}</div>
+				<div class="text-base text-gold-muted">{war?.date}</div>
+			</div>
 		</div>
-	</div>
 
-	<svelte:fragment slot="actions">
-		{#if !is_public}
-			{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
-				<Button on:click={() => open_share()}>Shared</Button>
+		<svelte:fragment slot="actions">
+			{#if !is_public}
+				{#if $User.wars?.find((w) => w.unique_id == war?.unique_id && war.unique_id !== '')}
+					<Button on:click={() => open_share()}>Shared</Button>
+				{:else}
+					<button on:click={() => open_share()} title="Share"><Icon icon={IoIosShareAlt} /></button>
+				{/if}
+				{#if !is_puppeteer}
+					<button on:click={download_logs}>
+						<Icon icon={MdFileDownload} />
+					</button>
+				{/if}
+				<button on:click={() => ModalManager.open(WarForm, { war: war })} title="Edit"
+					><Icon icon={MdSettings} /></button
+				>
+			{:else if war?.unique_id && $Manager.get_war_by_id(war?.unique_id)}
+				<Button on:click={() => goto(`/wars/${war?.id}`)}>View in Dashboard</Button>
+			{:else if !is_puppeteer}
+				<Button on:click={add_war}>Add to Dashboard</Button>
+			{/if}
+		</svelte:fragment>
+		<svelte:fragment slot="content">
+			<Table
+				id="war-players-{war?.id}"
+				height={420}
+				{header}
+				{rows}
+				searchable
+				title={(selected_guild?.guild.name ?? 'All') + ' Players'}
+			/>
+		</svelte:fragment>
+
+		<svelte:fragment slot="fields">
+			<Field title="Guild member distribution">
+				<Chart data={member_chart_data} labels={member_chart_labels} type="donut" />
+			</Field>
+			{#if has_classes}
+				<Field title="Class distribution{selected_guild ? ` of ${selected_guild.guild.name}` : ''}">
+					<Chart
+						colors={class_colors}
+						data={class_chart_data}
+						labels={class_chart_labels}
+						type="donut"
+						legend_width="125"
+					/>
+				</Field>
+				<Field title="Class statistics">
+					<Table
+						id="war-classes-{war?.id}"
+						height={275}
+						header={class_table_header}
+						rows={class_table_rows}
+						searchable
+						title={(selected_guild?.guild.name ?? 'All') + ' Players'}
+					/>
+				</Field>
 			{:else}
-				<button on:click={() => open_share()} title="Share"><Icon icon={IoIosShareAlt} /></button>
+				<Field title="Class statistics" class="sm:col-span-2">
+					<div
+						class="text-center text-foreground-secondary flex items-center justify-center h-full"
+					>
+						No class data available
+					</div>
+				</Field>
 			{/if}
-			{#if !is_puppeteer}
-				<button on:click={download_logs}>
-					<Icon icon={MdFileDownload} />
-				</button>
-			{/if}
-			<button on:click={() => ModalManager.open(WarForm, { war: war })} title="Edit"
-				><Icon icon={MdSettings} /></button
+			<Field
+				title="Kill/Death Overview of {selected_guild
+					? ` of ${selected_guild.guild.name}`
+					: 'All Players'}"
+				class="sm:col-span-3 h-[315px]"
 			>
-		{:else if war?.unique_id && $Manager.get_war_by_id(war?.unique_id)}
-			<Button on:click={() => goto(`/wars/${war?.id}`)}>View in Dashboard</Button>
-		{:else if !is_puppeteer}
-			<Button on:click={add_war}>Add to Dashboard</Button>
-		{/if}
-	</svelte:fragment>
-	<svelte:fragment slot="content">
-		<Table
-			id="war-players-{war?.id}"
-			height={420}
-			{header}
-			{rows}
-			searchable
-			title={(selected_guild?.guild.name ?? 'All') + ' Players'}
-		/>
-	</svelte:fragment>
-
-	<svelte:fragment slot="fields">
-		<Field title="Guild member distribution">
-			<Chart data={member_chart_data} labels={member_chart_labels} type="donut" />
-		</Field>
-		{#if has_classes}
-			<Field title="Class distribution{selected_guild ? ` of ${selected_guild.guild.name}` : ''}">
 				<Chart
-					colors={class_colors}
-					data={class_chart_data}
-					labels={class_chart_labels}
-					type="donut"
+					colors={['#1c9177', '#f05252']}
+					tooltip_minutes
+					height={'100%'}
+					data={[
+						{ name: 'Kills', data: kills_chart_data },
+						{ name: 'Deaths', data: deaths_chart_data }
+					]}
+					labels={kill_chart_labels}
+					dates
+					type="area"
 					legend_width="125"
 				/>
 			</Field>
-			<Field title="Class statistics">
-				<Table
-					id="war-classes-{war?.id}"
-					height={275}
-					header={class_table_header}
-					rows={class_table_rows}
-					searchable
-					title={(selected_guild?.guild.name ?? 'All') + ' Players'}
-				/>
-			</Field>
-		{:else}
-			<Field title="Class statistics" class="sm:col-span-2">
-				<div class="text-center text-foreground-secondary flex items-center justify-center h-full">
-					No class data available
-				</div>
-			</Field>
-		{/if}
-		<Field
-			title="Kill/Death Overview of {selected_guild
-				? ` of ${selected_guild.guild.name}`
-				: 'All Players'}"
-			class="sm:col-span-3 h-[315px]"
-		>
-			<Chart
-				colors={['#1c9177', '#f05252']}
-				tooltip_minutes
-				height={'100%'}
-				data={[
-					{ name: 'Kills', data: kills_chart_data },
-					{ name: 'Deaths', data: deaths_chart_data }
-				]}
-				labels={kill_chart_labels}
-				dates
-				type="area"
-				legend_width="125"
-			/>
-		</Field>
-	</svelte:fragment>
-</DashboardLayout>
+		</svelte:fragment>
+	</DashboardLayout>
+</div>
