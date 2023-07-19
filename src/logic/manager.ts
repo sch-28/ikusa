@@ -144,24 +144,10 @@ export class ManagerClass {
 		return manager;
 	}
 
-	static from_json(data: string) {
-		/* const manager = new ManagerClass();
-		manager.user = user;
-		if (wars.length == 0 || !wars.length) return manager;
-
-		for (const [index, war] of wars.entries()) {
-			war.logs = war.logs.map((l) => new Log(l.player_one, l.player_two, l.kill, l.guild, l.time));
-			manager.add_war({
-				guild_name: war.guild_name,
-				name: war.name,
-				date: war.date,
-				won: war.won,
-				logs: war.logs
-			});
-		} */
-		const manager_data = parse(LZString.decompress(data) ?? '') as ManagerClass;
-		// assign all data to their classes
-		/* const manager = Object.assign(new ManagerClass(), manager_data); */
+	static from_json(data: string | ManagerClass, decompress = true) {
+		const manager_data = decompress
+			? (parse(LZString.decompress(data as string) ?? '') as ManagerClass)
+			: (data as ManagerClass);
 
 		const manager = new ManagerClass();
 
@@ -442,12 +428,12 @@ export class ManagerClass {
 		const new_manager = await promise;
 
 		if (!new_manager) return;
+		const parsed_new_manager = ManagerClass.from_json(new_manager, false);
 
-		this.wars = new_manager.wars.map((war) => Object.assign(new War('', '', '', false, []), war));
-		this.players = new_manager.players.map((player) =>
-			Object.assign(new Player('', new Guild('')), player)
-		);
-		this.guilds = new_manager.guilds.map((guild) => Object.assign(new Guild(''), guild));
+		this.wars = parsed_new_manager.wars;
+		this.players = parsed_new_manager.players;
+		this.guilds = parsed_new_manager.guilds;
+
 		this.wars.forEach((war) => {
 			const war_class_mapping_object = war_class_mapping.find((w) => w.war_id == war.id);
 			if (war_class_mapping_object) {
