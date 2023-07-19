@@ -19,6 +19,18 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.14',
+		date: '19.07.2023',
+		title: 'Fixes & Improvements',
+		changes: [
+			'Fixed Login issue',
+			'Added redirect to previous page after login',
+			'Fixed war graph not loading on first render',
+			'Fixed duplicate logs in the logger'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.13',
 		date: '17.07.2023',
 		title: 'Logger Improvements',
