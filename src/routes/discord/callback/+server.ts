@@ -39,11 +39,11 @@ export const GET: RequestHandler = async (event) => {
 	const client_response = new Response(null, { status: 302 });
 	client_response.headers.append(
 		'Set-Cookie',
-		`access_token=${response.access_token}; Path=/; HttpOnly; SameSite=Strict; Expires=${access_token_expires_in}}`
+		`access_token=${response.access_token}; Path=/; HttpOnly; SameSite=Lax; Expires=${access_token_expires_in}}`
 	);
 	client_response.headers.append(
 		'Set-Cookie',
-		`refresh_token=${response.refresh_token}; Path=/; HttpOnly; SameSite=Strict; Expires=${refresh_token_expires_in}`
+		`refresh_token=${response.refresh_token}; Path=/; HttpOnly; SameSite=Lax; Expires=${refresh_token_expires_in}`
 	);
 	 client_response.headers.append('Location', '/discord/redirect');
 
