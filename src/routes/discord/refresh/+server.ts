@@ -37,7 +37,7 @@ export const GET: RequestHandler = async (event) => {
 		});
 	}
 
-	const access_token_expires_in = new Date(Date.now() + response.expires_in); // 10 minutes
+	const access_token_expires_in = new Date(Date.now() + response.expires_in * 1000); // 7 days
 	const refresh_token_expires_in = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
 	const client_response = new Response(JSON.stringify({ access_token: response.access_token }), {

@@ -107,7 +107,12 @@
 				>
 			</Dropdown>
 		{:else}
-			<Button size="sm" color="secondary" on:click={() => goto('/discord/auth')}>Login</Button>
+			<Button
+				size="sm"
+				color="secondary"
+				on:click={() => goto(`/discord/auth?url=${encodeURIComponent($page.url.href)}`)}
+				>Login</Button
+			>
 		{/if}
 	</div>
 </header>

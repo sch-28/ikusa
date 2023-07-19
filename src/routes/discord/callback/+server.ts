@@ -33,7 +33,7 @@ export const GET: RequestHandler = async (event) => {
 		return new Response(null, { headers: { Location: '/' }, status: 302 });
 	}
 
-	const access_token_expires_in = new Date(Date.now() + response.expires_in); // 10 minutes
+	const access_token_expires_in = new Date(Date.now() + response.expires_in * 1000); // 7 days
 	const refresh_token_expires_in = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
 	const client_response = new Response(null, { status: 302 });
@@ -45,7 +45,9 @@ export const GET: RequestHandler = async (event) => {
 		'Set-Cookie',
 		`refresh_token=${response.refresh_token}; Path=/; HttpOnly; SameSite=Lax; Expires=${refresh_token_expires_in}`
 	);
-	 client_response.headers.append('Location', '/discord/redirect');
+
+	const redirect_url = event.cookies.get('login_redirect');
+	client_response.headers.append('Location', redirect_url ?? '/');
 
 	return client_response;
 };
