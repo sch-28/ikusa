@@ -205,3 +205,13 @@
 		<LoadingIndicator size="lg" />
 	</div>
 {/if}
+
+<style>
+	:global(.apexcharts-menu) {
+		background-color: rgb(31 31 31 / var(--tw-bg-opacity)) !important;
+	}
+
+	:global(.apexcharts-menu-item:hover) {
+		background-color: rgb(28 28 28 / var(--tw-bg-opacity)) !important;
+	}
+</style>
