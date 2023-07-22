@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.15',
+		date: '22.07.2023',
+		title: 'Logger Improvements & Fixes',
+		changes: [
+			'Added Logger settings, allowing the user to change the sniffing target',
+			'Added Logger updater that now also updates the logging executable',
+			'Fixed chart menubar dropdown color'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.14',
 		date: '19.07.2023',
 		title: 'Fixes & Improvements',
