@@ -32,6 +32,7 @@ specifiers:
   prettier: ^2.8.0
   prettier-plugin-svelte: ^2.8.1
   prisma: ^4.15.0
+  svelecte: ^3.16.2
   svelte: ^3.59.1
   svelte-apexcharts: ^1.0.2
   svelte-check: ^3.0.1
@@ -62,6 +63,7 @@ dependencies:
   generate-unique-id: 2.0.1
   lz-string: 1.5.0
   posthog-js: 1.70.1
+  svelecte: 3.16.2
   svelte-apexcharts: 1.0.2_apexcharts@3.41.0
   svelte-french-toast: 1.0.3_svelte@3.59.1
   svelte-icons: 2.1.0
@@ -2469,6 +2471,12 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  /svelecte/3.16.2:
+    resolution: {integrity: sha512-t37ZDpt4mQaR0vVhoupEvR+Rw5anoKWBYhWZBCIAQVBQutH+H/DP2osGXiiqGP++5YKEsc0SSWNfVGL/QDBtEw==}
+    dependencies:
+      svelte-tiny-virtual-list: 2.0.5
+    dev: false
+
   /svelte-apexcharts/1.0.2_apexcharts@3.41.0:
     resolution: {integrity: sha512-6qlx4rE+XsonZ0FZudfwqOQ34Pq+3wpxgAD75zgEmGoYhYBJcwmikTuTf3o8ZBsZue9U/pAwhNy3ed1Bkq1gmA==}
     peerDependencies:
@@ -2579,6 +2587,10 @@ packages:
     dependencies:
       svelte: 3.59.1
     dev: true
+
+  /svelte-tiny-virtual-list/2.0.5:
+    resolution: {integrity: sha512-xg9ckb8UeeIme4/5qlwCrl2QNmUZ8SCQYZn3Ji83cUsoASqRNy3KWjpmNmzYvPDqCHSZjruBBsoB7t5hwuzw5g==}
+    dev: false
 
   /svelte-writable-derived/2.1.6_svelte@3.59.1:
     resolution: {integrity: sha512-vqOXuiESMZyP/kt/RD+nOk2RVHNakDm1K1hmfeGAKc4jzcSp5hEkUi43MDbkVlMurkSBlcMVTQwRQy4LcBT2lw==}
