@@ -19,6 +19,17 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.16',
+		date: '27.07.2023',
+		title: 'Logger Improvements & Documentation',
+		changes: [
+			'Added button to the Logger to restart it with developer mode enabled',
+			'Added some additional error handling for the previous network interface changes',
+			'Improved the Ikusa documentation'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.15',
 		date: '22.07.2023',
 		title: 'Logger Improvements & Fixes',
