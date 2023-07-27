@@ -58,8 +58,9 @@
 		}
 
 		loading = true;
+		const region = $User.region ?? 'EU';
 		const result = await fetch(
-			`${PUBLIC_IKUSA_API}/api/player?name=${player.name}&region=${'EU'}`,
+			`${PUBLIC_IKUSA_API}/api/player?name=${player.name}&region=${region}`,
 			{
 				method: 'GET'
 			}

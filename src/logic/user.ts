@@ -67,6 +67,7 @@ export interface User {
 	wars?: WarType[];
 	bdo_sync: boolean;
 	liked_suggestions?: string[];
+	region?: string;
 }
 
 export const User = storage('settings', { bdo_sync: true });

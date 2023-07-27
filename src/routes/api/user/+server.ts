@@ -17,6 +17,7 @@ export const POST: RequestHandler = async (event) => {
 				id: new_user.discord_data.id
 			},
 			data: {
+				region: new_user.region,
 				name: new_user.name,
 				guild: new_user.guild,
 				bdo_sync: new_user.bdo_sync

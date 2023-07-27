@@ -17,6 +17,7 @@ model User {
   name                String
   guild               String
   discriminator       String
+  region              String       @default("EU")
   wars                War[]
   bdo_sync            Boolean      @default(true)
   created_suggestions Suggestion[] @relation("suggestion_creator")

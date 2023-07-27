@@ -40,6 +40,7 @@ async function set_session(
 			username: prisma_user.username
 		},
 		bdo_sync: prisma_user.bdo_sync,
+		region: prisma_user.region,
 		name: prisma_user.name,
 		guild: prisma_user.guild,
 		liked_suggestions: prisma_user.liked_suggestions.map((suggestion) => suggestion.id),

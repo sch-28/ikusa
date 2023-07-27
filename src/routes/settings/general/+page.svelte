@@ -4,6 +4,7 @@
 	import AutoComplete from '../../../components/elements/auto-complete.svelte';
 	import { Manager } from '../../../logic/stores';
 	import { User } from '../../../logic/user';
+	import Select from '../../../components/elements/select.svelte';
 
 	let form_error = '';
 
@@ -44,14 +45,32 @@
 		$User.name = family_name;
 		$User.guild = guild_name;
 	}
+
+	let selected_region = $User.region === 'EU' ? 0 : 1;
+	$: {
+		if (selected_region === 0) {
+			$User.region = 'EU';
+		} else {
+			$User.region = 'NA';
+		}
+	}
 </script>
 
 <div class="flex flex-col gap-2">
-	<div>
+	<div class="gap-2 flex flex-col">
 		<p class="capitalize font-semibold text-lg text-gold">General</p>
 		<div class="flex gap-2 items-center">
 			<Toggle bind:checked={$User.bdo_sync} id="bdo-sync" />
 			<Label class="!text-gray-400" for="bdo-sync">BDO Sync</Label>
+		</div>
+		<div class="flex flex-col gap-2">
+			<Select
+				bind:selected_value={selected_region}
+				options={[
+					{ name: 'EU', value: 'EU' },
+					{ name: 'NA', value: 'NA' }
+				]}
+			/>
 		</div>
 	</div>
 	<div>

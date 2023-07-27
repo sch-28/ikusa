@@ -241,12 +241,14 @@
 			const all_characters = war.logs.map((l) => l.character_names).flat();
 			let character_names = [...new Set(all_characters)];
 
+			const region = $User.region == 'EU';
+
 			fetch(`${PUBLIC_IKUSA_API}/api/characters`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ names: character_names, region: 'EU' })
+				body: JSON.stringify({ names: character_names, region: region })
 			})
 				.then((res) => {
 					if (res.status === 200) {
