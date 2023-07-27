@@ -25,6 +25,7 @@ const changes: Change[] = [
 		changes: [
 			'Added button to the Logger to restart it with developer mode enabled',
 			'Added some additional error handling for the previous network interface changes',
+			'Added some NA servers to the server list for the Logger',
 			'Improved the Ikusa documentation'
 		],
 		author: oracle
