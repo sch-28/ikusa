@@ -5,14 +5,24 @@
 
 	interface $$Props {
 		class?: string;
+		is_button?: boolean;
 	}
+
+	export let is_button = true;
+
+	const href =
+		'https://github.com/sch-28/ikusa_logger/releases/download/1.3.0/ikusa-logger-installer.exe';
 </script>
 
-<Button
-	class="flex gap-2 items-center justify-center leading-none {$$props.class}"
-	size="lg"
-	href="https://github.com/sch-28/ikusa_logger/releases/download/1.3.0/ikusa-logger-installer.exe"
->
-	<Icon icon={MdFileDownload} size="lg" />
-	Ikusa Logger
-</Button>
+{#if is_button}
+	<Button
+		class="flex gap-2 items-center justify-center leading-none {$$props.class}"
+		size="lg"
+		{href}
+	>
+		<Icon icon={MdFileDownload} size="lg" />
+		Ikusa Logger
+	</Button>
+{:else}
+	<a {href} class="underline {$$props.class}">Download Ikusa Logger</a>
+{/if}

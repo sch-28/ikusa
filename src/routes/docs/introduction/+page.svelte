@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { discord_invite } from '../../../components/landing/discord-invite';
+	import DownloadLogger from '../../../components/landing/download-logger.svelte';
 </script>
 
 <div>
@@ -23,9 +24,10 @@
 		Online. Uploading these logs to Ikusa allows you to analyze them. Follow the steps below to get
 		started.
 	</p>
-
-	<ol class="mt-8 list-decimal list-inside">
-		<li>Install the logger</li>
+	<p class="text-xl font-bold text-gold mt-4">Quick start</p>
+	<ol class="list-decimal list-inside">
+		<li><DownloadLogger is_button={false} /></li>
+		<li><a href="https://npcap.com/#download" class="underline">Download Npcap</a></li>
 		<li>Record combat logs</li>
 		<li>Upload logs to Ikusa</li>
 		<li>Share your logs</li>
