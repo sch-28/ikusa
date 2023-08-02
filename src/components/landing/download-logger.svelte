@@ -11,7 +11,7 @@
 	export let is_button = true;
 
 	const href =
-		'https://github.com/sch-28/ikusa_logger/releases/download/1.4.0/ikusa-logger-installer.exe';
+		'https://github.com/sch-28/ikusa_logger/releases/download/1.5.0/ikusa-logger-installer.exe';
 </script>
 
 {#if is_button}
