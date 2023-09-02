@@ -420,7 +420,7 @@
 
 		<svelte:fragment slot="fields">
 			<Field title="Guild member distribution">
-				<Chart data={member_chart_data} labels={member_chart_labels} type="donut" />
+				<Chart data={member_chart_data} labels={member_chart_labels} type="donut" height="100%" />
 			</Field>
 			{#if has_classes}
 				<Field title="Class distribution{selected_guild ? ` of ${selected_guild.guild.name}` : ''}">
