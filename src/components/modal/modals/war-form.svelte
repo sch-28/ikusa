@@ -21,6 +21,7 @@
 	import { PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_URL } from '$env/static/public';
 	import posthog from 'posthog-js';
 	import { dev } from '$app/environment';
+	import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte';
 
 	let war_name: string = '';
 	let war_date: string = '';
@@ -36,6 +37,10 @@
 	export let war: WarType | undefined = undefined;
 	export let logs: Log[] = [];
 	export let migrated_wars: MigratedWar[] = [];
+
+	let show_add_tag: boolean = false;
+	let new_tag: string = '';
+	let tags: string[] = [];
 
 	$: {
 		if (war_guild_name.length > 0 && !$User.guild && war_guild_name !== $User.guild) {
@@ -432,6 +437,44 @@
 				<div>
 					<Label class="mb-2 !text-gray-400" for="logs">Logs</Label>
 					<Button class="w-full" id="logs" on:click={() => (state = 'logs')}>View Logs</Button>
+				</div>
+				<div>
+					<Label class="mb-2 !text-gray-400" for="tags">Tags</Label>
+					<div class="flex items-center flex-wrap gap-2">
+						{#each tags as tag}
+							<div
+								class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 h-7"
+							>
+								{tag}
+							</div>
+						{/each}
+						{#if show_add_tag}
+							<Autocomplete
+								id="tags"
+								input_class="w-28 h-7"
+								bind:value={new_tag}
+								items={$Manager.guilds.map((g) => g.name)}
+								required
+								is_creatable
+								on_create={(value) => {
+									tags.push(value);
+									new_tag = '';
+									show_add_tag = false;
+									tags = tags;
+								}}
+								on_select={(value) => {
+									tags.push(value);
+									new_tag = '';
+									show_add_tag = false;
+									tags = tags;
+								}}
+							/>
+						{:else}
+							<button on:click={() => (show_add_tag = true)} class="h-7">
+								<Icon icon={MdAddCircleOutline} class="self-center text-submarine-500" />
+							</button>
+						{/if}
+					</div>
 				</div>
 				<div class="flex flex-col">
 					<Label class="mb-2 !text-gray-400" for="won">Won</Label>

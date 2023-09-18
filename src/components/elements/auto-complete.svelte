@@ -10,12 +10,18 @@
 		placeholder?: string;
 		required?: boolean;
 		id?: string;
+		is_creatable?: boolean;
+		on_create?: (value: string) => void;
+		on_select?: (value: string) => void;
 	}
 
 	export let items: string[] = [];
 	export let value = '';
 	export let placeholder = '';
 	export let required = false;
+	export let is_creatable = false;
+	export let on_create = (value: string) => {};
+	export let on_select = (value: string) => {};
 
 	let selected_suggestion = -1;
 	let suggestions: { name: string; button?: HTMLButtonElement }[] = [];
@@ -35,7 +41,7 @@
 		suggestions = items
 			.filter(
 				(item) =>
-					item.toLowerCase().includes(value.toLowerCase()) && value.length > 0 && value !== item
+					item.toLowerCase().includes(value.toLowerCase()) && value.length > 0 && item !== value
 			)
 			.splice(0, 3)
 			.map((item) => ({ name: item, button: undefined }));
@@ -80,6 +86,10 @@
 		}
 	}
 
+	$: show_dropdown =
+		(suggestions.length > 0 || (value.length > 0 && is_creatable && !items.includes(value))) &&
+		show_suggestions;
+
 	onMount(() => {
 		document.addEventListener('keydown', handle_keydown);
 	});
@@ -100,18 +110,33 @@
 		on:focus={() => (show_suggestions = true)}
 	/>
 	<div
-		class="border border-gray-600 mt-1 absolute bg-background z-50 rounded-lg overflow-hidden {(suggestions.length ===
-			0 ||
-			!show_suggestions) &&
-			'hidden'}"
+		class="border border-gray-600 mt-1 absolute bg-background z-50 rounded-lg overflow-hidden {!show_dropdown
+			? 'hidden'
+			: ''}"
 		style="width: {input_width};"
 	>
 		{#each suggestions as suggestion}
 			<button
-				class="p-2 w-full text-left text-gold-muted  hover:text-gold outline-none focus:bg-gold focus:text-black"
+				class="p-2 w-full text-left text-gold-muted hover:text-gold outline-none focus:bg-gold focus:text-black"
 				bind:this={suggestion.button}
-				on:click={() => (value = suggestion.name)}>{suggestion.name}</button
+				on:click={() => {
+					value = suggestion.name;
+					show_suggestions = false;
+					on_select(suggestion.name);
+				}}>{suggestion.name}</button
 			>
 		{/each}
+		{#if is_creatable && value.length > 0 && !items.includes(value)}
+			<button
+				class="p-2 w-full text-left text-gold-muted hover:text-gold outline-none focus:bg-gold focus:text-black"
+				on:click={() => {
+					on_create(value);
+					show_suggestions = false;
+					value = '';
+				}}
+			>
+				Create "{value}"
+			</button>
+		{/if}
 	</div>
 </div>
