@@ -238,9 +238,18 @@
 		if (war) {
 			LoaderManager.set_status('Fetching characters', 0);
 			LoaderManager.open();
-			const all_characters = war.logs.map((l) => l.character_names).flat();
-			let character_names = [...new Set(all_characters)];
+			const all_characters = war.logs
+				.filter(
+					(l) =>
+						l.character_names &&
+						l.character_names.length == 2 &&
+						l.character_names[0] &&
+						l.character_names[1]
+				)
+				.map((l) => l.character_names)
+				.flat();
 
+			let character_names = [...new Set(all_characters)];
 			const region = $User.region ?? 'EU';
 
 			fetch(`${PUBLIC_IKUSA_API}/api/characters`, {
