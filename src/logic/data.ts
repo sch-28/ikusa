@@ -540,7 +540,7 @@ export class Log {
 				kill,
 				results[5],
 				results[1],
-				results.length === 8 ? [results[6], results[7]] : undefined
+				results.length === 8 && results[6] && results[7] ? [results[6], results[7]] : undefined
 			);
 		}
 		throw new Error(`Invalid Log: ${log}`);
