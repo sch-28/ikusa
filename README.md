@@ -7,7 +7,7 @@
 ![Status](https://img.shields.io/github/deployments/sch-28/ikusa/production?label=Deployment)
 ![Latest commit](https://img.shields.io/github/last-commit/sch-28/ikusa)
 
-<a href="https://ikusa.site"><img src="https://raw.githubusercontent.com/sch-28/ikusa/main/.github/readme-thumbnail.jpg"></a>
+<a href="https://ikusa.site"><img src="https://raw.githubusercontent.com/sch-28/ikusa/main/.github/readme-thumbnail.png"></a>
 
 </div>
  
