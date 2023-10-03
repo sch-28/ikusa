@@ -2,7 +2,7 @@
 
 ![github-thumbnail](https://github.com/sch-28/ikusa/assets/42447473/7c5363e9-0cff-4b30-8c95-654a56d5aec4)
 
-[Introduction](#introduction) • [Features](#features) 
+[Introduction](#introduction) • [Features](#features)
 
 ![Status](https://img.shields.io/github/deployments/sch-28/ikusa/production?label=Deployment)
 ![Latest commit](https://img.shields.io/github/last-commit/sch-28/ikusa)

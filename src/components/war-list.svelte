@@ -16,7 +16,7 @@
 		if (war.id === undefined) {
 			return $Manager.wars.find((w) => w.id === war.date + war.name);
 		}
-	}
+	};
 </script>
 
 {#each wars as war}
