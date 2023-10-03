@@ -19,6 +19,16 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.4.17',
+		date: '04.10.2023',
+		title: 'Performance & QOL Improvements',
+		changes: [
+			'Added cancel button to the war-sync loading modal',
+			'Fixed an issue with the war sharing system, improving performance'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.16',
 		date: '27.07.2023',
 		title: 'Logger Improvements & Documentation',
