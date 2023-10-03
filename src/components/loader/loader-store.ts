@@ -2,9 +2,9 @@ import { get, writable } from 'svelte/store';
 
 export type Loader = {
 	visible: boolean;
-	/* state?: LoadingState; */
 	text?: string;
 	progress?: number;
+	cancel?: () => void;
 };
 
 const CurrentLoader = writable<Loader>({ visible: false });
@@ -18,8 +18,8 @@ export abstract class LoaderManager {
 		CurrentLoader.set({ visible: false });
 	}
 
-	static open() {
-		CurrentLoader.update((s) => ({ ...s, visible: true }));
+	static open(cancel?: () => void) {
+		CurrentLoader.update((s) => ({ ...s, visible: true, cancel }));
 	}
 
 	static get store() {

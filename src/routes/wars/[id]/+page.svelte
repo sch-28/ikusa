@@ -83,7 +83,7 @@
 			if (has_classes) add_class_column();
 			else update_rows();
 
-			if (has_characters && !has_classes && $User.bdo_sync) sync_war();
+			/* if (has_characters && !has_classes && $User.bdo_sync) */ sync_war();
 		}
 	});
 
@@ -237,7 +237,10 @@
 	async function sync_war() {
 		if (war) {
 			LoaderManager.set_status('Fetching characters', 0);
-			LoaderManager.open();
+			const canceled = { current: false };
+			LoaderManager.open(() => {
+				canceled.current = true;
+			});
 			const all_characters = war.logs
 				.filter(
 					(l) =>
@@ -269,6 +272,8 @@
 				})
 
 				.then(async (reader) => {
+					if (canceled.current) return;
+
 					const players: {
 						char_name: string;
 						name?: string;
@@ -281,10 +286,16 @@
 
 					await (async (reader) => {
 						if (!reader) return;
+
+						if (canceled.current) {
+							reader.cancel();
+							return;
+						}
+
 						let done, value;
 						while (!done) {
 							({ value, done } = await reader.read());
-							if (done) {
+							if (done || canceled.current) {
 								return true;
 							}
 							try {
