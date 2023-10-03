@@ -25,15 +25,16 @@ model User {
 }
 
 model War {
-  date       String
-  name       String
-  won        Boolean
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  guild_name String
-  guilds     String
-  data       String
-  id         String  @id @unique
+  date         String
+  name         String
+  won          Boolean
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  guild_name   String
+  is_new_share Boolean @default(false)
+  guilds       String
+  data         String
+  id           String  @id @unique
 }
 
 model UploadStorage {

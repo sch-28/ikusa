@@ -15,6 +15,7 @@
 	import { stringify } from 'flatted';
 	import { posthog } from 'posthog-js';
 	import { dev } from '$app/environment';
+	import type { SharedWar } from './share-war-type';
 
 	export let war: War;
 
@@ -42,11 +43,25 @@
 		}
 		loading = true;
 		await sleep();
-		const data = LZString.compressToEncodedURIComponent(stringify(war));
+
+		const war_data = war.to_json();
+
+		const player_class_mapping: SharedWar['class_mapping'] = war.local_players.map((p) => {
+			return {
+				name: p.player.name,
+				char_name: p.character_name,
+				class_name: p.character_class
+			};
+		});
+
+		const data = LZString.compressToEncodedURIComponent(
+			stringify({ ...war_data, class_mapping: player_class_mapping })
+		);
 		const prisma_war: Omit<PrismaWar, 'userId'> = {
 			date: war.date,
 			guild_name: war.guild_name,
 			name: war.name,
+			is_new_share: true,
 			data: data,
 			guilds: [...war.enemy_guilds]
 				.sort((a, b) => b.kill_difference - a.kill_difference)

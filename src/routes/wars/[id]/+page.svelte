@@ -40,7 +40,7 @@
 	let selected_guild: Local_Guild | undefined;
 	export let data: PageData;
 
-	$: ({ war: war_raw, is_public, is_own } = data);
+	$: ({ war: war_raw, is_public, is_own, is_new_share } = data);
 	let war: War | undefined;
 	let has_characters = false;
 	let has_classes = false;
@@ -54,7 +54,10 @@
 			if (!is_public) {
 				war = $Manager.get_war(war_raw);
 			} else {
-				war = parse(LZString.decompressFromEncodedURIComponent(war_raw));
+				war = is_new_share
+					? parse(war_raw)
+					: parse(LZString.decompressFromEncodedURIComponent(war_raw));
+
 				war?.local_guilds.forEach((local) =>
 					local.local_events.forEach((e) => (e.time = dayjs(e.time)))
 				);
@@ -83,7 +86,7 @@
 			if (has_classes) add_class_column();
 			else update_rows();
 
-			/* if (has_characters && !has_classes && $User.bdo_sync) */ sync_war();
+			if (has_characters && !has_classes && $User.bdo_sync) sync_war();
 		}
 	});
 

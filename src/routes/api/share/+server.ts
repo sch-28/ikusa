@@ -28,7 +28,8 @@ export const POST: RequestHandler = async (event) => {
 						data: war.data,
 						guilds: war.guilds,
 						id: id,
-						won: war.won
+						won: war.won,
+						is_new_share: war.is_new_share
 					}
 				}
 			}
