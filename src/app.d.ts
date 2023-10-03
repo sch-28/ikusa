@@ -1,7 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 
-import type Component from './components/table/component.svelte';
+import type { Component } from './components/modal/modal-store';
 import { User } from './logic/user';
 declare global {
 	declare module 'svelte-icons/*' {
