@@ -11,7 +11,11 @@ export function show_toast(message: string, type: 'success' | 'error') {
 	});
 }
 
-export function redirect_and_toast(destination: string, message: string, type: 'success' | 'error' = 'error') {
+export function redirect_and_toast(
+	destination: string,
+	message: string,
+	type: 'success' | 'error' = 'error'
+) {
 	show_toast(message, type);
 	goto(destination, { replaceState: true });
 }

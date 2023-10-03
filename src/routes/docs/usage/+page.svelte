@@ -19,7 +19,7 @@
 		<a href="https://www.wireshark.org/" class="underline">Wireshark</a>.
 	</p>
 	<div class="mt-4">
-		The logger tries to automatically find the optimal configuration for the logs. <br>
+		The logger tries to automatically find the optimal configuration for the logs. <br />
 		You are required to adjust the order of the names. The logger cannot differentiate the names of the
 		players & guilds. If you notice that the names are not complete or incorrect, you can adjust the
 		configuration by clicking the Gear <Icon class="inline-block" icon={MdSettings} /> button.

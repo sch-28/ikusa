@@ -13,7 +13,7 @@ declare global {
 		}
 	}
 	declare namespace svelte.JSX {
-		interface HTMLProps<T> {
+		interface HTMLProps {
 			onclick_outside?: (e: CustomEvent) => void;
 		}
 	}

@@ -54,17 +54,15 @@
 				format(guild.average_kill_difference),
 				format(guild.average_members),
 				guild.players.length,
-				guild.locals.length,
-
-				
+				guild.locals.length
 			],
 			onclick() {
 				goto(`/guilds/${guild.name}`);
 			}
 		} as Row;
 	});
-    let table: HTMLDivElement;
-    $: table_height = get_remaining_height(table, 16);
+	let table: HTMLDivElement;
+	$: table_height = get_remaining_height(table, 16);
 </script>
 
 <div class="flex justify-between mb-4">
@@ -72,6 +70,4 @@
 	<p>{$Manager.guilds.length} Guilds</p>
 </div>
 
-
 <Table id="guilds" {header} {rows} searchable height={table_height} bind:instance={table} />
-

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { onDestroy, onMount } from 'svelte';
 	import LoadingIndicator from '../elements/loading-indicator.svelte';
 	import dayjs from 'dayjs';
@@ -20,7 +19,6 @@
 	export let legend_width: string = 'auto';
 	export let colors: string[] = [];
 
-	let render = false;
 	let formatted_labels: string[] | number[] = [];
 	let options: any;
 	let chart_container: HTMLDivElement;

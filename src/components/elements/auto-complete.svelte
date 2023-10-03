@@ -108,7 +108,7 @@
 	>
 		{#each suggestions as suggestion}
 			<button
-				class="p-2 w-full text-left text-gold-muted  hover:text-gold outline-none focus:bg-gold focus:text-black"
+				class="p-2 w-full text-left text-gold-muted hover:text-gold outline-none focus:bg-gold focus:text-black"
 				bind:this={suggestion.button}
 				on:click={() => (value = suggestion.name)}>{suggestion.name}</button
 			>

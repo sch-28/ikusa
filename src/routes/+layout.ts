@@ -1,6 +1,10 @@
 import posthog from 'posthog-js';
 import { browser } from '$app/environment';
-import { PUBLIC_ORIGINAL_POSTHOG_URL, PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_URL } from '$env/static/public';
+import {
+	PUBLIC_ORIGINAL_POSTHOG_URL,
+	PUBLIC_POSTHOG_KEY,
+	PUBLIC_POSTHOG_URL
+} from '$env/static/public';
 import { dev } from '$app/environment';
 
 export const load = async () => {

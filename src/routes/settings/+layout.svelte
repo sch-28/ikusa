@@ -43,12 +43,14 @@
 					<Icon icon={IoIosClose} />
 				</button>
 			</div>
-			<div class="flex flex-col gap-1 ">
+			<div class="flex flex-col gap-1">
 				{#each content as entry}
 					{#if 'link' in entry}
 						<a href={entry.link}>
 							<p
-								class="font-light {page_entry === entry.link ? 'text-foreground' : 'text-foreground-secondary'}"
+								class="font-light {page_entry === entry.link
+									? 'text-foreground'
+									: 'text-foreground-secondary'}"
 								title={entry.description}
 							>
 								{entry.title}
