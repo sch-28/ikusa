@@ -24,7 +24,8 @@ export const classes = [
 	'Corsair',
 	'Drakania',
 	'Woosa',
-	'Maegu'
+	'Maegu',
+	'Scholar'
 ];
 
 export const get_class_color: Record<string, string> = {
