@@ -138,10 +138,12 @@
 	let kill_chart_labels: number[] = [];
 	$: {
 		kill_chart_labels = [];
-		const first_time = dayjs(war?.kill_events[0].time).valueOf();
-		const last_time = dayjs(war?.kill_events[war.kill_events.length - 1].time).valueOf();
-		for (let i = first_time; i < last_time; i += 60000) {
-			kill_chart_labels.push(i);
+		if (war && war.kill_events.length > 0) {
+			const first_time = dayjs(war?.kill_events[0].time).valueOf();
+			const last_time = dayjs(war?.kill_events[war.kill_events.length - 1].time).valueOf();
+			for (let i = first_time; i < last_time; i += 60000) {
+				kill_chart_labels.push(i);
+			}
 		}
 	}
 	$: kills_chart_data = kill_chart_labels.map((l) => {
