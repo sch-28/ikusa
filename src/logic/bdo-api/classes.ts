@@ -54,5 +54,6 @@ export const get_class_color: Record<string, string> = {
 	Corsair: '#015d7a',
 	Drakania: '#6c3931',
 	Woosa: '#20276c',
-	Maegu: '#a74d6e'
+	Maegu: '#a74d6e',
+	Scholar: 'f1dc00'
 };
