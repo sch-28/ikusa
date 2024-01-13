@@ -55,5 +55,5 @@ export const get_class_color: Record<string, string> = {
 	Drakania: '#6c3931',
 	Woosa: '#20276c',
 	Maegu: '#a74d6e',
-	Scholar: 'f1dc00'
+	Scholar: '#f1dc00'
 };
