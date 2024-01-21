@@ -42,11 +42,6 @@
 		{/each}
 	</ul>
 
-	<Button href="https://ko-fi.com/O5O6N90L4" target="_blank" class="w-fit mt-2"
-		><Icon icon={GiBeerBottle} class="w-6 h-6 mr-1" />
-		Buy Me a Fun Drink</Button
-	>
-
 	<div class="mt-8">
 		Next: <a href="/docs/changelog" class="underline">Changelog</a>
 	</div>
