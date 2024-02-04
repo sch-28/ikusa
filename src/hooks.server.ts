@@ -15,15 +15,23 @@ async function set_session(
 	request: {
 		event: RequestEvent<Partial<Record<string, string>>>;
 	},
-	user: DiscordUser
+	user: DiscordUser | User,
+	access_token?: string
 ): Promise<User | undefined> {
+	const u = (user as User).discord_data ? (user as User).discord_data : (user as DiscordUser);
+	if (!u) return undefined;
+
+	console.log("setting session");
 	const prisma_user = await prisma.user.upsert({
-		where: { id: user.id },
-		update: {},
+		where: { id: u.id },
+		update: {
+			access_token: access_token
+		},
 		create: {
-			id: user.id,
-			discriminator: user.discriminator,
-			username: user.username,
+			id: u.id,
+			discriminator: u.discriminator,
+			username: u.username,
+			access_token: access_token,
 			name: '',
 			guild: ''
 		},
@@ -32,6 +40,8 @@ async function set_session(
 			liked_suggestions: { select: { id: true } }
 		}
 	});
+
+	console.log('hi');
 
 	return {
 		discord_data: {
@@ -96,17 +106,28 @@ export const handle: Handle = async (request) => {
 			const response = await discord_request.json();
 
 			if (response.id) {
-				request.event.locals.user = await set_session(request, response);
+				request.event.locals.user = await set_session(
+					request,
+					response,
+					discord_response.access_token
+				);
 			}
 		}
 	} else if (access_token) {
-		const discord_request = await fetch(`${DISCORD_API_URL}/users/@me`, {
-			headers: { Authorization: `Bearer ${access_token}` }
-		});
+		const user = await prisma.user.findFirst({ where: { access_token: access_token } });
+		console.log(user ? 'found user' : 'fetching user');
+		if (!user) {
+			const discord_request = await fetch(`${DISCORD_API_URL}/users/@me`, {
+				headers: { Authorization: `Bearer ${access_token}` }
+			});
 
-		const response = await discord_request.json();
-		if (response.id) {
-			request.event.locals.user = await set_session(request, response);
+			console.log(access_token);
+			const response = await discord_request.json();
+			if (response.id) {
+				request.event.locals.user = await set_session(request, response, access_token);
+			}
+		} else {
+			request.event.locals.user = await set_session(request, user, access_token);
 		}
 	} else {
 		request.event.locals.user = undefined;
