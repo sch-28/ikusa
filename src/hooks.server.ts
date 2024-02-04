@@ -21,7 +21,6 @@ async function set_session(
 	const u = (user as User).discord_data ? (user as User).discord_data : (user as DiscordUser);
 	if (!u) return undefined;
 
-	console.log("setting session");
 	const prisma_user = await prisma.user.upsert({
 		where: { id: u.id },
 		update: {
@@ -36,12 +35,24 @@ async function set_session(
 			guild: ''
 		},
 		include: {
-			wars: {},
 			liked_suggestions: { select: { id: true } }
 		}
 	});
 
-	console.log('hi');
+	const prisma_wars = await prisma.war.findMany({
+		where: { userId: prisma_user.id }
+	});
+
+	const wars = prisma_wars.map((war) => {
+		return {
+			won: war.won,
+			name: war.name,
+			date: war.date,
+			logs: [],
+			guild_name: war.guild_name,
+			unique_id: war.id
+		};
+	});
 
 	return {
 		discord_data: {
@@ -54,16 +65,7 @@ async function set_session(
 		name: prisma_user.name,
 		guild: prisma_user.guild,
 		liked_suggestions: prisma_user.liked_suggestions.map((suggestion) => suggestion.id),
-		wars: prisma_user.wars.map((war) => {
-			return {
-				won: war.won,
-				name: war.name,
-				date: war.date,
-				logs: [],
-				guild_name: war.guild_name,
-				unique_id: war.id
-			};
-		})
+		wars: wars
 	};
 }
 
@@ -115,13 +117,11 @@ export const handle: Handle = async (request) => {
 		}
 	} else if (access_token) {
 		const user = await prisma.user.findFirst({ where: { access_token: access_token } });
-		console.log(user ? 'found user' : 'fetching user');
 		if (!user) {
 			const discord_request = await fetch(`${DISCORD_API_URL}/users/@me`, {
 				headers: { Authorization: `Bearer ${access_token}` }
 			});
 
-			console.log(access_token);
 			const response = await discord_request.json();
 			if (response.id) {
 				request.event.locals.user = await set_session(request, response, access_token);
