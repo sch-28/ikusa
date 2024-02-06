@@ -17,7 +17,6 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.1.0",
-		"@sveltejs/adapter-vercel": "^3.0.1",
 		"@sveltejs/kit": "^1.20.2",
 		"@types/file-saver": "^2.0.5",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
@@ -51,6 +50,7 @@
 		"apexcharts": "^3.41.0",
 		"classnames": "^2.3.2",
 		"dayjs": "^1.11.7",
+		"dexie": "4.0.1-beta.7",
 		"file-saver": "^2.0.5",
 		"flatted": "^3.2.7",
 		"flowbite": "^1.6.3",

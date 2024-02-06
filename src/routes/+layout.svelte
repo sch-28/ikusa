@@ -22,9 +22,15 @@
 	onMount(async () => {
 		const manager_worker = await import('../logic/worker/manager-worker?worker');
 		const compress_worker = await import('../logic/worker/compress-worker?worker');
-		$Manager.manager_worker = new manager_worker.default();
-		$Manager.compress_worker = new compress_worker.default();
-		is_mounted = true;
+
+		const init_store_interval = setInterval(() => {
+			if ($Manager.save_callback) {
+				$Manager.manager_worker = new manager_worker.default();
+				$Manager.compress_worker = new compress_worker.default();
+				is_mounted = true;
+				clearInterval(init_store_interval);
+			}
+		}, 4);
 	});
 	const origin = $page.url.origin;
 	const default_title = 'Ikusa | BDO Combat Analyzer';

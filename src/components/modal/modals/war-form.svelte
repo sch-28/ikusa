@@ -119,7 +119,7 @@
 	async function check_files() {
 		if (files && files.length > 0) {
 			const results = await Promise.all(Array.from(files).map((f) => load_data(f))).catch((e) =>
-				show_toast(e.message, 'error')
+				show_toast(e.message || 'Something went wrong with the file upload', 'error')
 			);
 
 			if (results && results.length > 1) {
@@ -306,7 +306,7 @@
 			war_logs = [];
 			war_won = false;
 		} else {
-			show_toast(form_error, 'error');
+			show_toast(form_error || 'Unable to save war', 'error');
 		}
 
 		close();
