@@ -31,10 +31,10 @@
 		>
 	</div>
 	<div
-		class="flex gap-2 items-baseline absolute sm:static flex-col sm:flex-row top-0 bottom-0 bg-background-secondary z-10 px-4 left-0 w-44 shadow-lg rounded-r-lg sm:rounded-lg sm:w-fit sm:py-2
+		class="flex gap-2 items-baseline absolute sm:h-fit sm:left-1/2 sm:-translate-x-1/2 sm:top-4 flex-col sm:flex-row top-0 bottom-0 bg-background-secondary z-10 px-4 left-0 w-44 shadow-lg rounded-r-lg sm:rounded-lg sm:w-fit sm:py-2
 		{show_sidebar
 			? 'translate-x-0'
-			: '-translate-x-full sm:translate-x-0'} transition-all sm:transition-none duration-200"
+			: '-translate-x-full'} transition-all sm:transition-none duration-200"
 		use:click_outside
 		on:click_outside={() => (show_sidebar = false)}
 	>
