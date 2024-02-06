@@ -7,8 +7,11 @@ async function setSaveCallback(store: Writable<ManagerClass>) {
 	const storeData = get(store);
 	storeData.save_callback = async () => {
 		store.set(get(store));
-		if (db.manager) await db.manager.clear();
-		storeData.get_json().then((data) => db.manager.add({ id: 0, data }));
+		const data = await get(store).get_json();
+		if (data) {
+			if (db.manager) await db.manager.clear();
+			db.manager.add({ id: 0, data });
+		}
 	};
 }
 
