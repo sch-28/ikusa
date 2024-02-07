@@ -19,7 +19,7 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
-		version: '0.5',
+		version: '0.5.0',
 		date: '07.02.2024',
 		title: 'Infrastructure & Storage',
 		changes: [
