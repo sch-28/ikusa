@@ -19,6 +19,19 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.5',
+		date: '07.02.2024',
+		title: 'Infrastructure & Storage',
+		changes: [
+			'Moved website from vercel to cloud server',
+			'Moved war storage from localstorage to indexDB',
+			'Fixed supabase connection issues',
+			'Improved authorization hook performance',
+			'Adjusted header layout'
+		],
+		author: oracle
+	},
+	{
 		version: '0.4.18',
 		date: '12.01.2024',
 		title: 'Bugs & Scholar',
