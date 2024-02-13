@@ -9,6 +9,7 @@
 	import { User } from '../logic/user';
 	import { navigating, page } from '$app/stores';
 	import LoadingCircle from '../components/elements/loading-circle.svelte';
+	import { db } from '../logic/indexDB';
 
 	let is_mounted = false;
 
@@ -23,12 +24,16 @@
 		const manager_worker = await import('../logic/worker/manager-worker?worker');
 		const compress_worker = await import('../logic/worker/compress-worker?worker');
 
-		const init_store_interval = setInterval(() => {
+		const init_store_interval = setInterval(async () => {
 			if ($Manager.save_callback) {
 				$Manager.manager_worker = new manager_worker.default();
 				$Manager.compress_worker = new compress_worker.default();
 				is_mounted = true;
 				clearInterval(init_store_interval);
+				const result = await db.manager.where('id').equals(0).first();
+				if (!result) {
+					$Manager.save_callback();
+				}
 			}
 		}, 4);
 	});

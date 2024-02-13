@@ -10,7 +10,7 @@ async function setSaveCallback(store: Writable<ManagerClass>) {
 		const data = await get(store).get_json();
 		if (data) {
 			if (db.manager) await db.manager.clear();
-			db.manager.add({ id: 0, data });
+			await db.manager.add({ id: 0, data });
 		}
 	};
 }
@@ -25,12 +25,11 @@ const storage = (key: string, initValue: ManagerClass): Writable<ManagerClass> =
 			setSaveCallback(store);
 		} else {
 			const legacyStorage = localStorage.getItem(key);
-			if (legacyStorage !== null) {
+			if (legacyStorage !== null && legacyStorage !== undefined && legacyStorage !== '') {
 				store.set(ManagerClass.from_json(legacyStorage));
 				/* localStorage.removeItem(key); */ //TODO add this line if everything works
 			}
 			setSaveCallback(store);
-			get(store).save_callback?.();
 		}
 	});
 
