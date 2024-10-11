@@ -25,7 +25,8 @@ export const classes = [
 	'Drakania',
 	'Woosa',
 	'Maegu',
-	'Scholar'
+	'Scholar',
+	'Dosa'
 ];
 
 export const get_class_color: Record<string, string> = {
@@ -55,5 +56,6 @@ export const get_class_color: Record<string, string> = {
 	Drakania: '#6c3931',
 	Woosa: '#20276c',
 	Maegu: '#a74d6e',
-	Scholar: '#f1dc00'
+	Scholar: '#f1dc00',
+	Dosa: '#807aff'
 };
