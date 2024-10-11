@@ -34,6 +34,6 @@
 	</ol>
 
 	<div class="mt-8">
-		Next: <a href="/docs/installation" class="underline">Examples</a>
+		Next: <a href="/docs/examples" class="underline">Examples</a>
 	</div>
 </div>
