@@ -28,8 +28,10 @@
 		{#if $User.discord_data}
 			<Button on:click={() => goto('/dashboard')}>Dashboard</Button>
 			<Button color="secondary" on:click={() => goto('/docs/introduction')}>Get Started</Button>
+			
 		{:else}
-			<Button color="primary" on:click={() => goto('/docs/introduction')}>Get Started</Button>
+			<Button color="primary" class="w-32" on:click={() => goto('/docs/introduction')}>Get Started</Button>
+			<Button color="secondary" class="w-32" on:click={() => goto("/wars/1apxu0169vnkxyitcmta")}> Example</Button>
 		{/if}
 	</div>
 </div>

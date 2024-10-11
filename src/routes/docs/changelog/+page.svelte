@@ -17,7 +17,7 @@
 
 <div class="flex flex-col gap-2">
 	{#each changes as change}
-		<div class="flex flex-col mb-4">
+		<div class="flex flex-col mb-4" id={change.version}>
 			<div class="flex items-center gap-2 mb-1">
 				<a href={change.author.link} class="text-blue-500"
 					><img src={change.author.image} alt="github user" class="w-8 h-8 rounded-full" /></a
