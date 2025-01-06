@@ -19,6 +19,13 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.5.1',
+		date: '06.01.2025',
+		title: 'Deadeye',
+		changes: ['Added Deadeye class'],
+		author: oracle
+	},
+	{
 		version: '0.5.0',
 		date: '07.02.2024',
 		title: 'Infrastructure & Storage',
