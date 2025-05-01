@@ -46,12 +46,14 @@
 		$User.guild = guild_name;
 	}
 
-	let selected_region = $User.region === 'EU' ? 0 : 1;
+	let selected_region = $User.region === 'EU' ? 0 : $User.region === 'NA' ? 1 : 2;
 	$: {
 		if (selected_region === 0) {
 			$User.region = 'EU';
-		} else {
+		} else if (selected_region === 1) {
 			$User.region = 'NA';
+		} else if (selected_region === 2) {
+			$User.region = 'SA';
 		}
 	}
 </script>
@@ -68,7 +70,8 @@
 				bind:selected_value={selected_region}
 				options={[
 					{ name: 'EU', value: 'EU' },
-					{ name: 'NA', value: 'NA' }
+					{ name: 'NA', value: 'NA' },
+					{ name: 'SA', value: 'SA' }
 				]}
 			/>
 		</div>
