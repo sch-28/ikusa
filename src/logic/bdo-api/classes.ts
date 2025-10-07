@@ -27,7 +27,8 @@ export const classes = [
 	'Maegu',
 	'Scholar',
 	'Dosa',
-	'Deadeye'
+	'Deadeye',
+	'Wukong'
 ];
 
 export const get_class_color: Record<string, string> = {
@@ -59,5 +60,6 @@ export const get_class_color: Record<string, string> = {
 	Maegu: '#a74d6e',
 	Scholar: '#f1dc00',
 	Dosa: '#807aff',
-	Deadeye: '#9412ff'
+	Deadeye: '#9412ff',
+	Wukong: '#ff6a00'
 };
