@@ -588,7 +588,7 @@
 				<p>{log.player_two.name}</p>
 				{#if log.local_player_two?.character_class}
 					<p class="self-center">
-						<Class bdo_class={log.local_player_two.character_class} />
+						<Class bdo_class={log.local_player_two.character_class} show_text={false} />
 					</p>
 				{/if}
 				<p class="text-navy-400">[{log.guild}]</p>
