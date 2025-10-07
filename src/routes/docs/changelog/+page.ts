@@ -19,6 +19,16 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: '0.5.2',
+		date: '08.10.2025',
+		title: 'Player Detail & Wukong',
+		changes: [
+			'You can now click on Players in the War overview, to see specific logs & stats of them',
+			'Added Wukong class'
+		],
+		author: oracle
+	},
+	{
 		version: '0.5.1',
 		date: '06.01.2025',
 		title: 'Deadeye',
