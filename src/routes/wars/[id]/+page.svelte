@@ -116,7 +116,7 @@
 				acc[enemy.name] = {
 					kills: 0,
 					deaths: 0,
-					class: "Musa",
+					class: event.local_player_two?.character_class,
 					guild: event.local_player_two.local_guild.guild.name
 				};
 			}
@@ -587,9 +587,9 @@
 
 				<p>{log.player_two.name}</p>
 				{#if log.local_player_two?.character_class}
-				<p class="self-center">
-					<Class bdo_class={log.local_player_two.character_class} />
-				</p>
+					<p class="self-center">
+						<Class bdo_class={log.local_player_two.character_class} />
+					</p>
 				{/if}
 				<p class="text-navy-400">[{log.guild}]</p>
 			</div>
@@ -598,7 +598,7 @@
 	<Table
 		id="enemy-players-{selected_player?.player.name}"
 		header={[
-			{ label: 'Class', sortable: true},
+			{ label: 'Class', sortable: true },
 			{ label: 'Name', sortable: true },
 			{ label: 'Kills', sortable: true, sort_dir: 'des' },
 			{ label: 'Deaths', sortable: true },
