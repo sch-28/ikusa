@@ -549,7 +549,9 @@
 >
 	<h5 class="text-foreground font-medium inline-flex items-center">
 		{#if selected_player?.character_class}
-			<Class bdo_class={selected_player.character_class} />
+			<div>
+				<Class bdo_class={selected_player.character_class} />
+			</div>
 		{/if}
 		{selected_player?.player.name}
 		{#if selected_player?.character_name}
