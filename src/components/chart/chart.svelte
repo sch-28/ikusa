@@ -189,7 +189,7 @@
 
 {#if loaded}
 	{#key loaded || data || labels || options || dates}
-		<div class="flex-grow relative chart-container chart.{type}">
+		<div class="flex-grow relative chart-container chart-{type}">
 			<div class="flex-grow" bind:this={chart_container} />
 			{#if date_switch}
 				<div class="absolute z-10 top-0 right-40 [&_label]:leading-none">

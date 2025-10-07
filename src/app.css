@@ -29,7 +29,7 @@ html {
 .drawer {
         @apply max-w-[100vw] flex flex-col gap-2 !transition-none !animate-none overflow-y-auto z-50 p-4 bg-background fixed top-[14.25rem] inset-y-0 right-0 rounded-lg border border-foreground h-[500px] rounded-r-none border-r-0 w-[500px];
 }
-.chart-container.chart.donut div:not(.apexcharts-legend-series) {
+.chart-container.chart-donut div:not(.apexcharts-legend-series) {
     min-height: 0 !important;
     height: 100% !important;
 }
