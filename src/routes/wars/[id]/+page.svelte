@@ -2,7 +2,6 @@
 	//@ts-expect-error types
 	import VirtualList from '@sveltejs/svelte-virtual-list';
 	import GiBroadsword from 'svelte-icons/gi/GiBroadsword.svelte';
-	import { Drawer } from 'flowbite-svelte';
 	import { page } from '$app/stores';
 	import Icon from '../../../components/elements/icon.svelte';
 	import { ModalManager } from '../../../components/modal/modal-store';
@@ -108,7 +107,6 @@
 		update_rows();
 	}
 	let selected_player: Local_Guild_Player | undefined = undefined;
-	let hideDrawer = !selected_player;
 	$: selected_player_enemy_columns = Object.entries(
 		selected_player?.local_events.reduce((acc, event) => {
 			const enemy = event.player_two;
@@ -150,8 +148,11 @@
 			for (const local_player of selected_guild?.local_players ?? war.local_players) {
 				rows.push({
 					onclick: () => {
-						selected_player = local_player;
-						hideDrawer = false;
+						if (selected_player?.player.name === local_player.player.name) {
+							selected_player = undefined;
+						} else {
+							selected_player = local_player;
+						}
 					},
 					columns: [
 						...(has_classes
@@ -479,14 +480,89 @@
 		</svelte:fragment>
 
 		<svelte:fragment slot="content">
-			<Table
-				id="war-players-{war?.id}"
-				height={420}
-				{header}
-				{rows}
-				searchable
-				title={(selected_guild?.guild.name ?? 'All') + ' Players'}
-			/>
+			<div class="flex flex-col xl:flex-row gap-2">
+				<div class={selected_player ? 'min-w-0 w-full' : 'w-full'}>
+					<Table
+						id="war-players-{war?.id}"
+						height={420}
+						{header}
+						{rows}
+						searchable
+						title={(selected_guild?.guild.name ?? 'All') + ' Players'}
+					/>
+				</div>
+				{#if selected_player}
+					<div
+						class="relative flex flex-col min-h-0 gap-2 p-2 border-t xl:border-t-0 xl:border-l h-[420px] pt-2 pl-4 w-[600px] max-w-full min-w-0"
+					>
+						<h5 class="text-foreground font-medium inline-flex items-center">
+							{#if selected_player?.character_class}
+								<div>
+									<Class bdo_class={selected_player.character_class} />
+								</div>
+							{/if}
+							{selected_player?.player.name}
+							{#if selected_player?.character_name}
+								({selected_player?.character_name})
+							{/if}
+						</h5>
+
+						<div class="absolute top-4 right-4">
+							<button on:click={() => (selected_player = undefined)}>
+								<Icon icon={MdClose} />
+							</button>
+						</div>
+
+						<span class="text-sm">
+							{selected_player?.kills} Kill{selected_player.kills !== 1 ? 's' : ''} | {selected_player?.deaths}
+							Death{selected_player?.deaths !== 1 ? 's': ''} | {table_format(selected_player.performance)
+								.label} Perf. | {table_format(selected_player.duration_percentage * 100, 0).label}%
+							Present
+						</span>
+						<span class="text-sm">Logs ({selected_player?.local_events.length})</span>
+						<div
+							class="border border-dashed border-foreground rounded-md p-2 h-[200px] overflow-auto"
+						>
+							<VirtualList items={selected_player?.local_events ?? []} let:item={log}>
+								<div class="flex gap-2 items-baseline group">
+									<p class="text-sm text-gray-400">{log.time_string}:</p>
+									<p>{log.player_one.name}</p>
+									<div class="flex justify-center items-center">
+										{#if log.kill}
+											<Icon icon={GiBroadsword} class="self-center text-submarine-500" />
+										{:else}
+											<Icon icon={GiSkullCrack} class="self-center text-red-500" />
+										{/if}
+									</div>
+
+									<p>{log.player_two.name}</p>
+									{#if log.local_player_two?.character_class}
+										<p class="self-center">
+											<Class bdo_class={log.local_player_two.character_class} show_text={false} />
+										</p>
+									{/if}
+									<p class="text-navy-400">[{log.guild}]</p>
+								</div>
+							</VirtualList>
+						</div>
+						<div class="h-2/3 w-full min-h-0 flex [&>div]:min-h-0 [&>div]:!h-full [&>div]:!w-full">
+							<Table
+								id="enemy-players-{selected_player?.player.name}"
+								header={[
+									{ label: 'Class', sortable: true },
+									{ label: 'Name', sortable: true },
+									{ label: 'Kills', sortable: true, sort_dir: 'des' },
+									{ label: 'Deaths', sortable: true },
+									{ label: 'Guild', sortable: true }
+								]}
+								rows={selected_player_enemy_columns}
+								searchable
+								title="Stats"
+							/>
+						</div>
+					</div>
+				{/if}
+			</div>
 		</svelte:fragment>
 
 		<svelte:fragment slot="fields">
@@ -545,68 +621,3 @@
 		</svelte:fragment>
 	</DashboardLayout>
 </div>
-<Drawer
-	backdrop={false}
-	transitionParams={{ delay: 0, amount: 0, easing: (x) => x, duration: 0 }}
-	bind:hidden={hideDrawer}
-	width="350px"
-	placement="right"
-	divClass="drawer"
->
-	<h5 class="text-foreground font-medium inline-flex items-center">
-		{#if selected_player?.character_class}
-			<div>
-				<Class bdo_class={selected_player.character_class} />
-			</div>
-		{/if}
-		{selected_player?.player.name}
-		{#if selected_player?.character_name}
-			({selected_player?.character_name})
-		{/if}
-	</h5>
-
-	<div class="absolute top-4 right-4">
-		<button on:click={() => (hideDrawer = true)}>
-			<Icon icon={MdClose} />
-		</button>
-	</div>
-
-	<span class="text-sm">Logs ({selected_player?.local_events.length})</span>
-	<div class="border border-dashed border-foreground rounded-md p-2 h-[200px] overflow-auto">
-		<VirtualList items={selected_player?.local_events ?? []} let:item={log}>
-			<div class="flex gap-2 items-baseline group">
-				<p class="text-sm text-gray-400">{log.time_string}:</p>
-				<p>{log.player_one.name}</p>
-				<div class="flex justify-center items-center">
-					{#if log.kill}
-						<Icon icon={GiBroadsword} class="self-center text-submarine-500" />
-					{:else}
-						<Icon icon={GiSkullCrack} class="self-center text-red-500" />
-					{/if}
-				</div>
-
-				<p>{log.player_two.name}</p>
-				{#if log.local_player_two?.character_class}
-					<p class="self-center">
-						<Class bdo_class={log.local_player_two.character_class} show_text={false} />
-					</p>
-				{/if}
-				<p class="text-navy-400">[{log.guild}]</p>
-			</div>
-		</VirtualList>
-	</div>
-	<Table
-		id="enemy-players-{selected_player?.player.name}"
-		header={[
-			{ label: 'Class', sortable: true },
-			{ label: 'Name', sortable: true },
-			{ label: 'Kills', sortable: true, sort_dir: 'des' },
-			{ label: 'Deaths', sortable: true },
-			{ label: 'Guild', sortable: true }
-		]}
-		rows={selected_player_enemy_columns}
-		height={225}
-		searchable
-		title="Stats"
-	/>
-</Drawer>
