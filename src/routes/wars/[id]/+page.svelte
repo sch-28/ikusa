@@ -1,4 +1,8 @@
 <script lang="ts">
+	//@ts-expect-error types
+	import VirtualList from '@sveltejs/svelte-virtual-list';
+	import GiBroadsword from 'svelte-icons/gi/GiBroadsword.svelte';
+	import { Drawer } from 'flowbite-svelte';
 	import { page } from '$app/stores';
 	import Icon from '../../../components/elements/icon.svelte';
 	import { ModalManager } from '../../../components/modal/modal-store';
@@ -8,6 +12,7 @@
 	import { Manager } from '../../../logic/stores';
 	import { format, redirect_and_toast, show_toast, table_format } from '../../../logic/util';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
+	import MdClose from 'svelte-icons/md/MdClose.svelte';
 	import GiSkullCrack from 'svelte-icons/gi/GiSkullCrack.svelte';
 	import GiCrownedSkull from 'svelte-icons/gi/GiCrownedSkull.svelte';
 	import Button from '../../../components/elements/button.svelte';
@@ -15,7 +20,7 @@
 	import { User } from '../../../logic/user';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
-	import { Log, type Local_Guild, type War } from '../../../logic/data';
+	import { Local_Guild_Player, Log, type Local_Guild, type War } from '../../../logic/data';
 	import { parse } from 'flatted';
 	import Share from '../../../components/modal/modals/share.svelte';
 	import MdFileDownload from 'svelte-icons/md/MdFileDownload.svelte';
@@ -102,12 +107,46 @@
 		];
 		update_rows();
 	}
+	let selected_player: Local_Guild_Player | undefined = undefined;
+	let hideDrawer = !selected_player;
+	$: selected_player_enemy_columns = Object.entries(
+		selected_player?.local_events.reduce((acc, event) => {
+			const enemy = event.player_two;
+			if (!(enemy.name in acc)) {
+				acc[enemy.name] = { kills: 0, deaths: 0, class: event.local_player_two.character_class };
+			}
 
+			if (event.kill) {
+				acc[enemy.name].kills += 1;
+			} else {
+				acc[enemy.name].deaths += 1;
+			}
+
+			return acc;
+		}, {} as Record<string, { kills: number; deaths: number; class?: string }>) ?? {}
+	).map(([name, value]) => {
+		return {
+			columns: [
+				{
+					label: value.class ? bind(Class, { bdo_class: value.class }) : '-',
+					value: value.class,
+					type: value.class ? 'component' : 'literal'
+				},
+				name,
+				value.kills,
+				value.deaths
+			]
+		} as Row;
+	});
 	function update_rows() {
 		if (war) {
 			rows.splice(0, rows.length);
 			for (const local_player of selected_guild?.local_players ?? war.local_players) {
 				rows.push({
+					onclick: () => {
+						selected_player = local_player;
+						hideDrawer = false;
+					},
 					columns: [
 						...(has_classes
 							? local_player.character_class
@@ -432,6 +471,7 @@
 				<Button on:click={add_war}>Add to Dashboard</Button>
 			{/if}
 		</svelte:fragment>
+
 		<svelte:fragment slot="content">
 			<Table
 				id="war-players-{war?.id}"
@@ -499,3 +539,65 @@
 		</svelte:fragment>
 	</DashboardLayout>
 </div>
+<Drawer
+	backdrop={false}
+	transitionParams={{ delay: 0, amount: 0, easing: (x) => x, duration: 0 }}
+	bind:hidden={hideDrawer}
+	width="350px"
+	placement="right"
+	divClass="drawer"
+>
+	<h5 class="text-foreground font-medium inline-flex items-center">
+		{#if selected_player?.character_class}
+			<Class bdo_class={selected_player.character_class} />
+		{/if}
+		{selected_player?.player.name}
+		{#if selected_player?.character_name}
+			({selected_player?.character_name})
+		{/if}
+	</h5>
+
+	<div class="absolute top-4 right-4">
+		<button on:click={() => (hideDrawer = true)}>
+			<Icon icon={MdClose} />
+		</button>
+	</div>
+
+	<span class="text-sm">Logs ({selected_player?.local_events.length})</span>
+	<div class="border border-dashed border-foreground rounded-md p-2 h-[200px] overflow-auto">
+		<VirtualList items={selected_player?.local_events ?? []} let:item={log}>
+			<div class="flex gap-2 items-baseline group">
+				<p class="text-sm text-gray-400">{log.time_string}:</p>
+				<p>{log.player_one.name}</p>
+				<div class="flex justify-center items-center">
+					{#if log.kill}
+						<Icon icon={GiBroadsword} class="self-center text-submarine-500" />
+					{:else}
+						<Icon icon={GiSkullCrack} class="self-center text-red-500" />
+					{/if}
+				</div>
+
+				<p>{log.player_two.name}</p>
+				<!-- {#if log.local_player_two?.character_class} -->
+				<p class="self-center">
+					<Class bdo_class={'Musa'} />
+				</p>
+				<!-- {/if} -->
+				<p class="text-navy-400">[{log.guild}]</p>
+			</div>
+		</VirtualList>
+	</div>
+	<Table
+		id="enemy-players-{selected_player?.player.name}"
+		header={[
+			{ label: 'Class', title: 'Class', min_width: 25, width: 25, sortable: true },
+			{ label: 'Name', sortable: true },
+			{ label: 'Kills', sortable: true, sort_dir: 'des' },
+			{ label: 'Deaths', sortable: true }
+		]}
+		rows={selected_player_enemy_columns}
+		height={225}
+		searchable
+		title="Stats"
+	/>
+</Drawer>
