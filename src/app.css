@@ -33,6 +33,6 @@ html {
     min-height: 0 !important;
     height: 100% !important;
 }
-.apexcharts-legend{
+.chart-donut .apexcharts-legend{
     top: 0 !important;
 }
