@@ -113,7 +113,12 @@
 		selected_player?.local_events.reduce((acc, event) => {
 			const enemy = event.player_two;
 			if (!(enemy.name in acc)) {
-				acc[enemy.name] = { kills: 0, deaths: 0, class: event.local_player_two.character_class };
+				acc[enemy.name] = {
+					kills: 0,
+					deaths: 0,
+					class: "Musa",
+					guild: event.local_player_two.local_guild.guild.name
+				};
 			}
 
 			if (event.kill) {
@@ -123,18 +128,19 @@
 			}
 
 			return acc;
-		}, {} as Record<string, { kills: number; deaths: number; class?: string }>) ?? {}
+		}, {} as Record<string, { kills: number; deaths: number; class?: string; guild: string }>) ?? {}
 	).map(([name, value]) => {
 		return {
 			columns: [
 				{
-					label: value.class ? bind(Class, { bdo_class: value.class }) : '-',
+					label: value.class ? bind(Class, { bdo_class: value.class, show_text: false }) : '-',
 					value: value.class,
 					type: value.class ? 'component' : 'literal'
 				},
 				name,
 				value.kills,
-				value.deaths
+				value.deaths,
+				value.guild
 			]
 		} as Row;
 	});
@@ -580,11 +586,11 @@
 				</div>
 
 				<p>{log.player_two.name}</p>
-				<!-- {#if log.local_player_two?.character_class} -->
+				{#if log.local_player_two?.character_class}
 				<p class="self-center">
-					<Class bdo_class={'Musa'} />
+					<Class bdo_class={log.local_player_two.character_class} />
 				</p>
-				<!-- {/if} -->
+				{/if}
 				<p class="text-navy-400">[{log.guild}]</p>
 			</div>
 		</VirtualList>
@@ -592,10 +598,11 @@
 	<Table
 		id="enemy-players-{selected_player?.player.name}"
 		header={[
-			{ label: 'Class', title: 'Class', min_width: 25, width: 25, sortable: true },
+			{ label: 'Class', sortable: true},
 			{ label: 'Name', sortable: true },
 			{ label: 'Kills', sortable: true, sort_dir: 'des' },
-			{ label: 'Deaths', sortable: true }
+			{ label: 'Deaths', sortable: true },
+			{ label: 'Guild', sortable: true }
 		]}
 		rows={selected_player_enemy_columns}
 		height={225}

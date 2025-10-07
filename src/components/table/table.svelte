@@ -391,7 +391,7 @@
 				>
 					<button
 						on:click={row.onclick}
-						class="flex w-full text-foreground-secondary hover:text-foreground"
+						class="flex w-full min-w-fit text-foreground-secondary hover:text-foreground"
 					>
 						{#each row.columns as column, index}
 							<div
