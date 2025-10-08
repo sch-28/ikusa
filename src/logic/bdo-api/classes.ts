@@ -26,7 +26,7 @@ export const classes = [
 	'Woosa',
 	'Maegu',
 	'Scholar',
-	'Do-sa',
+	'Do-Sa',
 	'Deadeye',
 	'Wukong'
 ];
@@ -59,7 +59,7 @@ export const get_class_color: Record<string, string> = {
 	Woosa: '#20276c',
 	Maegu: '#a74d6e',
 	Scholar: '#f1dc00',
-	'Do-sa': '#807aff',
+	'Do-Sa': '#807aff',
 	Deadeye: '#9412ff',
 	Wukong: '#ff6a00'
 };
