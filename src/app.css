@@ -25,11 +25,7 @@ html {
 	@apply !bg-foreground-secondary !rounded-lg;
 }
 
-
-.drawer {
-        @apply max-w-[100vw] flex flex-col gap-2 !transition-none !animate-none overflow-y-auto z-50 p-4 bg-background fixed top-[14.25rem] inset-y-0 right-8 rounded-lg border border-foreground h-[500px] w-[500px];
-}
-.chart-container.chart-donut div:not(.apexcharts-legend-series,.apexcharts-tooltip),.apexcharts-svg {
+.chart-container.chart-donut, .chart-container.chart-donut div:not(.apexcharts-legend-series,.apexcharts-tooltip), .chart-container.chart-donut .apexcharts-svg{
     min-height: 0 !important;
     height: 100% !important;
 }
