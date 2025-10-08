@@ -226,7 +226,7 @@
 
 	$: class_chart_data = class_data?.map((c) => c.data) ?? [];
 	$: class_chart_labels = class_data?.map((c) => c.name) ?? [];
-	$: class_colors = class_data?.map((c) => get_class_color[c.name]) ?? [];
+	$: class_colors = class_data?.map((c) => get_class_color[c.name] ?? '#630101') ?? [];
 
 	$: class_table_rows = (class_data?.map((c) => ({
 		columns: [
