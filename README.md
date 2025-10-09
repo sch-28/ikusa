@@ -13,3 +13,8 @@
 ## Introduction
 Ikusa is a powerful tool that allows you to analyze your game logs and gain valuable insights into your combat performance. 
 Download the Ikusa Logger and keep it running in the background while you play. The logger will automatically detect all kill logs. Then, directly upload your logs to Ikusa to analyze them.
+
+[Get Started](https://ikusa.site/docs/introduction)
+
+## Credits
+[man90es](https://github.com/man90es/BDO-REST-API) - Scraper for Black Desert Online community data with a built-in API server.
