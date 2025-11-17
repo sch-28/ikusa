@@ -1,14 +1,40 @@
-import { PUBLIC_ORIGINAL_POSTHOG_URL } from '$env/static/public';
-import type { RequestHandler } from '@sveltejs/kit';
+import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async (event) => {
-	//rediret request from /api/event/* to https://eu.posthog.com/*
-	const url = new URL(event.request.url);
-	url.hostname = PUBLIC_ORIGINAL_POSTHOG_URL.split('//')[1];
-	url.protocol = 'https';
-	url.port = '';
-	url.pathname = url.pathname.replace('/api/event', '');
-	event.request.headers.set('host', 'eu.posthog.com');
-	const response = await fetch(url.toString(), event.request);
-	return response;
+	return handle(event);
 };
+
+export const GET: RequestHandler = async (event) => {
+	return handle(event);
+};
+
+async function handle(event: RequestEvent<Partial<Record<string, string>>, string | null>) {
+	const { pathname } = event.url;
+
+	// Determine target hostname based on static or dynamic ingestion
+	const hostname = pathname.startsWith('/api/event/static/')
+		? 'eu-assets.i.posthog.com'
+		: 'eu.i.posthog.com';
+
+	// Build external URL
+	const url = new URL(event.request.url);
+	url.protocol = 'https:';
+	url.hostname = hostname;
+	url.port = '443';
+	url.pathname = pathname.replace('/api/event/', '');
+
+	// Clone and adjust headers
+	const headers = new Headers(event.request.headers);
+	headers.set('Accept-Encoding', '');
+	headers.set('host', hostname);
+
+	// Proxy the request to the external host
+	const response = await fetch(url.toString(), {
+		method: event.request.method,
+		headers,
+		body: event.request.body,
+		duplex: 'half'
+	});
+
+	return response;
+}
