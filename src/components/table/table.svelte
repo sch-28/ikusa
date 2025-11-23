@@ -9,8 +9,10 @@
 	import Input from '../elements/input.svelte';
 	import { draggable } from '@neodrag/svelte';
 	import MdZoomOutMap from 'svelte-icons/md/MdZoomOutMap.svelte';
+    import MdDownload from 'svelte-icons/md/MdFileDownload.svelte'
 	import IoMdCode from 'svelte-icons/io/IoMdCode.svelte';
 	import Component from './component.svelte';
+	import { exportTableCSV } from './export';
 
 	export let header: HeaderColumn[] = [];
 	export let rows: Row[] = [];
@@ -274,6 +276,10 @@
 		if (v_list) setTimeout(() => v_list.scrollTo({ top: y, behavior: 'auto' }), 20);
 	}
 
+    function exportTable(){
+        exportTableCSV(title ||  'table-export', header, rows)
+    }
+
 	function fitTable() {
 		if (!instance) return;
 		const width = (instance.clientWidth - (scrollbar_width ?? 4)) / header.length;
@@ -418,8 +424,9 @@
 		{/key}
 	</div>
 
-	<div class="mt-2 flex">
+	<div class="mt-2 gap-2 flex">
 		<button on:click={fitTable} class="flex gap-1"><Icon icon={MdZoomOutMap} /> Fit width</button>
+		<button on:click={exportTable} class="flex gap-1"><Icon icon={MdDownload} />Export </button>
 		<div class="ml-auto">
 			<p>{start}-{end}/{sorted_rows.length}</p>
 		</div>

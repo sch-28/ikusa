@@ -488,7 +488,7 @@
 						{header}
 						{rows}
 						searchable
-						title={(selected_guild?.guild.name ?? 'All') + ' Players'}
+						title={(selected_guild?.guild.name ?? 'All') + ' Players' + " - " + war?.name}
 					/>
 				</div>
 				{#if selected_player}
