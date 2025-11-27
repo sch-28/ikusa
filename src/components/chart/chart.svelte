@@ -3,6 +3,7 @@
 	import LoadingIndicator from '../elements/loading-indicator.svelte';
 	import dayjs from 'dayjs';
 	import { Toggle } from 'flowbite-svelte';
+	import { Event } from '../../logic/data';
 
 	export let title: string | undefined = undefined;
 	export let type: 'area' | 'donut' = 'area';
@@ -18,11 +19,79 @@
 	export let height: string = 'auto';
 	export let legend_width: string = 'auto';
 	export let colors: string[] = [];
+	export let event_data: Event[][] = [];
 
+	function escape_html(s: string) {
+		return s.replace(
+			/[&<>"']/g,
+			(m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])
+		);
+	}
 	let formatted_labels: string[] | number[] = [];
 	let options: any;
 	let chart_container: HTMLDivElement;
 	let current_chart: any;
+
+	$: show_custom_tooltip = event_data && event_data.length > 0;
+	$: console.log(show_custom_tooltip);
+
+	let tooltip:ApexCharts.ApexOptions["tooltip"] = {
+		enabled: true,
+		theme: 'dark',
+		x: {
+			show: true,
+			format: tooltip_minutes ? 'HH:mm:ss' : 'yyyy-MM-dd'
+		}
+	};
+	$: {
+		if (show_custom_tooltip) {
+			tooltip = {
+				enabled: true,
+				fixed: {
+					enabled: true,
+					position: 'topRight',
+					offsetY: -790
+				},
+				custom: function ({
+					series,
+					dataPointIndex
+				}: {
+					series: number[][];
+					dataPointIndex: number;
+				}) {
+					const timeLabel = new Intl.DateTimeFormat(undefined, {
+						hour: '2-digit',
+						minute: '2-digit',
+						hour12: false
+					}).format(new Date(labels[dataPointIndex]));
+					const kills = series[0]?.[dataPointIndex] ?? '';
+					const deaths = series[1]?.[dataPointIndex] ?? '';
+
+					const logs = event_data[dataPointIndex];
+					const logsHtml = logs.length
+						? `<div style="margin-top:6px;border-top:1px solid #e3e3e3;padding-top:6px;">
+                                        <div style="font-weight:600;margin-bottom:4px;">logs:</div>
+                                        ${logs
+																					.map(
+																						(l) =>
+																							`<div>${escape_html(l.message.split('(')[0])}</div>`
+																					)
+																					.join('')}
+                                        </div>`
+						: '';
+
+					return `
+                                    <div style="padding:10px; width: 600px; font-family:inherit; font-size:12px;">
+                                        <div style="font-weight:600;">${timeLabel}</div>
+                                        <div>kills: ${kills}</div>
+                                        <div>deaths: ${deaths}</div>
+                                        ${logsHtml}
+                                    </div>
+                                    `;
+				}
+			};
+		}
+	}
 
 	$: {
 		formatted_labels = dates
@@ -111,15 +180,7 @@
 			},
 			labels: formatted_labels as string[],
 			colors: type === 'area' && colors.length === 0 ? ['#f5cd40'] : colors,
-			tooltip: {
-				enabled: true,
-				theme: 'dark',
-				x: {
-					show: true,
-					format: tooltip_minutes ? 'HH:mm:ss' : 'yyyy-MM-dd'
-				}
-			},
-
+			tooltip,
 			dataLabels: {
 				enabled: data_labels,
 				distributed: true,
@@ -211,5 +272,9 @@
 
 	:global(.apexcharts-menu-item:hover) {
 		background-color: rgb(28 28 28 / var(--tw-bg-opacity)) !important;
+	}
+
+	:global(.apexcharts-tooltip) {
+		background: rgb(28, 28, 28) !important;
 	}
 </style>

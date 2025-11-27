@@ -206,6 +206,13 @@
 		return events ? events.length : 0;
 	});
 
+	$: event_chart_data = kill_chart_labels.map((l) => {
+		const events = (selected_guild?.local_events ?? war?.logs ?? []).filter((k) => {
+			return k.time.valueOf() >= l && k.time.valueOf() < l + 60000;
+		});
+		return events;
+	});
+
 	$: member_chart_data =
 		war?.local_guilds.map((local_guild) => local_guild.local_players.length) ?? [];
 	$: member_chart_labels = war?.local_guilds.map((local_guild) => local_guild.guild.name) ?? [];
@@ -488,7 +495,7 @@
 						{header}
 						{rows}
 						searchable
-						title={(selected_guild?.guild.name ?? 'All') + ' Players' + " - " + war?.name}
+						title={(selected_guild?.guild.name ?? 'All') + ' Players' + ' - ' + war?.name}
 					/>
 				</div>
 				{#if selected_player}
@@ -515,8 +522,9 @@
 
 						<span class="text-sm">
 							{selected_player?.kills} Kill{selected_player.kills !== 1 ? 's' : ''} | {selected_player?.deaths}
-							Death{selected_player?.deaths !== 1 ? 's': ''} | {table_format(selected_player.performance)
-								.label} Perf. | {table_format(selected_player.duration_percentage * 100, 0).label}%
+							Death{selected_player?.deaths !== 1 ? 's' : ''} | {table_format(
+								selected_player.performance
+							).label} Perf. | {table_format(selected_player.duration_percentage * 100, 0).label}%
 							Present
 						</span>
 						<span class="text-sm">Logs ({selected_player?.local_events.length})</span>
@@ -610,8 +618,9 @@
 					height={'100%'}
 					data={[
 						{ name: 'Kills', data: kills_chart_data },
-						{ name: 'Deaths', data: deaths_chart_data }
+						{ name: 'Deaths', data: deaths_chart_data },
 					]}
+                    event_data={event_chart_data}
 					labels={kill_chart_labels}
 					dates
 					type="area"

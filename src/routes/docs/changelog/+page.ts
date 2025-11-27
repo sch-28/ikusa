@@ -19,6 +19,16 @@ const oracle = {
 };
 const changes: Change[] = [
 	{
+		version: "0.5.4",
+		date: "27.11.2025",
+		title: "Logger & Website update",
+		changes: [
+			"You can now see guild member and enemy member player count directly in the logger",
+			"Hovering on the Kill/Death overview now allows you to see the logs for that timestamp",
+		],
+		author: oracle,
+	},
+	{
 		version: "0.5.3",
 		date: "23.11.2025",
 		title: "CSV Export & Linux support",
