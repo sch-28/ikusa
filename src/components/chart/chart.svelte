@@ -35,7 +35,7 @@
 	$: show_custom_tooltip = event_data && event_data.length > 0;
 	$: console.log(show_custom_tooltip);
 
-	let tooltip:ApexCharts.ApexOptions["tooltip"] = {
+	let tooltip: ApexCharts.ApexOptions['tooltip'] = {
 		enabled: true,
 		theme: 'dark',
 		x: {
@@ -72,10 +72,17 @@
 						? `<div style="margin-top:6px;border-top:1px solid #e3e3e3;padding-top:6px;">
                                         <div style="font-weight:600;margin-bottom:4px;">logs:</div>
                                         ${logs
-																					.map(
-																						(l) =>
-																							`<div>${escape_html(l.message.split('(')[0])}</div>`
-																					)
+																					.map((l) => {
+																						const message = `[${l.time_string}] ${
+																							l.player_one.name
+																						} ${
+																							l.kill
+																								? '<b class="text-submarine-500">has killed</b>'
+																								: '<b class="text-red-500">died to</b>'
+																						} ${l.player_two.name} from ${l.guild}`;
+
+																						return `<div>${message}</div>`;
+																					})
 																					.join('')}
                                         </div>`
 						: '';
