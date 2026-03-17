@@ -550,10 +550,10 @@ export class Log {
 		return events.map(
 			(l) =>
 				new Log(
-					l.player_one.name,
-					l.player_two.name,
+					l.player_one?.name,
+					l.player_two?.name,
 					l.kill,
-					l.local_player_two.local_guild.guild.name,
+					l.local_player_two?.local_guild?.guild.name,
 					l.time_string,
 					l.character_names
 				)
