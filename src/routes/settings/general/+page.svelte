@@ -7,6 +7,7 @@
 	import Select from '../../../components/elements/select.svelte';
 
 	let form_error = '';
+	let form_success = false;
 
 	let family_name = $User.name ?? '';
 	let guild_name = $User.guild ?? '';
@@ -16,34 +17,32 @@
 		guild_name = $User.guild ?? '';
 	});
 
-	$: {
-		family_name;
-		guild_name;
-		validate();
-	}
-
-	function validate() {
-		if (family_name === $User.name && guild_name === $User.guild) {
-			return;
-		}
+	function save() {
+		form_error = '';
+		form_success = false;
 
 		if (family_name.length === 0) {
 			form_error = 'Family name is required';
+			return;
 		}
 		if (guild_name.length === 0) {
 			form_error = 'Guild name is required';
+			return;
 		}
 
 		if (!$Manager.players.find((p) => p.name === family_name)) {
 			form_error = 'Family name is not valid, it could not be found in your uploaded logs';
+			return;
 		}
 
 		if (!$Manager.guilds.find((g) => g.name === guild_name)) {
 			form_error = 'Guild name is not valid, it could not be found in your uploaded logs';
+			return;
 		}
 
 		$User.name = family_name;
 		$User.guild = guild_name;
+		form_success = true;
 	}
 
 	let selected_region = $User.region === 'EU' ? 0 : $User.region === 'NA' ? 1 : 2;
@@ -93,14 +92,26 @@
 			</div>
 
 			<div>
-				<Label class="mb-2 !text-gray-400" for="fam-name">Guild</Label>
+				<Label class="mb-2 !text-gray-400" for="guild-name">Guild</Label>
 				<AutoComplete
-					id="fam-name"
+					id="guild-name"
 					items={$Manager.guilds.map((g) => g.name)}
 					bind:value={guild_name}
 				/>
 			</div>
 		</div>
-		<p class="text-red-500">{form_error}</p>
+		<div class="flex items-center gap-3">
+			<button
+				on:click={save}
+				class="px-4 py-2 bg-gold text-black text-sm font-semibold rounded-lg hover:bg-gold/80 transition-colors"
+			>
+				Save
+			</button>
+			{#if form_error}
+				<p class="text-red-500">{form_error}</p>
+			{:else if form_success}
+				<p class="text-green-500">Settings saved</p>
+			{/if}
+		</div>
 	</div>
 </div>
