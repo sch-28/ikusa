@@ -62,5 +62,13 @@
 		"svelte-apexcharts": "^1.0.2",
 		"svelte-french-toast": "^1.0.3",
 		"svelte-icons": "^2.1.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@prisma/client",
+			"@prisma/engines",
+			"prisma",
+			"esbuild"
+		]
 	}
 }
