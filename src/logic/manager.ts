@@ -278,7 +278,8 @@ export class ManagerClass {
 							local_guild.local_events.push(event);
 							if (event.player_one == player) {
 								event.local_player_one = local_player;
-							} else {
+							}
+							if (event.player_two == player) {
 								event.local_player_two = local_player;
 								event.guild = local_player.local_guild.guild.name;
 							}

@@ -174,7 +174,7 @@ export class War implements IWar {
 						e.player_one.name,
 						e.player_two.name,
 						e.kill,
-						e.local_player_two.local_guild.guild.name,
+						e.local_player_two?.local_guild?.guild.name ?? e.guild,
 						e.time_string,
 						e.character_names
 					)
@@ -477,7 +477,7 @@ export class Event {
 	}
 
 	normalized_kill(guild: Guild) {
-		if (guild == this.local_player_one.local_guild.guild) {
+		if (guild == this.local_player_one?.local_guild?.guild) {
 			return this.kill;
 		}
 		return !this.kill;
